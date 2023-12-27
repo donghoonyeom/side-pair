@@ -1,4 +1,4 @@
-package sidepair.backend.member.exception;
+package sidepair.member.exception;
 
 public class MemberException extends RuntimeException {
 

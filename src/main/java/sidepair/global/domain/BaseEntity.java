@@ -1,4 +1,4 @@
-package sidepair.backend.global.domain;
+package sidepair.global.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

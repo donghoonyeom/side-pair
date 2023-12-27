@@ -1,4 +1,4 @@
-package sidepair.backend.member.domain.vo;
+package sidepair.member.domain.vo;
 
 
 import jakarta.persistence.Column;

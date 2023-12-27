@@ -1,13 +1,13 @@
-package sidepair.backend.member.domain;
+package sidepair.member.domain;
 
 import jakarta.persistence.Embedded;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import sidepair.backend.global.domain.BaseEntity;
-import sidepair.backend.member.domain.vo.Email;
-import sidepair.backend.member.domain.vo.Nickname;
-import sidepair.backend.member.domain.vo.ProfileImgUrl;
+import sidepair.global.domain.BaseEntity;
+import sidepair.member.domain.vo.Email;
+import sidepair.member.domain.vo.Nickname;
+import sidepair.member.domain.vo.ProfileImgUrl;
 
 public class Member extends BaseEntity {
 

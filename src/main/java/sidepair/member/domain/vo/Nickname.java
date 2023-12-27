@@ -1,8 +1,8 @@
-package sidepair.backend.member.domain.vo;
+package sidepair.member.domain.vo;
 
 import jakarta.persistence.Column;
 import java.util.Objects;
-import sidepair.backend.member.exception.MemberException;
+import sidepair.member.exception.MemberException;
 
 public class Nickname {
 
