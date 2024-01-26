@@ -3,8 +3,11 @@ package sidepair.member.domain.vo;
 import jakarta.persistence.Column;
 import java.util.Objects;
 import java.util.regex.Pattern;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import sidepair.member.exception.MemberException;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Email {
 
     private static final String EMAIL_REGEX = "^([\\w\\.\\_\\-])*[a-zA-Z0-9]+([\\w\\.\\_\\-])*([a-zA-Z0-9])+([\\w\\.\\_\\-])+@([a-zA-Z0-9]+\\.)+[a-zA-Z0-9]{2,8}$";
@@ -29,5 +32,9 @@ public class Email {
 
     private boolean isNotMatchEmailForm(final String value) {
         return !Pattern.matches(EMAIL_REGEX, value);
+    }
+
+    public String getValue() {
+        return value;
     }
 }
