@@ -1,10 +1,10 @@
-package sidepair.member.domain.vo;
+package sidepair.member.domain;
 
 import java.util.Arrays;
 import lombok.Getter;
 
 @Getter
-public enum Skill {
+public enum SkillType {
     JAVA("Java"),
     PYTHON("Python"),
     JAVASCRIPT("JavaScript"),
@@ -23,11 +23,11 @@ public enum Skill {
 
     private final String displayName;
 
-    Skill(String inputSkill) {
+    SkillType(String inputSkill) {
         validateNull(inputSkill);
         validateBlank(inputSkill);
         this.displayName = inputSkill.trim();
-        validateExistence(this.displayName);
+       // validateExistence(this.displayName);
     }
 
     private void validateNull(String displayName) {
@@ -42,10 +42,10 @@ public enum Skill {
         }
     }
 
-    private void validateExistence(String displayName) {
-        if (Arrays.stream(values())
-                .noneMatch(skill -> skill.displayName.equals(displayName))) {
-            throw new IllegalArgumentException("존재하지 않는 기술입니다.");
-        }
-    }
+//    private void validateExistence(String displayName) {
+//        if (Arrays.stream(values())
+//                .noneMatch(skill -> skill.displayName.equals(displayName))) {
+//            throw new IllegalArgumentException("존재하지 않는 기술입니다.");
+//        }
+//    }
 }
