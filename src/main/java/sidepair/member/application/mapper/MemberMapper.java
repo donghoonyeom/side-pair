@@ -1,16 +1,18 @@
 package sidepair.member.application.mapper;
 
 
-import java.util.LinkedHashSet;
-import java.util.Set;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import sidepair.member.configuration.MemberJoinRequest;
+import sidepair.member.configuration.dto.MemberInformationDto;
+import sidepair.member.configuration.dto.MemberInformationForPublicDto;
+import sidepair.member.configuration.request.MemberJoinRequest;
 import sidepair.member.configuration.dto.MemberJoinDto;
+import sidepair.member.configuration.response.MemberInformationForPublicResponse;
+import sidepair.member.configuration.response.MemberInformationResponse;
 import sidepair.member.domain.vo.Email;
 import sidepair.member.domain.vo.Nickname;
 import sidepair.member.domain.vo.Password;
-import sidepair.member.domain.vo.Skill;
+import sidepair.member.domain.Skill;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MemberMapper {
@@ -18,8 +20,20 @@ public class MemberMapper {
         final Email email = new Email(request.email());
         final Password password = new Password(request.password());
         final Nickname nickname = new Nickname(request.nickname());
-        Set<Skill> skills = new LinkedHashSet<>();
-        skills.add(request.skills());
-        return new MemberJoinDto(email, password, nickname, null, skills);
+        final Skill skills = Skill.valueOf(request.skills().name());
+        return new MemberJoinDto(email, password, nickname, skills);
+    }
+
+    public static MemberInformationResponse convertToMemberInformationResponse(
+            final MemberInformationDto memberInformationDto) {
+        return new MemberInformationResponse(memberInformationDto.id(), memberInformationDto.nickname(),
+                memberInformationDto.profileImageUrl(), memberInformationDto.skills(), memberInformationDto.email());
+    }
+
+    public static MemberInformationForPublicResponse convertToMemberInformationForPublicResponse(
+            final MemberInformationForPublicDto memberInformationForPublicDto) {
+        return new MemberInformationForPublicResponse(memberInformationForPublicDto.nickname(),
+                memberInformationForPublicDto.profileImageUrl(),
+                memberInformationForPublicDto.skills());
     }
 }
