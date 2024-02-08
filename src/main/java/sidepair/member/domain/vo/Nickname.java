@@ -1,9 +1,12 @@
-package sidepair.backend.member.domain.vo;
+package sidepair.member.domain.vo;
 
 import jakarta.persistence.Column;
 import java.util.Objects;
-import sidepair.backend.member.exception.MemberException;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import sidepair.member.exception.MemberException;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Nickname {
 
     public static final int MAX_LENGTH = 8;
@@ -26,7 +29,7 @@ public class Nickname {
 
     private void validate(final String value) {
         if (value.length() > MAX_LENGTH) {
-            throw new MemberException.NameLengthException(MAX_LENGTH, value);
+            throw new MemberException.NickNameLengthException(MAX_LENGTH, value);
         }
         if (value.isBlank()) {
             throw new MemberException.NickNameBlankException();
@@ -36,6 +39,7 @@ public class Nickname {
     public Nickname change(final String nickname) {
         return new Nickname(nickname);
     }
-
-
+    public String getValue() {
+        return value;
+    }
 }
