@@ -1,11 +1,11 @@
-package sidepair.post.domain.vo;
+package sidepair.feed.domain.vo;
 
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import sidepair.post.exception.FeedException;
+import sidepair.feed.exception.FeedException;
 
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

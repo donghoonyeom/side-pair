@@ -1,4 +1,4 @@
-package sidepair.post.exception;
+package sidepair.feed.exception;
 
 import sidepair.global.domain.exception.DomainException;
 
