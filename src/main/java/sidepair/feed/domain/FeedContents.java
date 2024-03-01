@@ -28,7 +28,7 @@ public class FeedContents {
         this.values.add(content);
     }
 
-    public Optional<FeedContent> findLastRoadmapContent() {
+    public Optional<FeedContent> findLastFeedContent() {
         if (values.isEmpty()) {
             return Optional.empty();
         }

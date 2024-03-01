@@ -32,13 +32,13 @@ public class FeedTags {
         values.addAll(new HashSet<>(feedTags));
     }
 
-    private void validate(final List<FeedTag> roadmapTags) {
-        validateCount(roadmapTags);
-        validateDuplicatedName(roadmapTags);
+    private void validate(final List<FeedTag> feedTags) {
+        validateCount(feedTags);
+        validateDuplicatedName(feedTags);
     }
 
-    private void validateCount(final List<FeedTag> roadmapTags) {
-        if (roadmapTags.size() > MAX_COUNT) {
+    private void validateCount(final List<FeedTag> feedTags) {
+        if (feedTags.size() > MAX_COUNT) {
             throw new FeedException(
                     String.format("태그의 개수는 최대 %d개까지 가능합니다.", MAX_COUNT));
         }

@@ -48,11 +48,11 @@ public class FeedNodes {
 
     public void updateAllFeedContent(final FeedContent content) {
         for (final FeedNode feedNode : values) {
-            updateRoadmapContent(feedNode, content);
+            updateFeedContent(feedNode, content);
         }
     }
 
-    private void updateRoadmapContent(final FeedNode feedNode, final FeedContent content) {
+    private void updateFeedContent(final FeedNode feedNode, final FeedContent content) {
         if (feedNode.isNotSameFeedContent(content)) {
             feedNode.updateFeedContent(content);
         }

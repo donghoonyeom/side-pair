@@ -71,11 +71,11 @@ public class FeedContent extends BaseUpdatedTimeEntity {
         return nodes.size();
     }
 
-    public Optional<FeedNode> findRoadmapNodeById(final Long id) {
+    public Optional<FeedNode> findFeedNodeById(final Long id) {
         return nodes.findById(id);
     }
 
-    public Optional<FeedNode> findRoadmapNodeByTitle(final String title) {
+    public Optional<FeedNode> findFeedNodeByTitle(final String title) {
         return nodes.findByTitle(title);
     }
 

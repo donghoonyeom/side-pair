@@ -134,7 +134,7 @@ public class Feed extends BaseCreatedTimeEntity {
     }
 
     public Optional<FeedContent> findLastFeedContent() {
-        return this.contents.findLastRoadmapContent();
+        return this.contents.findLastFeedContent();
     }
 
     public boolean isDeleted() {
