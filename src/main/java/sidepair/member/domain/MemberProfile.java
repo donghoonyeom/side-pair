@@ -14,7 +14,7 @@ public class MemberProfile extends BaseUpdatedTimeEntity {
     @Column(nullable = false)
     private Skill skills;
 
-    public MemberProfile(Skill skills) {
+    public MemberProfile(final Skill skills) {
         this.skills = skills;
     }
 
