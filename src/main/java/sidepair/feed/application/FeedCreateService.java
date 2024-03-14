@@ -114,6 +114,7 @@ public class FeedCreateService {
     public void deleteFeed(final String email, final Long feedId) {
         final Feed feed = findFeedById(feedId);
         validateFeedCreator(feedId, email);
+        feedRepository.delete(feed);
         // 프로젝트 확인
         feed.delete();
     }
