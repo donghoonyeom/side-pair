@@ -30,11 +30,28 @@ public class Email {
         }
     }
 
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Email that = (Email) o;
+        return Objects.equals(value, that.value);
+    }
+
     private boolean isNotMatchEmailForm(final String value) {
         return !Pattern.matches(EMAIL_REGEX, value);
     }
 
     public String getValue() {
         return value;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 }
