@@ -94,7 +94,6 @@ public class FeedController {
         return ResponseEntity.ok(responses);
     }
 
-
     @DeleteMapping("/{feedId}")
     @Authenticated
     public ResponseEntity<Void> deleteFeed(@MemberIdentifier final String identifier,
