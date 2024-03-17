@@ -1,4 +1,4 @@
-package sidepair.global.service;
+package sidepair.service;
 
 public interface FilePathGenerator {
 

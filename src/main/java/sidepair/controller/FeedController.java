@@ -24,10 +24,10 @@ import sidepair.feed.configuration.requesst.FeedCategorySaveRequest;
 import sidepair.feed.configuration.requesst.FeedOrderTypeRequest;
 import sidepair.feed.configuration.requesst.FeedSaveRequest;
 import sidepair.feed.configuration.requesst.FeedSearchRequest;
-import sidepair.global.service.dto.CustomScrollRequest;
+import sidepair.service.dto.CustomScrollRequest;
 import sidepair.feed.configuration.response.FeedCategoryResponse;
 import sidepair.feed.configuration.response.FeedForListResponses;
-import sidepair.global.service.dto.feed.response.FeedResponse;
+import sidepair.service.dto.feed.response.FeedResponse;
 import sidepair.feed.configuration.response.MemberFeedResponses;
 
 @RestController

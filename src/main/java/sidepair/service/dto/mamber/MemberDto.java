@@ -1,4 +1,4 @@
-package sidepair.global.service.dto.mamber;
+package sidepair.service.dto.mamber;
 
 public record MemberDto(
         long id,

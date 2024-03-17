@@ -1,4 +1,4 @@
-package sidepair.global.service.dto.mamber.response;
+package sidepair.service.dto.mamber.response;
 
 public record MemberResponse(
         long id,

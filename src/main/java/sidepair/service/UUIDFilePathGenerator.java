@@ -1,10 +1,10 @@
-package sidepair.global.service;
+package sidepair.service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 import org.springframework.stereotype.Component;
-import sidepair.global.service.exception.BadRequestException;
+import sidepair.service.exception.BadRequestException;
 
 @Component
 public class UUIDFilePathGenerator implements FilePathGenerator {

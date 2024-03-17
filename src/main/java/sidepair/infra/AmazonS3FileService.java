@@ -11,9 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
-import sidepair.global.service.FileService;
-import sidepair.global.service.dto.FileInformation;
-import sidepair.global.service.exception.ServerException;
+import sidepair.service.FileService;
+import sidepair.service.dto.FileInformation;
+import sidepair.service.exception.ServerException;
 
 @Service
 @RequiredArgsConstructor

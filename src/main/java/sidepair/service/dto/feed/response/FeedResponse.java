@@ -1,4 +1,4 @@
-package sidepair.global.service.dto.feed.response;
+package sidepair.service.dto.feed.response;
 
 import java.time.LocalDateTime;
 import java.util.List;

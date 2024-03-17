@@ -1,4 +1,4 @@
-package sidepair.global.service;
+package sidepair.service;
 
 public enum ImageDirType {
     CHECK_FEED("project/checkfeed"),

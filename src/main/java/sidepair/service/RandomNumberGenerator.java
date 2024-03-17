@@ -1,4 +1,4 @@
-package sidepair.global.service;
+package sidepair.service;
 
 import java.util.Random;
 import org.springframework.stereotype.Component;

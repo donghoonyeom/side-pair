@@ -1,4 +1,4 @@
-package sidepair.global.service.dto;
+package sidepair.service.dto;
 
 import java.io.InputStream;
 

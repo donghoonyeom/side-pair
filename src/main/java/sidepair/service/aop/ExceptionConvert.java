@@ -1,4 +1,4 @@
-package sidepair.global.service.aop;
+package sidepair.service.aop;
 
 
 import java.lang.annotation.ElementType;

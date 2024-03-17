@@ -1,4 +1,4 @@
-package sidepair.global.service.mapper;
+package sidepair.service.mapper;
 
 import java.util.List;
 import lombok.AccessLevel;

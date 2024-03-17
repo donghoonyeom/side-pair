@@ -1,4 +1,4 @@
-package sidepair.global.service.exception;
+package sidepair.service.exception;
 
 public class ServerException extends RuntimeException {
 
