@@ -17,7 +17,7 @@ public class Password {
 
     private void validate(final String value) {
         if (isNotValidLength(value) || isNotValidPattern(value)) {
-            throw new MemberException.PasswordRegexException(value);
+            throw new MemberException("정해진 비밀번호의 양식이 아닙니다.");
         }
     }
 

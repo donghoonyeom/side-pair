@@ -26,7 +26,7 @@ public class Email {
         }
 
         if (isNotMatchEmailForm(value)) {
-            throw new MemberException.EmailRegexException(value);
+            throw new MemberException("제약 조건에 맞지 않는 이메일입니다.");
         }
     }
 

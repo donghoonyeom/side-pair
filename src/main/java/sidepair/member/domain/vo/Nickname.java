@@ -29,10 +29,10 @@ public class Nickname {
 
     private void validate(final String value) {
         if (value.length() > MAX_LENGTH) {
-            throw new MemberException.NickNameLengthException(MAX_LENGTH, value);
+            throw new MemberException("닉네임의 길이가 최대 길이를 초과했습니다.");
         }
         if (value.isBlank()) {
-            throw new MemberException.NickNameBlankException();
+            throw new MemberException("닉네임은 공백을 제외한 1자 이상이어야합니다.");
         }
     }
 

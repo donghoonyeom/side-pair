@@ -24,10 +24,9 @@ import sidepair.member.domain.EncryptedPassword;
 import sidepair.member.domain.Member;
 import sidepair.member.domain.MemberProfile;
 import sidepair.member.domain.vo.MemberImage;
+import sidepair.member.exception.MemberException;
 import sidepair.persistence.member.MemberRepository;
 import sidepair.member.domain.vo.Email;
-import sidepair.member.exception.MemberException.DuplicateEmailException;
-import sidepair.member.exception.MemberException.MemberNotFoundException;
 
 @Service
 @Transactional(readOnly = true)
@@ -59,7 +58,7 @@ public class MemberService {
 
     private void checkEmailDuplicate(final Email email) {
         if (memberRepository.findByEmail(email).isPresent()) {
-            throw new DuplicateEmailException(email);
+            throw new MemberException("이미 존재하는 이메일입니다.");
         }
     }
 
@@ -71,7 +70,7 @@ public class MemberService {
 
     private Member findMemberInformationByEmail(final String email) {
         return memberRepository.findWithMemberProfileAndImageByEmail(email)
-                .orElseThrow(() -> new MemberNotFoundException(email));
+                .orElseThrow(() -> new MemberException("조회한 멤버가 존재하지 않습니다."));
     }
 
     public MemberInformationDto makeMemberInformationDto(final Member member) {
