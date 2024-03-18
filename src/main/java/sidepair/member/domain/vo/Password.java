@@ -1,7 +1,9 @@
 package sidepair.member.domain.vo;
 
+import lombok.Getter;
 import sidepair.member.exception.MemberException;
 
+@Getter
 public class Password {
 
     private static final int MIN_LENGTH = 8;
