@@ -12,6 +12,7 @@ import sidepair.global.domain.BaseUpdatedTimeEntity;
 import sidepair.member.domain.vo.Email;
 import sidepair.member.domain.vo.MemberImage;
 import sidepair.member.domain.vo.Nickname;
+import sidepair.member.domain.vo.Password;
 
 
 @Entity
@@ -23,6 +24,8 @@ public class Member extends BaseUpdatedTimeEntity {
 
     @Embedded
     private Email email;
+
+    private String oauthId;
 
     @Embedded
     private EncryptedPassword encryptedPassword;
@@ -41,17 +44,27 @@ public class Member extends BaseUpdatedTimeEntity {
 
     public Member(final Email email, final EncryptedPassword encryptedPassword, final Nickname nickname,
                   final MemberImage image, final MemberProfile memberProfile) {
-        this(null, email, encryptedPassword, nickname, image, memberProfile);
+        this(null, email, null, encryptedPassword, nickname, image, memberProfile);
     }
 
-    public Member(final Long id, final Email email, final EncryptedPassword encryptedPassword,
+    public Member(final Email email, final String oauthId, final Nickname nickname,
+                  final MemberImage image, final MemberProfile memberProfile) {
+        this(null, email, oauthId, null, nickname, image, memberProfile);
+    }
+
+    public Member(final Long id, final Email email, final String oauthId, final EncryptedPassword encryptedPassword,
                   final Nickname nickname, final MemberImage image, final MemberProfile memberProfile) {
         this.id = id;
         this.email = email;
+        this.oauthId = oauthId;
         this.encryptedPassword = encryptedPassword;
         this.nickname = nickname;
         this.image = image;
         this.memberProfile = memberProfile;
+    }
+
+    public boolean isPasswordMismatch(final Password password) {
+        return this.encryptedPassword.isMismatch(password);
     }
 
     public MemberImage getImage() {
