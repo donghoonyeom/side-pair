@@ -5,7 +5,7 @@ import java.util.List;
 import sidepair.feed.configuration.response.FeedCategoryResponse;
 import sidepair.feed.configuration.response.FeedContentResponse;
 import sidepair.feed.configuration.response.FeedTagResponse;
-import sidepair.global.service.dto.mamber.response.MemberResponse;
+import sidepair.service.dto.mamber.response.MemberResponse;
 
 public record FeedResponse(
         Long feedId,

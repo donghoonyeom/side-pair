@@ -41,11 +41,11 @@ import sidepair.feed.domain.FeedTag;
 import sidepair.feed.domain.FeedTags;
 import sidepair.feed.domain.vo.FeedTagName;
 import sidepair.global.domain.ImageContentType;
-import sidepair.global.service.FileService;
-import sidepair.global.service.dto.CustomScrollRequest;
-import sidepair.global.service.dto.feed.response.FeedResponse;
-import sidepair.global.service.dto.mamber.response.MemberResponse;
-import sidepair.global.service.exception.NotFoundException;
+import sidepair.service.FileService;
+import sidepair.service.dto.CustomScrollRequest;
+import sidepair.service.dto.feed.response.FeedResponse;
+import sidepair.service.dto.mamber.response.MemberResponse;
+import sidepair.service.exception.NotFoundException;
 import sidepair.member.domain.EncryptedPassword;
 import sidepair.member.domain.Member;
 import sidepair.member.domain.MemberProfile;
@@ -62,7 +62,7 @@ import sidepair.persistence.member.MemberRepository;
 @ExtendWith(MockitoExtension.class)
 class FeedReadServiceTest {
 
-    private final Member member = new Member(1L, new Email("test@test.com"),
+    private final Member member = new Member(1L, new Email("test@test.com"),null,
             new EncryptedPassword(new Password("password1!")), new Nickname("닉네임"),
             new MemberImage("originalFileName", "default-member-image", ImageContentType.JPG),
             new MemberProfile(Skill.JAVA));
@@ -431,7 +431,7 @@ class FeedReadServiceTest {
     }
 
     private Member 사용자를_생성한다(final Long id, final String email, final String nickname) {
-        return new Member(id, new Email(email),
+        return new Member(id, new Email(email),null,
                  new EncryptedPassword(new Password("password1!")),
                 new Nickname(nickname),
                 new MemberImage("originalFileName", "default-profile-image", ImageContentType.JPG),

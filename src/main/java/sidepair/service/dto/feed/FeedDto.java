@@ -5,7 +5,7 @@ import java.util.List;
 import sidepair.feed.configuration.dto.FeedCategoryDto;
 import sidepair.feed.configuration.dto.FeedContentDto;
 import sidepair.feed.configuration.dto.FeedTagDto;
-import sidepair.global.service.dto.mamber.MemberDto;
+import sidepair.service.dto.mamber.MemberDto;
 
 public record FeedDto(
         Long feedId,

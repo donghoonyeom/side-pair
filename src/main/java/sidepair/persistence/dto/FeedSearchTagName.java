@@ -1,6 +1,6 @@
 package sidepair.persistence.dto;
 
-import sidepair.global.service.exception.BadRequestException;
+import sidepair.service.exception.BadRequestException;
 
 public record FeedSearchTagName(
         String value

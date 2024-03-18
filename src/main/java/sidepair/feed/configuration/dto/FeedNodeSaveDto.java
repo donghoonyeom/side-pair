@@ -1,7 +1,7 @@
 package sidepair.feed.configuration.dto;
 
 import java.util.List;
-import sidepair.global.service.dto.FileInformation;
+import sidepair.service.dto.FileInformation;
 
 public record FeedNodeSaveDto(
 

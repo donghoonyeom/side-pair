@@ -2,7 +2,7 @@ package sidepair.feed.configuration.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import sidepair.global.service.dto.mamber.MemberDto;
+import sidepair.service.dto.mamber.MemberDto;
 
 public record FeedForListDto(
         long feedId,
