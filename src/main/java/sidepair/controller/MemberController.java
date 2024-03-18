@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sidepair.common.interceptor.Authenticated;
-import sidepair.common.resolver.MemberIdentifier;
+import sidepair.common.resolver.MemberEmail;
 import sidepair.member.application.MemberService;
 import sidepair.member.configuration.request.MemberJoinRequest;
 import sidepair.member.configuration.response.MemberInformationForPublicResponse;
@@ -32,7 +32,7 @@ public class MemberController {
 
     @GetMapping("/me")
     @Authenticated
-    public ResponseEntity<MemberInformationResponse> findMemberInformation(@MemberIdentifier final String email) {
+    public ResponseEntity<MemberInformationResponse> findMemberInformation(@MemberEmail final String email) {
         final MemberInformationResponse response = memberService.findMemberInformation(email);
         return ResponseEntity.ok(response);
     }
