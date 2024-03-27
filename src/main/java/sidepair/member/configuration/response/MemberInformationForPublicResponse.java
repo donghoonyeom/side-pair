@@ -5,7 +5,8 @@ import java.util.List;
 public record MemberInformationForPublicResponse(
         String nickname,
         String profileImageUrl,
-        List<String> skills
+        String position,
+        List<MemberSkillResponse> skills
 ) {
 
 }
