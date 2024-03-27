@@ -6,7 +6,8 @@ public record MemberInformationResponse(
         Long id,
         String nickname,
         String profileImageUrl,
-        List<String> skills,
+        String position,
+        List<MemberSkillResponse> skills,
         String email
 ) {
 }
