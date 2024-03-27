@@ -30,6 +30,9 @@ public class Member extends BaseUpdatedTimeEntity {
     @Embedded
     private EncryptedPassword encryptedPassword;
 
+    @Embedded
+    private MemberSkills skills;
+
     @OneToOne(fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
             orphanRemoval = true)
@@ -43,17 +46,17 @@ public class Member extends BaseUpdatedTimeEntity {
     private MemberProfile memberProfile;
 
     public Member(final Email email, final EncryptedPassword encryptedPassword, final Nickname nickname,
-                  final MemberImage image, final MemberProfile memberProfile) {
-        this(null, email, null, encryptedPassword, nickname, image, memberProfile);
+                  final MemberImage image, final MemberProfile memberProfile, final MemberSkills skills) {
+        this(null, email, null, encryptedPassword, nickname, image, memberProfile, skills);
     }
 
     public Member(final Email email, final String oauthId, final Nickname nickname,
-                  final MemberImage image, final MemberProfile memberProfile) {
-        this(null, email, oauthId, null, nickname, image, memberProfile);
+                  final MemberImage image, final MemberProfile memberProfile, final MemberSkills skills) {
+        this(null, email, oauthId, null, nickname, image, memberProfile, skills);
     }
 
     public Member(final Long id, final Email email, final String oauthId, final EncryptedPassword encryptedPassword,
-                  final Nickname nickname, final MemberImage image, final MemberProfile memberProfile) {
+                  final Nickname nickname, final MemberImage image, final MemberProfile memberProfile, MemberSkills skills) {
         this.id = id;
         this.email = email;
         this.oauthId = oauthId;
@@ -61,10 +64,15 @@ public class Member extends BaseUpdatedTimeEntity {
         this.nickname = nickname;
         this.image = image;
         this.memberProfile = memberProfile;
+        this.skills = skills;
     }
 
     public boolean isPasswordMismatch(final Password password) {
         return this.encryptedPassword.isMismatch(password);
+    }
+
+    public void addSkills(final MemberSkills skills) {
+        this.skills.addAll(skills);
     }
 
     public MemberImage getImage() {
@@ -82,4 +90,6 @@ public class Member extends BaseUpdatedTimeEntity {
     public Email getEmail() {
         return email;
     }
+
+    public MemberSkills getSkills() {return skills;}
 }
