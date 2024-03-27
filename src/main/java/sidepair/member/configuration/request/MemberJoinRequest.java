@@ -4,7 +4,8 @@ package sidepair.member.configuration.request;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import sidepair.member.domain.SkillType;
+import java.util.List;
+import sidepair.member.domain.PositionType;
 
 public record MemberJoinRequest(
         @NotBlank(message = "이메일은 빈 값일 수 없습니다.")
@@ -17,7 +18,10 @@ public record MemberJoinRequest(
         @NotBlank(message = "닉네임 빈 값일 수 없습니다.")
         String nickname,
 
+        @NotNull(message = "포지션은 빈 값일 수 없습니다.")
+        PositionType positionType,
+
         @NotNull(message = "기술은 빈 값일 수 없습니다.")
-        SkillType skills
+        List<MemberSkillSaveRequest> skills
 ) {
 }
