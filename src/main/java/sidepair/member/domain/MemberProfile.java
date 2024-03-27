@@ -3,6 +3,8 @@ package sidepair.member.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import sidepair.global.domain.BaseUpdatedTimeEntity;
@@ -10,16 +12,15 @@ import sidepair.global.domain.BaseUpdatedTimeEntity;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberProfile extends BaseUpdatedTimeEntity {
+    @Enumerated(value = EnumType.STRING)
+    @Column(length = 10, nullable = false)
+    private Position position;
 
-    @Column(nullable = false)
-    private Skill skills;
-
-    public MemberProfile(final Skill skills) {
-        this.skills = skills;
+    public MemberProfile(final Position position) {
+        this.position = position;
     }
 
-
-    public Skill getSkills() {
-        return skills;
+    public Position getPosition() {
+        return position;
     }
 }
