@@ -91,7 +91,7 @@ public class Feed extends BaseCreatedTimeEntity {
     private void validateTitleLength(final String title) {
         if (title.length() < TITLE_MIN_LENGTH || title.length() > TITLE_MAX_LENGTH) {
             throw new FeedException(
-                    String.format("개시물 제목의 길이는 최소 %d글자, 최대 %d글자입니다.", TITLE_MIN_LENGTH, TITLE_MAX_LENGTH)
+                    String.format("피드 제목의 길이는 최소 %d글자, 최대 %d글자입니다.", TITLE_MIN_LENGTH, TITLE_MAX_LENGTH)
             );
         }
     }
@@ -99,7 +99,7 @@ public class Feed extends BaseCreatedTimeEntity {
     private void validateIntroductionLength(final String introduction) {
         if (introduction.length() < INTRODUCTION_MIN_LENGTH || introduction.length() > INTRODUCTION_MAX_LENGTH) {
             throw new FeedException(
-                    String.format("개시물 소개글의 길이는 최소 %d글자, 최대 %d글자입니다.",
+                    String.format("피드 소개글의 길이는 최소 %d글자, 최대 %d글자입니다.",
                             INTRODUCTION_MIN_LENGTH, INTRODUCTION_MAX_LENGTH
                     )
             );
@@ -109,7 +109,7 @@ public class Feed extends BaseCreatedTimeEntity {
     private void validateRequiredPeriod(final int requiredPeriod) {
         if (requiredPeriod < REQUIRED_MIN_PERIOD || requiredPeriod > REQUIRED_MAX_PERIOD) {
             throw new FeedException(
-                    String.format("개시물 추천 소요 기간은 최소 %d일, 최대 %d일입니다.", REQUIRED_MIN_PERIOD, REQUIRED_MAX_PERIOD)
+                    String.format("피드 추천 소요 기간은 최소 %d일, 최대 %d일입니다.", REQUIRED_MIN_PERIOD, REQUIRED_MAX_PERIOD)
             );
         }
     }
