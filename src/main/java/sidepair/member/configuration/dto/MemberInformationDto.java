@@ -6,7 +6,8 @@ public record MemberInformationDto (
         Long id,
         String nickname,
         String profileImageUrl,
-        List<String> skills,
+        String position,
+        List<MemberSkillDto> skills,
         String email
 ) {
 
