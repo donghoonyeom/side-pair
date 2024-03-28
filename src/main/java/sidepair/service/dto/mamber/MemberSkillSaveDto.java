@@ -1,4 +1,4 @@
-package sidepair.member.configuration.dto;
+package sidepair.service.dto.mamber;
 
 public record MemberSkillSaveDto(
 
