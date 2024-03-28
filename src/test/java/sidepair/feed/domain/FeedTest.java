@@ -12,10 +12,13 @@ import sidepair.feed.exception.FeedException;
 import sidepair.member.domain.EncryptedPassword;
 import sidepair.member.domain.Member;
 import sidepair.member.domain.MemberProfile;
-import sidepair.member.domain.Skill;
+import sidepair.member.domain.MemberSkill;
+import sidepair.member.domain.MemberSkills;
+import sidepair.member.domain.Position;
 import sidepair.member.domain.vo.Email;
 import sidepair.member.domain.vo.Nickname;
 import sidepair.member.domain.vo.Password;
+import sidepair.member.domain.vo.SkillName;
 
 class FeedTest {
 
@@ -75,10 +78,12 @@ class FeedTest {
     }
 
     private Member 작성자를_생성한다() {
-        final MemberProfile profile = new MemberProfile(Skill.JAVA);
+        final MemberProfile profile = new MemberProfile(Position.BACKEND);
+        final MemberSkills skills = new MemberSkills(
+                List.of(new MemberSkill(1L, new SkillName("Java"))));
 
         return new Member(new Email("test@test.com"), new EncryptedPassword(new Password("password1")),
-                new Nickname("nickname"), null, profile);
+                new Nickname("nickname"), null, profile, skills);
     }
 
     private FeedCategory 카테고리를_생성한다() {
