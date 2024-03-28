@@ -1,16 +1,17 @@
-package sidepair.member.domain.vo;
+package sidepair.domain.member.vo;
 
 import jakarta.persistence.Column;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import sidepair.member.exception.MemberException;
+import sidepair.domain.member.exception.MemberException;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SkillName {
 
-    private static final int MIN_LENGTH = 1;
+    private static final int MIN_LENGTH = 2;
     private static final int MAX_LENGTH = 10;
+    private static final String REGEX = "^[a-zA-Z가-힣]{1,10}$";
 
     @Column(name = "name", length = 15)
     private String value;
@@ -21,11 +22,14 @@ public class SkillName {
         this.value = removedSpaceValue;
     }
 
-    private void validate(final String name) {
-        if (name.length() < MIN_LENGTH || name.length() > MAX_LENGTH) {
-            throw new MemberException(
-                    String.format("기술 이름은 최소 %d자부터 최대 %d자까지 가능합니다.", MIN_LENGTH, MAX_LENGTH));
+    private void validate(final String value) {
+        if (isNotValidLength(value) || isNotValidPattern(value)) {
+            throw new MemberException("제약 조건에 맞지 않는 스킬 이름입니다.");
         }
+    }
+
+    private boolean isNotValidLength(final String value) {
+        return value.length() < MIN_LENGTH || value.length() > MAX_LENGTH;
     }
 
     @Override
@@ -38,6 +42,10 @@ public class SkillName {
         }
         final SkillName that = (SkillName) o;
         return Objects.equals(value, that.value);
+    }
+
+    private boolean isNotValidPattern(final String value) {
+        return !value.matches(REGEX);
     }
 
     @Override
