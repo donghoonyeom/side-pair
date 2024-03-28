@@ -19,11 +19,14 @@ import sidepair.global.domain.ImageContentType;
 import sidepair.member.domain.EncryptedPassword;
 import sidepair.member.domain.Member;
 import sidepair.member.domain.MemberProfile;
-import sidepair.member.domain.Skill;
+import sidepair.member.domain.MemberSkill;
+import sidepair.member.domain.MemberSkills;
+import sidepair.member.domain.Position;
 import sidepair.member.domain.vo.Email;
 import sidepair.member.domain.vo.MemberImage;
 import sidepair.member.domain.vo.Nickname;
 import sidepair.member.domain.vo.Password;
+import sidepair.member.domain.vo.SkillName;
 import sidepair.persistence.dto.FeedOrderType;
 import sidepair.persistence.dto.FeedSearchDto;
 import sidepair.persistence.helper.RepositoryTest;
@@ -378,10 +381,11 @@ class FeedRepositoryTest {
     }
 
     private Member 사용자를_생성한다(final String email, final String nickname) {
-        final MemberProfile memberProfile = new MemberProfile(Skill.JAVA);
+        final MemberProfile memberProfile = new MemberProfile(Position.BACKEND);
+        final MemberSkills skills = new MemberSkills(List.of(new MemberSkill(1L, new SkillName("Java"))));
         final MemberImage memberImage = new MemberImage("file-name", "file-path", ImageContentType.PNG);
         final Member creator = new Member(new Email(email), new EncryptedPassword(new Password("password1!")),
-                new Nickname(nickname), memberImage, memberProfile);
+                new Nickname(nickname), memberImage, memberProfile, skills);
         return memberRepository.save(creator);
     }
 
