@@ -2,7 +2,6 @@ package sidepair.feed.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -12,7 +11,6 @@ import static org.mockito.Mockito.when;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -41,6 +39,10 @@ import sidepair.feed.domain.FeedTag;
 import sidepair.feed.domain.FeedTags;
 import sidepair.feed.domain.vo.FeedTagName;
 import sidepair.global.domain.ImageContentType;
+import sidepair.member.domain.MemberSkill;
+import sidepair.member.domain.MemberSkills;
+import sidepair.member.domain.Position;
+import sidepair.member.domain.vo.SkillName;
 import sidepair.service.FileService;
 import sidepair.service.dto.CustomScrollRequest;
 import sidepair.service.dto.feed.response.FeedResponse;
@@ -49,7 +51,6 @@ import sidepair.service.exception.NotFoundException;
 import sidepair.member.domain.EncryptedPassword;
 import sidepair.member.domain.Member;
 import sidepair.member.domain.MemberProfile;
-import sidepair.member.domain.Skill;
 import sidepair.member.domain.vo.Email;
 import sidepair.member.domain.vo.MemberImage;
 import sidepair.member.domain.vo.Nickname;
@@ -65,7 +66,11 @@ class FeedReadServiceTest {
     private final Member member = new Member(1L, new Email("test@test.com"),null,
             new EncryptedPassword(new Password("password1!")), new Nickname("닉네임"),
             new MemberImage("originalFileName", "default-member-image", ImageContentType.JPG),
-            new MemberProfile(Skill.JAVA));
+            new MemberProfile(Position.BACKEND),
+            new MemberSkills(
+                    List.of(new MemberSkill(1L, new SkillName("Java")),
+                            new MemberSkill(2L, new SkillName("CSS"))))
+            );
     private final LocalDateTime now = LocalDateTime.now();
 
     @Mock
@@ -432,10 +437,13 @@ class FeedReadServiceTest {
 
     private Member 사용자를_생성한다(final Long id, final String email, final String nickname) {
         return new Member(id, new Email(email),null,
-                 new EncryptedPassword(new Password("password1!")),
+                new EncryptedPassword(new Password("password1!")),
                 new Nickname(nickname),
                 new MemberImage("originalFileName", "default-profile-image", ImageContentType.JPG),
-                new MemberProfile(Skill.JAVA));
+                new MemberProfile(Position.BACKEND),
+                new MemberSkills(
+                List.of(new MemberSkill(1L, new SkillName("Java")),
+                        new MemberSkill(2L, new SkillName("CSS")))));
     }
 
     private Feed 피드을_생성한다(final String feedTitle, final FeedCategory category) {
