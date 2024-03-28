@@ -1,4 +1,4 @@
-package sidepair.feed.configuration.response;
+package sidepair.service.dto.feed.response;
 
 import java.util.List;
 

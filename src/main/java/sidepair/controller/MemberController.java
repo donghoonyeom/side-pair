@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sidepair.common.interceptor.Authenticated;
 import sidepair.common.resolver.MemberEmail;
-import sidepair.member.application.MemberService;
-import sidepair.member.configuration.request.MemberJoinRequest;
-import sidepair.member.configuration.response.MemberInformationForPublicResponse;
-import sidepair.member.configuration.response.MemberInformationResponse;
+import sidepair.service.member.MemberService;
+import sidepair.service.dto.mamber.request.MemberJoinRequest;
+import sidepair.service.dto.mamber.response.MemberInformationForPublicResponse;
+import sidepair.service.dto.mamber.response.MemberInformationResponse;
 
 @RestController
 @RequestMapping("/members")

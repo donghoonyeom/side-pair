@@ -1,6 +1,6 @@
-package sidepair.member.exception;
+package sidepair.domain.member.exception;
 
-import sidepair.global.domain.exception.DomainException;
+import sidepair.domain.exception.DomainException;
 
 public class MemberException extends DomainException {
 

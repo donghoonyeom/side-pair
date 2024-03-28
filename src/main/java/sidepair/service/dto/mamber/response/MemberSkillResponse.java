@@ -1,4 +1,4 @@
-package sidepair.member.configuration.response;
+package sidepair.service.dto.mamber.response;
 
 public record MemberSkillResponse(
         Long id,

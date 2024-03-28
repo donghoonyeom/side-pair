@@ -1,12 +1,12 @@
-package sidepair.member.domain;
+package sidepair.domain.member;
 
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import sidepair.global.domain.BaseEntity;
-import sidepair.member.domain.vo.SkillName;
+import sidepair.domain.BaseEntity;
+import sidepair.domain.member.vo.SkillName;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

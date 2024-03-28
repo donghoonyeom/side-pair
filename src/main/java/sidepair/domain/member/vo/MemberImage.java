@@ -1,4 +1,4 @@
-package sidepair.member.domain.vo;
+package sidepair.domain.member.vo;
 
 
 import jakarta.persistence.Column;
@@ -8,8 +8,8 @@ import jakarta.persistence.Enumerated;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import sidepair.global.domain.BaseEntity;
-import sidepair.global.domain.ImageContentType;
+import sidepair.domain.BaseEntity;
+import sidepair.domain.ImageContentType;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

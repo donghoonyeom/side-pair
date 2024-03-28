@@ -1,4 +1,4 @@
-package sidepair.member.domain;
+package sidepair.domain.member;
 
 
 import jakarta.persistence.Column;
@@ -7,7 +7,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import sidepair.global.domain.BaseUpdatedTimeEntity;
+import sidepair.domain.BaseUpdatedTimeEntity;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

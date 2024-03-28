@@ -1,4 +1,4 @@
-package sidepair.member.domain;
+package sidepair.domain.member;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embedded;
@@ -8,11 +8,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import sidepair.global.domain.BaseUpdatedTimeEntity;
-import sidepair.member.domain.vo.Email;
-import sidepair.member.domain.vo.MemberImage;
-import sidepair.member.domain.vo.Nickname;
-import sidepair.member.domain.vo.Password;
+import sidepair.domain.BaseUpdatedTimeEntity;
+import sidepair.domain.member.vo.Email;
+import sidepair.domain.member.vo.MemberImage;
+import sidepair.domain.member.vo.Nickname;
+import sidepair.domain.member.vo.Password;
 
 
 @Entity
