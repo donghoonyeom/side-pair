@@ -1,11 +1,12 @@
 package sidepair.persistence.member;
 
-import static sidepair.member.domain.QMember.member;
-import static sidepair.member.domain.QMemberProfile.memberProfile;
-import static sidepair.member.domain.vo.QMemberImage.memberImage;
+
+import static sidepair.domain.member.QMember.member;
+import static sidepair.domain.member.QMemberProfile.memberProfile;
+import static sidepair.domain.member.vo.QMemberImage.memberImage;
 
 import java.util.Optional;
-import sidepair.member.domain.Member;
+import sidepair.domain.member.Member;
 import sidepair.persistence.QuerydslRepositorySupporter;
 
 public class MemberQueryRepositoryImpl extends QuerydslRepositorySupporter implements MemberQueryRepository {

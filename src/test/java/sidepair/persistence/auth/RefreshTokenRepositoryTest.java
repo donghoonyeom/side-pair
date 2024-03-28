@@ -14,16 +14,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import sidepair.member.domain.EncryptedPassword;
-import sidepair.member.domain.Member;
-import sidepair.member.domain.MemberProfile;
-import sidepair.member.domain.MemberSkill;
-import sidepair.member.domain.MemberSkills;
-import sidepair.member.domain.Position;
-import sidepair.member.domain.vo.Email;
-import sidepair.member.domain.vo.Nickname;
-import sidepair.member.domain.vo.Password;
-import sidepair.member.domain.vo.SkillName;
+import sidepair.domain.member.EncryptedPassword;
+import sidepair.domain.member.Member;
+import sidepair.domain.member.MemberProfile;
+import sidepair.domain.member.MemberSkill;
+import sidepair.domain.member.MemberSkills;
+import sidepair.domain.member.Position;
+import sidepair.domain.member.vo.Email;
+import sidepair.domain.member.vo.Nickname;
+import sidepair.domain.member.vo.Password;
+import sidepair.domain.member.vo.SkillName;
 
 @ExtendWith(MockitoExtension.class)
 class RefreshTokenRepositoryTest {

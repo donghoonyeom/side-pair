@@ -1,4 +1,4 @@
-package sidepair.member.domain;
+package sidepair.domain.member;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -7,8 +7,8 @@ import java.util.Base64;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import sidepair.global.domain.exception.UnexpectedDomainException;
-import sidepair.member.domain.vo.Password;
+import sidepair.domain.exception.UnexpectedDomainException;
+import sidepair.domain.member.vo.Password;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class EncryptedPassword {

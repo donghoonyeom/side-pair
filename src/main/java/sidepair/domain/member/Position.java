@@ -1,4 +1,4 @@
-package sidepair.member.domain;
+package sidepair.domain.member;
 
 public enum Position {
     BACKEND,

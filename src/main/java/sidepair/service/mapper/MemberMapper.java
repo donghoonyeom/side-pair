@@ -1,27 +1,28 @@
-package sidepair.member.application.mapper;
+package sidepair.service.mapper;
 
 
 import java.util.Collections;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import sidepair.member.configuration.dto.MemberInformationDto;
-import sidepair.member.configuration.dto.MemberInformationForPublicDto;
-import sidepair.member.configuration.dto.MemberSkillDto;
-import sidepair.member.configuration.dto.MemberSkillSaveDto;
-import sidepair.member.configuration.request.MemberJoinRequest;
-import sidepair.member.configuration.dto.MemberJoinDto;
-import sidepair.member.configuration.request.MemberSkillSaveRequest;
-import sidepair.member.configuration.response.MemberInformationForPublicResponse;
-import sidepair.member.configuration.response.MemberInformationResponse;
-import sidepair.member.configuration.response.MemberSkillResponse;
-import sidepair.member.domain.Position;
-import sidepair.member.domain.vo.Email;
-import sidepair.member.domain.vo.Nickname;
-import sidepair.member.domain.vo.Password;
+import sidepair.service.dto.mamber.MemberInformationDto;
+import sidepair.service.dto.mamber.MemberInformationForPublicDto;
+import sidepair.service.dto.mamber.MemberSkillDto;
+import sidepair.service.dto.mamber.MemberSkillSaveDto;
+import sidepair.service.dto.mamber.request.MemberJoinRequest;
+import sidepair.service.dto.mamber.MemberJoinDto;
+import sidepair.service.dto.mamber.request.MemberSkillSaveRequest;
+import sidepair.service.dto.mamber.response.MemberInformationForPublicResponse;
+import sidepair.service.dto.mamber.response.MemberInformationResponse;
+import sidepair.service.dto.mamber.response.MemberSkillResponse;
+import sidepair.domain.member.Position;
+import sidepair.domain.member.vo.Email;
+import sidepair.domain.member.vo.Nickname;
+import sidepair.domain.member.vo.Password;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MemberMapper {
+
     public static MemberJoinDto convertToMemberJoinDto(final MemberJoinRequest request) {
         final Email email = new Email(request.email());
         final Password password = new Password(request.password());
@@ -47,7 +48,7 @@ public class MemberMapper {
 
     private static List<MemberSkillResponse> convertMemberSkillResponses(final List<MemberSkillDto> memberSkillDtos) {
         return memberSkillDtos.stream()
-                .map(tag -> new MemberSkillResponse(tag.id(), tag.name()))
+                .map(skill -> new MemberSkillResponse(skill.id(), skill.name()))
                 .toList();
     }
 

@@ -1,7 +1,7 @@
 package sidepair.persistence.member;
 
 import java.util.Optional;
-import sidepair.member.domain.Member;
+import sidepair.domain.member.Member;
 
 public interface MemberQueryRepository {
 

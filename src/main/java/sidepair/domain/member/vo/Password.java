@@ -1,7 +1,7 @@
-package sidepair.member.domain.vo;
+package sidepair.domain.member.vo;
 
 import lombok.Getter;
-import sidepair.member.exception.MemberException;
+import sidepair.domain.member.exception.MemberException;
 
 @Getter
 public class Password {

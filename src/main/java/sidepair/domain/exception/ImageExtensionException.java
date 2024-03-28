@@ -1,6 +1,6 @@
-package sidepair.member.exception;
+package sidepair.domain.exception;
 
-import sidepair.global.domain.exception.DomainException;
+import sidepair.domain.exception.DomainException;
 
 public class ImageExtensionException extends DomainException {
 

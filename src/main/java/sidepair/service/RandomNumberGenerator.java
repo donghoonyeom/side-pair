@@ -2,7 +2,6 @@ package sidepair.service;
 
 import java.util.Random;
 import org.springframework.stereotype.Component;
-import sidepair.global.domain.NumberGenerator;
 
 @Component
 public class RandomNumberGenerator implements NumberGenerator {

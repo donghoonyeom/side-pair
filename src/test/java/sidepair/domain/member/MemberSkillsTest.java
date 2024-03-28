@@ -1,4 +1,4 @@
-package sidepair.member.domain;
+package sidepair.domain.member;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import sidepair.member.domain.vo.SkillName;
-import sidepair.member.exception.MemberException;
+import sidepair.domain.member.vo.SkillName;
+import sidepair.domain.member.exception.MemberException;
 
 class MemberSkillsTest {
 

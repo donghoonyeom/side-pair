@@ -1,11 +1,9 @@
-package sidepair.member.domain.vo;
+package sidepair.domain.member.vo;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
-import sidepair.member.domain.EncryptedPassword;
-import sidepair.member.domain.vo.Password;
+import sidepair.domain.member.EncryptedPassword;
 
 class EncryptedPasswordTest {
 

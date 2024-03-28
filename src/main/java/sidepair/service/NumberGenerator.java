@@ -1,4 +1,4 @@
-package sidepair.global.domain;
+package sidepair.service;
 
 public interface NumberGenerator {
 

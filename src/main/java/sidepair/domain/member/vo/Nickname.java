@@ -1,9 +1,9 @@
-package sidepair.member.domain.vo;
+package sidepair.domain.member.vo;
 
 import jakarta.persistence.Column;
 import java.util.Objects;
 import lombok.NoArgsConstructor;
-import sidepair.member.exception.MemberException;
+import sidepair.domain.member.exception.MemberException;
 
 @NoArgsConstructor
 public class Nickname {
