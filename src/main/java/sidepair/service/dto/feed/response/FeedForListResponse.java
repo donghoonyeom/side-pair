@@ -4,17 +4,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 import sidepair.service.dto.mamber.response.MemberResponse;
 
-public record FeedResponse(
-        Long feedId,
-        FeedCategoryResponse category,
+public record FeedForListResponse(
+        long feedId,
         String feedTitle,
         String introduction,
-        MemberResponse creator,
-        FeedContentResponse content,
         int recommendedFeedPeriod,
         LocalDateTime createdAt,
+        MemberResponse creator,
+        FeedCategoryResponse category,
         List<FeedTagResponse> tags
-
-        // todo: 프로젝트 추가
 ) {
 }

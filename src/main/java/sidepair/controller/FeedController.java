@@ -18,17 +18,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import sidepair.common.interceptor.Authenticated;
 import sidepair.common.resolver.MemberEmail;
-import sidepair.feed.application.FeedCreateService;
-import sidepair.feed.application.FeedReadService;
-import sidepair.feed.configuration.requesst.FeedCategorySaveRequest;
-import sidepair.feed.configuration.requesst.FeedOrderTypeRequest;
-import sidepair.feed.configuration.requesst.FeedSaveRequest;
-import sidepair.feed.configuration.requesst.FeedSearchRequest;
+import sidepair.service.feed.FeedCreateService;
+import sidepair.service.feed.FeedReadService;
+import sidepair.service.dto.feed.requesst.FeedCategorySaveRequest;
+import sidepair.service.dto.feed.requesst.FeedOrderTypeRequest;
+import sidepair.service.dto.feed.requesst.FeedSaveRequest;
+import sidepair.service.dto.feed.requesst.FeedSearchRequest;
 import sidepair.service.dto.CustomScrollRequest;
-import sidepair.feed.configuration.response.FeedCategoryResponse;
-import sidepair.feed.configuration.response.FeedForListResponses;
+import sidepair.service.dto.feed.response.FeedCategoryResponse;
+import sidepair.service.dto.feed.response.FeedForListResponses;
 import sidepair.service.dto.feed.response.FeedResponse;
-import sidepair.feed.configuration.response.MemberFeedResponses;
+import sidepair.service.dto.feed.response.MemberFeedResponses;
 
 @RestController
 @RequestMapping("/feeds")
