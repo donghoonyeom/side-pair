@@ -1,4 +1,4 @@
-package sidepair.global.domain;
+package sidepair.domain;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

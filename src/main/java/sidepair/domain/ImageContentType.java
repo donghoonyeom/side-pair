@@ -1,7 +1,7 @@
-package sidepair.global.domain;
+package sidepair.domain;
 
 import java.util.Arrays;
-import sidepair.member.exception.ImageExtensionException;
+import sidepair.domain.exception.ImageExtensionException;
 
 public enum ImageContentType {
     JPG("image/jpg"),

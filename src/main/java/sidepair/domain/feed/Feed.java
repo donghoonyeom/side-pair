@@ -1,4 +1,4 @@
-package sidepair.feed.domain;
+package sidepair.domain.feed;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -13,9 +13,9 @@ import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import sidepair.feed.exception.FeedException;
-import sidepair.global.domain.BaseCreatedTimeEntity;
-import sidepair.member.domain.Member;
+import sidepair.domain.feed.exception.FeedException;
+import sidepair.domain.BaseCreatedTimeEntity;
+import sidepair.domain.member.Member;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

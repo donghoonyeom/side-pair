@@ -1,4 +1,4 @@
-package sidepair.global.domain.exception;
+package sidepair.domain.exception;
 
 public class DomainException extends RuntimeException {
 
