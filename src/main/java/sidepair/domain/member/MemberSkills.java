@@ -1,4 +1,4 @@
-package sidepair.member.domain;
+package sidepair.domain.member;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embeddable;
@@ -12,12 +12,14 @@ import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.BatchSize;
-import sidepair.member.domain.vo.SkillName;
-import sidepair.member.exception.MemberException;
+import sidepair.domain.member.vo.SkillName;
+import sidepair.domain.member.exception.MemberException;
 
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberSkills {
+
+    private static final int MIN_COUNT = 1;
     private static final int MAX_COUNT = 5;
 
     @OneToMany(fetch = FetchType.LAZY,
@@ -38,9 +40,9 @@ public class MemberSkills {
     }
 
     private void validateCount(final List<MemberSkill> memberSkills) {
-        if (memberSkills.size() > MAX_COUNT) {
+        if (memberSkills.size() < MIN_COUNT || memberSkills.size() > MAX_COUNT) {
             throw new MemberException(
-                    String.format("기술의 개수는 최대 %d개까지 가능합니다.", MAX_COUNT));
+                    String.format("기술의 개수는 최소 %d개부터 최대 %d개까지 가능합니다.", MIN_COUNT, MAX_COUNT));
         }
     }
 
