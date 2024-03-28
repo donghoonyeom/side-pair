@@ -10,10 +10,13 @@ import sidepair.feed.exception.FeedException;
 import sidepair.member.domain.EncryptedPassword;
 import sidepair.member.domain.Member;
 import sidepair.member.domain.MemberProfile;
-import sidepair.member.domain.Skill;
+import sidepair.member.domain.MemberSkill;
+import sidepair.member.domain.MemberSkills;
+import sidepair.member.domain.Position;
 import sidepair.member.domain.vo.Email;
 import sidepair.member.domain.vo.Nickname;
 import sidepair.member.domain.vo.Password;
+import sidepair.member.domain.vo.SkillName;
 
 class FeedContentTest {
 
@@ -72,9 +75,11 @@ class FeedContentTest {
     void 피드_본문의_피드인_경우_false를_반환한다() {
         // given
         final FeedContent content = new FeedContent("content");
-        final MemberProfile profile = new MemberProfile(Skill.JAVA);
+        final MemberProfile profile = new MemberProfile(Position.BACKEND);
+        final MemberSkills skills = new MemberSkills(
+                List.of(new MemberSkill(1L, new SkillName("Java"))));
         final Member creator = new Member(new Email("test@test.com"),
-                new EncryptedPassword(new Password("password1")), new Nickname("nickname"), null, profile);
+                new EncryptedPassword(new Password("password1")), new Nickname("nickname"), null, profile, skills);
         final FeedCategory category = new FeedCategory(1L, "여가");
         final Feed feed = new Feed("피드 제목", "피드 소개글", 30, creator, category);
 
