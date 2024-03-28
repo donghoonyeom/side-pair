@@ -25,14 +25,17 @@ import sidepair.feed.configuration.requesst.FeedTagSaveRequest;
 import sidepair.feed.domain.Feed;
 import sidepair.feed.domain.FeedCategory;
 import sidepair.feed.domain.FeedContent;
-import sidepair.global.service.exception.AuthenticationException;
-import sidepair.global.service.exception.ConflictException;
-import sidepair.global.service.exception.ForbiddenException;
-import sidepair.global.service.exception.NotFoundException;
+import sidepair.member.domain.MemberSkill;
+import sidepair.member.domain.MemberSkills;
+import sidepair.member.domain.Position;
+import sidepair.member.domain.vo.SkillName;
+import sidepair.service.exception.AuthenticationException;
+import sidepair.service.exception.ConflictException;
+import sidepair.service.exception.ForbiddenException;
+import sidepair.service.exception.NotFoundException;
 import sidepair.member.domain.EncryptedPassword;
 import sidepair.member.domain.Member;
 import sidepair.member.domain.MemberProfile;
-import sidepair.member.domain.Skill;
 import sidepair.member.domain.vo.Email;
 import sidepair.member.domain.vo.Nickname;
 import sidepair.member.domain.vo.Password;
@@ -43,9 +46,12 @@ import sidepair.persistence.member.MemberRepository;
 @ExtendWith(MockitoExtension.class)
 class FeedCreateServiceTest {
 
-    private static final Member MEMBER = new Member(1L, new Email("test@email.com"),
+    private static final Member MEMBER = new Member(1L, new Email("test@email.com"),null,
             new EncryptedPassword(new Password("password123!")), new Nickname("닉네임"),
-            null, new MemberProfile(Skill.JAVA));
+            null, new MemberProfile(Position.BACKEND),
+            new MemberSkills(
+            List.of(new MemberSkill(1L, new SkillName("Java")),
+                    new MemberSkill(2L, new SkillName("CSS")))));
 
     @Mock
     private MemberRepository memberRepository;

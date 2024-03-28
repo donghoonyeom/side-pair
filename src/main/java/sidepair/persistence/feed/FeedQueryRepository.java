@@ -26,7 +26,7 @@ public interface FeedQueryRepository {
                                                                 final Long lastId,
                                                                 final int pageSize);
 
-    Optional<Feed> findByIdAndMemberEmail(final Long roadmapId, final String email);
+    Optional<Feed> findByIdAndMemberEmail(final Long feedId, final String email);
 
     List<Feed> findWithFeedContentByStatus(final FeedStatus status);
 }
