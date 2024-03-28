@@ -1,11 +1,12 @@
-package sidepair.member.configuration.request;
+package sidepair.service.dto.mamber.request;
 
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
-import sidepair.service.dto.mamber.request.PositionType;
 
 public record MemberJoinRequest(
         @NotBlank(message = "이메일은 빈 값일 수 없습니다.")
@@ -21,7 +22,7 @@ public record MemberJoinRequest(
         @NotNull(message = "포지션은 빈 값일 수 없습니다.")
         PositionType positionType,
 
-        @NotNull(message = "기술은 빈 값일 수 없습니다.")
-        List<MemberSkillSaveRequest> skills
+        @NotEmpty(message = "기술은 빈 값일 수 없습니다.")
+        List<@Valid MemberSkillSaveRequest> skills
 ) {
 }
