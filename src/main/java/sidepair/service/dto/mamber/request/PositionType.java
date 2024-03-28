@@ -1,4 +1,4 @@
-package sidepair.member.domain;
+package sidepair.service.dto.mamber.request;
 
 import java.util.Arrays;
 import sidepair.service.exception.BadRequestException;
