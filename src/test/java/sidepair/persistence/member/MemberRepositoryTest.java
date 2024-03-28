@@ -3,18 +3,23 @@ package sidepair.persistence.member;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import sidepair.global.domain.ImageContentType;
 import sidepair.member.domain.EncryptedPassword;
 import sidepair.member.domain.Member;
 import sidepair.member.domain.MemberProfile;
-import sidepair.member.domain.Skill;
+import sidepair.member.domain.MemberSkill;
+import sidepair.member.domain.MemberSkills;
+import sidepair.member.domain.Position;
 import sidepair.member.domain.vo.Email;
 import sidepair.member.domain.vo.MemberImage;
 import sidepair.member.domain.vo.Nickname;
 import sidepair.member.domain.vo.Password;
+import sidepair.member.domain.vo.SkillName;
 import sidepair.persistence.helper.RepositoryTest;
 
 @RepositoryTest
@@ -34,9 +39,10 @@ class MemberRepositoryTest {
         final Password password = new Password("password1!");
         final EncryptedPassword encryptedPassword = new EncryptedPassword(password);
         final Nickname nickname = new Nickname("nickname");
-        final MemberProfile memberProfile = new MemberProfile(Skill.JAVA);
+        final MemberSkills skills = new MemberSkills(List.of(new MemberSkill(1L, new SkillName("Java"))));
+        final MemberProfile memberProfile = new MemberProfile(Position.BACKEND);
         final MemberImage memberImage = new MemberImage("originalFileName", "serverFilePath", ImageContentType.PNG);
-        member = new Member(email, encryptedPassword, nickname, memberImage, memberProfile);
+        member = new Member(email, encryptedPassword, nickname, memberImage, memberProfile, skills);
     }
 
     @Test
@@ -66,7 +72,7 @@ class MemberRepositoryTest {
 
         assertAll(
                 () -> assertThat(member.getEmail().getValue()).isEqualTo("test@example.com"),
-                () -> assertThat(memberProfile.getSkills()).isEqualTo(Skill.JAVA),
+                () -> assertThat(memberProfile.getPosition()).isEqualTo(Position.BACKEND),
                 () -> assertThat(memberImage.getServerFilePath()).isEqualTo("serverFilePath")
         );
     }
@@ -85,7 +91,7 @@ class MemberRepositoryTest {
 
         assertAll(
                 () -> assertThat(member.getEmail().getValue()).isEqualTo("test@example.com"),
-                () -> assertThat(memberProfile.getSkills()).isEqualTo(Skill.JAVA),
+                () -> assertThat(memberProfile.getPosition()).isEqualTo(Position.BACKEND),
                 () -> assertThat(memberImage.getServerFilePath()).isEqualTo("serverFilePath")
         );
     }
