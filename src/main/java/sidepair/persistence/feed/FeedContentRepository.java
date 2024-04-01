@@ -4,8 +4,8 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import sidepair.feed.domain.Feed;
-import sidepair.feed.domain.FeedContent;
+import sidepair.domain.feed.Feed;
+import sidepair.domain.feed.FeedContent;
 
 public interface FeedContentRepository extends JpaRepository<FeedContent, Long> {
     Optional<FeedContent> findFirstByFeedOrderByCreatedAtDesc(final Feed feed);

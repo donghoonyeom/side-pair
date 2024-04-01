@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sidepair.common.interceptor.Authenticated;
-import sidepair.common.resolver.MemberIdentifier;
-import sidepair.member.application.MemberService;
-import sidepair.member.configuration.request.MemberJoinRequest;
-import sidepair.member.configuration.response.MemberInformationForPublicResponse;
-import sidepair.member.configuration.response.MemberInformationResponse;
+import sidepair.common.resolver.MemberEmail;
+import sidepair.service.member.MemberService;
+import sidepair.service.dto.mamber.request.MemberJoinRequest;
+import sidepair.service.dto.mamber.response.MemberInformationForPublicResponse;
+import sidepair.service.dto.mamber.response.MemberInformationResponse;
 
 @RestController
 @RequestMapping("/members")
@@ -32,7 +32,7 @@ public class MemberController {
 
     @GetMapping("/me")
     @Authenticated
-    public ResponseEntity<MemberInformationResponse> findMemberInformation(@MemberIdentifier final String email) {
+    public ResponseEntity<MemberInformationResponse> findMemberInformation(@MemberEmail final String email) {
         final MemberInformationResponse response = memberService.findMemberInformation(email);
         return ResponseEntity.ok(response);
     }

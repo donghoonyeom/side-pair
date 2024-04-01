@@ -6,24 +6,27 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
-import sidepair.feed.domain.Feed;
-import sidepair.feed.domain.FeedCategory;
-import sidepair.feed.domain.FeedContent;
-import sidepair.feed.domain.FeedNode;
-import sidepair.feed.domain.FeedNodes;
-import sidepair.feed.domain.FeedStatus;
-import sidepair.feed.domain.FeedTag;
-import sidepair.feed.domain.FeedTags;
-import sidepair.feed.domain.vo.FeedTagName;
-import sidepair.global.domain.ImageContentType;
-import sidepair.member.domain.EncryptedPassword;
-import sidepair.member.domain.Member;
-import sidepair.member.domain.MemberProfile;
-import sidepair.member.domain.Skill;
-import sidepair.member.domain.vo.Email;
-import sidepair.member.domain.vo.MemberImage;
-import sidepair.member.domain.vo.Nickname;
-import sidepair.member.domain.vo.Password;
+import sidepair.domain.feed.Feed;
+import sidepair.domain.feed.FeedCategory;
+import sidepair.domain.feed.FeedContent;
+import sidepair.domain.feed.FeedNode;
+import sidepair.domain.feed.FeedNodes;
+import sidepair.domain.feed.FeedStatus;
+import sidepair.domain.feed.FeedTag;
+import sidepair.domain.feed.FeedTags;
+import sidepair.domain.feed.vo.FeedTagName;
+import sidepair.domain.ImageContentType;
+import sidepair.domain.member.EncryptedPassword;
+import sidepair.domain.member.Member;
+import sidepair.domain.member.MemberProfile;
+import sidepair.domain.member.MemberSkill;
+import sidepair.domain.member.MemberSkills;
+import sidepair.domain.member.Position;
+import sidepair.domain.member.vo.Email;
+import sidepair.domain.member.vo.MemberImage;
+import sidepair.domain.member.vo.Nickname;
+import sidepair.domain.member.vo.Password;
+import sidepair.domain.member.vo.SkillName;
 import sidepair.persistence.dto.FeedOrderType;
 import sidepair.persistence.dto.FeedSearchDto;
 import sidepair.persistence.helper.RepositoryTest;
@@ -378,10 +381,11 @@ class FeedRepositoryTest {
     }
 
     private Member 사용자를_생성한다(final String email, final String nickname) {
-        final MemberProfile memberProfile = new MemberProfile(Skill.JAVA);
+        final MemberProfile memberProfile = new MemberProfile(Position.BACKEND);
+        final MemberSkills skills = new MemberSkills(List.of(new MemberSkill(1L, new SkillName("Java"))));
         final MemberImage memberImage = new MemberImage("file-name", "file-path", ImageContentType.PNG);
         final Member creator = new Member(new Email(email), new EncryptedPassword(new Password("password1!")),
-                new Nickname(nickname), memberImage, memberProfile);
+                new Nickname(nickname), memberImage, memberProfile, skills);
         return memberRepository.save(creator);
     }
 

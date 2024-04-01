@@ -1,25 +1,23 @@
 package sidepair.persistence.feed;
 
-import static sidepair.feed.domain.QFeed.feed;
-import static sidepair.feed.domain.QFeedCategory.feedCategory;
-import static sidepair.feed.domain.QFeedContent.feedContent;
-import static sidepair.feed.domain.QFeedTag.feedTag;
-import static sidepair.member.domain.QMember.member;
 
-import com.querydsl.core.types.Order;
+import static sidepair.domain.feed.QFeed.feed;
+import static sidepair.domain.feed.QFeedCategory.feedCategory;
+import static sidepair.domain.feed.QFeedContent.feedContent;
+import static sidepair.domain.feed.QFeedTag.feedTag;
+import static sidepair.domain.member.QMember.member;
+
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.StringExpression;
-import com.querydsl.jpa.impl.JPAQuery;
 import java.util.List;
 import java.util.Optional;
-import sidepair.feed.domain.Feed;
-import sidepair.feed.domain.FeedCategory;
-import sidepair.feed.domain.FeedStatus;
-import sidepair.member.domain.Member;
-import sidepair.member.domain.vo.Email;
+import sidepair.domain.feed.Feed;
+import sidepair.domain.feed.FeedCategory;
+import sidepair.domain.feed.FeedStatus;
+import sidepair.domain.member.Member;
+import sidepair.domain.member.vo.Email;
 import sidepair.persistence.QuerydslRepositorySupporter;
 import sidepair.persistence.dto.FeedOrderType;
 import sidepair.persistence.dto.FeedSearchCreatorNickname;

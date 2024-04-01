@@ -6,7 +6,7 @@ import java.net.URL;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import sidepair.global.service.exception.ServerException;
+import sidepair.service.exception.ServerException;
 
 @Service
 @RequiredArgsConstructor

@@ -2,10 +2,10 @@ package sidepair.persistence.feed;
 
 import java.util.List;
 import java.util.Optional;
-import sidepair.feed.domain.Feed;
-import sidepair.feed.domain.FeedCategory;
-import sidepair.feed.domain.FeedStatus;
-import sidepair.member.domain.Member;
+import sidepair.domain.feed.Feed;
+import sidepair.domain.feed.FeedCategory;
+import sidepair.domain.feed.FeedStatus;
+import sidepair.domain.member.Member;
 import sidepair.persistence.dto.FeedOrderType;
 import sidepair.persistence.dto.FeedSearchDto;
 
@@ -26,7 +26,7 @@ public interface FeedQueryRepository {
                                                                 final Long lastId,
                                                                 final int pageSize);
 
-    Optional<Feed> findByIdAndMemberEmail(final Long roadmapId, final String email);
+    Optional<Feed> findByIdAndMemberEmail(final Long feedId, final String email);
 
     List<Feed> findWithFeedContentByStatus(final FeedStatus status);
 }

@@ -3,17 +3,21 @@ package sidepair.persistence.feed;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
 import org.junit.jupiter.api.Test;
-import sidepair.feed.domain.Feed;
-import sidepair.feed.domain.FeedCategory;
-import sidepair.feed.domain.FeedContent;
-import sidepair.member.domain.EncryptedPassword;
-import sidepair.member.domain.Member;
-import sidepair.member.domain.MemberProfile;
-import sidepair.member.domain.Skill;
-import sidepair.member.domain.vo.Email;
-import sidepair.member.domain.vo.Nickname;
-import sidepair.member.domain.vo.Password;
+import sidepair.domain.feed.Feed;
+import sidepair.domain.feed.FeedCategory;
+import sidepair.domain.feed.FeedContent;
+import sidepair.domain.member.EncryptedPassword;
+import sidepair.domain.member.Member;
+import sidepair.domain.member.MemberProfile;
+import sidepair.domain.member.MemberSkill;
+import sidepair.domain.member.MemberSkills;
+import sidepair.domain.member.Position;
+import sidepair.domain.member.vo.Email;
+import sidepair.domain.member.vo.Nickname;
+import sidepair.domain.member.vo.Password;
+import sidepair.domain.member.vo.SkillName;
 import sidepair.persistence.helper.RepositoryTest;
 import sidepair.persistence.member.MemberRepository;
 
@@ -85,9 +89,11 @@ class FeedContentRepositoryTest {
     }
 
     private Member 사용자를_생성한다() {
-        final MemberProfile memberProfile = new MemberProfile(Skill.JAVA);
+        final MemberProfile memberProfile = new MemberProfile(Position.BACKEND);
+        final MemberSkills skills = new MemberSkills(
+                List.of(new MemberSkill(1L, new SkillName("Java"))));
         final Member member = new Member(new Email("test@email.com"),
-                new EncryptedPassword(new Password("password1!")), new Nickname("두두"), null, memberProfile);
+                new EncryptedPassword(new Password("password1!")), new Nickname("두두"), null, memberProfile, skills);
 
         return memberRepository.save(member);
     }

@@ -1,0 +1,60 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:test;MODE=MYSQL
+    driver-class-name: org.h2.Driver
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+  servlet:
+    multipart:
+      max-file-size: 10MB
+  flyway:
+    enabled: false
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+logging:
+  level:
+    org:
+      hibernate:
+        sql: debug
+        orm:
+          jdbc:
+            bind: TRACE
+  file-path: ./logs
+  file-name: test-name
+  custom-pattern: '%d{yyyy-MM-dd HH:mm:ss.SSS} [%level] [%thread] [%logger{36}] - %msg%n'
+
+server:
+  servlet:
+    contextPath: /api
+  port: 8080
+
+jwt:
+  secret-key: euwqioeuwqioruRQWIRQWI12344saQWeR42213Qiewqyuey189798dshue
+  access-token-validity-in-seconds: 86400
+  refresh-token-validity-in-seconds: 86400
+
+image:
+  default:
+    originalFileName: default-member-image
+    serverFilePath: /test/member/profile/default/default-member-image
+    imageContentType: PNG
+    extension: .png
+
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      access-key: access-key
+      secret-key: secret-key
