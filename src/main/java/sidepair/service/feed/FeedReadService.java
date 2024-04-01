@@ -54,7 +54,7 @@ public class FeedReadService {
     private final MemberRepository memberRepository;
     private final FileService fileService;
 
-    @Cacheable(value = "feed")
+    @Cacheable(value = "feed", keyGenerator = "cacheKeyGenerator", cacheManager = "redisCacheManager")
     public FeedResponse findFeed(final Long id) {
         final Feed feed = findFeedById(id);
         final FeedContent recentFeedContent = findRecentContent(feed);
@@ -105,15 +105,15 @@ public class FeedReadService {
 
     private Feed findFeedById(final Long id) {
         return feedRepository.findFeedById(id)
-                .orElseThrow(() -> new NotFoundException("존재하지 않는 개시물입니다. feedId = " + id));
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 피드입니다. feedId = " + id));
     }
 
     private FeedContent findRecentContent(final Feed feed) {
         return feedContentRepository.findFirstByFeedOrderByCreatedAtDesc(feed)
-                .orElseThrow(() -> new NotFoundException("로드맵에 컨텐츠가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException("피드에 컨텐츠가 존재하지 않습니다."));
     }
 
-    @Cacheable(value = "feedList")
+    @Cacheable(value = "feedList", keyGenerator = "cacheKeyGenerator", cacheManager = "redisCacheManager")
     public FeedForListResponses findFeedsByOrderType(final Long categoryId,
                                                            final FeedOrderTypeRequest orderTypeRequest,
                                                            final CustomScrollRequest scrollRequest) {
@@ -185,7 +185,7 @@ public class FeedReadService {
         return FeedMapper.convertFeedResponses(feedForListScrollDto);
     }
 
-    @Cacheable(value = "categoryList")
+    @Cacheable(value = "categoryList", keyGenerator = "cacheKeyGenerator", cacheManager = "redisCacheManager")
     public List<FeedCategoryResponse> findAllFeedCategories() {
         final List<FeedCategory> feedCategories = feedCategoryRepository.findAll();
         return FeedMapper.convertFeedCategoryResponses(feedCategories);
