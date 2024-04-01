@@ -1,11 +1,12 @@
-//package sidepair.global.event;
-//
-//import sidepair.service.dto.feed.FeedSaveDto;
-//import sidepair.feed.domain.Feed;
-//
-//public record FeedCreateEvent(
-//        Feed feed,
-//        FeedSaveDto feedSaveDto
-//) {
-//
-//}
+package sidepair.service.event;
+
+import sidepair.domain.feed.Feed;
+import sidepair.service.dto.feed.FeedSaveDto;
+
+
+public record FeedCreateEvent(
+        Feed feed,
+        FeedSaveDto feedSaveDto
+) {
+
+}

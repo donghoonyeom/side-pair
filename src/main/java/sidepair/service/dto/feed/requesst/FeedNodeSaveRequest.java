@@ -11,10 +11,11 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @Getter
 public class FeedNodeSaveRequest {
-    @NotBlank(message = "게시물 노드의 제목을 입력해주세요.")
+
+    @NotBlank(message = "피드 노드의 제목을 입력해주세요.")
     private String title;
 
-    @NotBlank(message = "게시물 노드의 설명을 입력해주세요.")
+    @NotBlank(message = "피드 노드의 설명을 입력해주세요.")
     private String content;
 
     private List<MultipartFile> images;

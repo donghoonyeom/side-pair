@@ -3,8 +3,10 @@ package sidepair.service.feed;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sidepair.service.event.FeedCreateEvent;
 import sidepair.service.mapper.FeedMapper;
 import sidepair.service.dto.feed.FeedNodeSaveDto;
 import sidepair.service.dto.feed.FeedSaveDto;
@@ -39,6 +41,7 @@ public class FeedCreateService {
     private final MemberRepository memberRepository;
     private final FeedRepository feedRepository;
     private final FeedCategoryRepository feedCategoryRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @CacheEvict(value = "feedList", allEntries = true)
     public Long create(final FeedSaveRequest request, final String email) {
@@ -47,6 +50,8 @@ public class FeedCreateService {
         final FeedSaveDto feedSaveDto = FeedMapper.convertToFeedSaveDto(request);
         final Feed feed = createFeed(member, feedSaveDto, feedCategory);
         final Feed savedFeed = feedRepository.save(feed);
+
+        applicationEventPublisher.publishEvent(new FeedCreateEvent(savedFeed, feedSaveDto));
 
         return savedFeed.getId();
     }
@@ -128,5 +133,4 @@ public class FeedCreateService {
         feedRepository.findByIdAndMemberEmail(feedId, email)
                 .orElseThrow(() -> new ForbiddenException("해당 피드를 생성한 사용자가 아닙니다."));
     }
-
 }

@@ -2,8 +2,8 @@ package sidepair.service.mapper;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import sidepair.member.domain.vo.Email;
-import sidepair.member.domain.vo.Password;
+import sidepair.domain.member.vo.Email;
+import sidepair.domain.member.vo.Password;
 import sidepair.service.dto.auth.LoginDto;
 import sidepair.service.dto.auth.request.LoginRequest;
 import sidepair.service.dto.auth.response.AuthenticationResponse;
