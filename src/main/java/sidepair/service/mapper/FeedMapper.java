@@ -6,11 +6,15 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
+import sidepair.domain.member.Member;
+import sidepair.service.dto.feed.FeedApplicantDto;
+import sidepair.service.dto.feed.FeedApplicantReadDto;
 import sidepair.service.dto.feed.FeedNodeDto;
 import sidepair.service.dto.feed.FeedNodeSaveDto;
 import sidepair.service.dto.feed.FeedSaveDto;
 import sidepair.service.dto.feed.FeedTagDto;
 import sidepair.service.dto.feed.FeedTagSaveDto;
+import sidepair.service.dto.feed.requesst.FeedApplicantSaveRequest;
 import sidepair.service.dto.feed.requesst.FeedCategorySaveRequest;
 import sidepair.service.dto.feed.requesst.FeedNodeSaveRequest;
 import sidepair.service.dto.feed.requesst.FeedOrderTypeRequest;
@@ -24,6 +28,7 @@ import sidepair.service.dto.feed.FeedContentDto;
 import sidepair.service.dto.feed.FeedDto;
 import sidepair.service.dto.feed.FeedForListDto;
 import sidepair.service.dto.feed.FeedForListScrollDto;
+import sidepair.service.dto.feed.response.FeedApplicantResponse;
 import sidepair.service.dto.feed.response.FeedCategoryResponse;
 import sidepair.service.dto.feed.response.FeedContentResponse;
 import sidepair.service.dto.feed.response.FeedForListResponse;
@@ -171,6 +176,26 @@ public final class FeedMapper {
         final List<MemberFeedResponse> subResponses = ScrollResponseMapper.getSubResponses(responses, requestSize);
         final boolean hasNext = ScrollResponseMapper.hasNext(responses.size(), requestSize);
         return new MemberFeedResponses(subResponses, hasNext);
+    }
+
+    public static FeedApplicantDto convertFeedApplicantDto(final FeedApplicantSaveRequest request,
+                                                           final Member member) {
+        return new FeedApplicantDto(request.content(), member);
+    }
+
+    public static List<FeedApplicantResponse> convertToFeedApplicantResponses(
+            final List<FeedApplicantReadDto> feedApplicantReadDtos) {
+        return feedApplicantReadDtos.stream()
+                .map(FeedMapper::convertToFeedApplicantResponse)
+                .toList();
+    }
+
+    private static FeedApplicantResponse convertToFeedApplicantResponse(
+            final FeedApplicantReadDto feedApplicantReadDto) {
+        final MemberDto memberDto = feedApplicantReadDto.member();
+        return new FeedApplicantResponse(feedApplicantReadDto.id(),
+                new MemberResponse(memberDto.id(), memberDto.name(), memberDto.imageUrl()),
+                feedApplicantReadDto.createdAt(), feedApplicantReadDto.content());
     }
 
     private static MemberFeedResponse convertMemberFeedResponse(final Feed feed) {
