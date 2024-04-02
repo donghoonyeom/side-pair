@@ -23,8 +23,8 @@ public interface FeedQueryRepository {
                                      final int pageSize);
 
     List<Feed> findFeedsWithCategoryByMemberOrderByLatest(final Member member,
-                                                                final Long lastId,
-                                                                final int pageSize);
+                                                          final Long lastId,
+                                                          final int pageSize);
 
     Optional<Feed> findByIdAndMemberEmail(final Long feedId, final String email);
 
