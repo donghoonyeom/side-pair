@@ -6,7 +6,12 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sidepair.domain.feed.FeedApplicant;
+import sidepair.persistence.feed.FeedApplicantRepository;
+import sidepair.service.dto.feed.FeedApplicantDto;
+import sidepair.service.dto.feed.requesst.FeedApplicantSaveRequest;
 import sidepair.service.event.FeedCreateEvent;
+import sidepair.service.exception.BadRequestException;
 import sidepair.service.mapper.FeedMapper;
 import sidepair.service.dto.feed.FeedNodeSaveDto;
 import sidepair.service.dto.feed.FeedSaveDto;
@@ -41,6 +46,7 @@ public class FeedCreateService {
     private final MemberRepository memberRepository;
     private final FeedRepository feedRepository;
     private final FeedCategoryRepository feedCategoryRepository;
+    private final FeedApplicantRepository feedApplicantRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @CacheEvict(value = "feedList", allEntries = true)
@@ -56,6 +62,17 @@ public class FeedCreateService {
         return savedFeed.getId();
     }
 
+    public void createApplicant(final Long feedId, final String email, final FeedApplicantSaveRequest request) {
+        final Feed feed = findFeedById(feedId);
+        final Member member = findMemberByEmail(email);
+        final FeedApplicantDto feedApplicantDto = FeedMapper.convertFeedApplicantDto(request, member);
+        validateApplicantQualification(feed, member);
+        validateApplicantCount(feed, member);
+        final FeedApplicant feedApplicant = new FeedApplicant(feedApplicantDto.content(), feedApplicantDto.member());
+
+        feed.addApplicant(feedApplicant);
+    }
+
     private Member findMemberByEmail(final String email) {
         return memberRepository.findByEmail(new Email(email))
                 .orElseThrow(() -> new AuthenticationException("존재하지 않는 회원입니다."));
@@ -64,6 +81,20 @@ public class FeedCreateService {
     private FeedCategory findFeedCategoryById(final Long categoryId) {
         return feedCategoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 카테고리입니다. categoryId = " + categoryId));
+    }
+
+    private void validateApplicantQualification(final Feed feed, final Member member) {
+        if (feed.isCreator(member)) {
+            throw new BadRequestException(
+                    "피드 생성자는 신청서를 보낼 수 없습니다. feedId = " + feed.getId() + " memberId = " + member.getId());
+        }
+    }
+
+    private void validateApplicantCount(final Feed feed, final Member member) {
+        if (feedApplicantRepository.findByFeedAndMember(feed, member).isPresent()) {
+            throw new BadRequestException(
+                    "이미 작성한 신청서가 존재합니다. roadmapId = " + feed.getId() + " memberId = " + member.getId());
+        }
     }
 
     private Feed createFeed(final Member member, final FeedSaveDto feedSaveDto,
