@@ -53,6 +53,9 @@ public class Feed extends BaseCreatedTimeEntity {
     private FeedContents contents = new FeedContents();
 
     @Embedded
+    private FeedApplicants applicants = new FeedApplicants();
+
+    @Embedded
     private FeedTags tags = new FeedTags();
 
     public Feed(final String title, final String introduction, final int requiredPeriod,
@@ -118,6 +121,13 @@ public class Feed extends BaseCreatedTimeEntity {
         contents.add(content);
         if (content.isNotSameFeed(this)) {
             content.updateFeed(this);
+        }
+    }
+
+    public void addApplicant(final FeedApplicant applicant) {
+        applicants.add(applicant);
+        if (applicant.isNotSameFeed(this)) {
+            applicant.updateFeed(this);
         }
     }
 
