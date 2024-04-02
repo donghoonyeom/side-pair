@@ -20,8 +20,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sidepair.domain.feed.FeedApplicant;
+import sidepair.persistence.feed.FeedApplicantRepository;
 import sidepair.service.dto.feed.requesst.FeedOrderTypeRequest;
 import sidepair.service.dto.feed.requesst.FeedSearchRequest;
+import sidepair.service.dto.feed.response.FeedApplicantResponse;
 import sidepair.service.dto.feed.response.FeedCategoryResponse;
 import sidepair.service.dto.feed.response.FeedContentResponse;
 import sidepair.service.dto.feed.response.FeedForListResponse;
@@ -47,6 +50,7 @@ import sidepair.service.FileService;
 import sidepair.service.dto.CustomScrollRequest;
 import sidepair.service.dto.feed.response.FeedResponse;
 import sidepair.service.dto.mamber.response.MemberResponse;
+import sidepair.service.exception.ForbiddenException;
 import sidepair.service.exception.NotFoundException;
 import sidepair.domain.member.EncryptedPassword;
 import sidepair.domain.member.Member;
@@ -63,14 +67,14 @@ import sidepair.persistence.member.MemberRepository;
 @ExtendWith(MockitoExtension.class)
 class FeedReadServiceTest {
 
-    private final Member member = new Member(1L, new Email("test@test.com"),null,
+    private final Member member = new Member(1L, new Email("test@test.com"), null,
             new EncryptedPassword(new Password("password1!")), new Nickname("닉네임"),
             new MemberImage("originalFileName", "default-member-image", ImageContentType.JPG),
             new MemberProfile(Position.BACKEND),
             new MemberSkills(
                     List.of(new MemberSkill(1L, new SkillName("Java")),
                             new MemberSkill(2L, new SkillName("CSS"))))
-            );
+    );
     private final LocalDateTime now = LocalDateTime.now();
 
     @Mock
@@ -81,6 +85,9 @@ class FeedReadServiceTest {
 
     @Mock
     private FeedContentRepository feedContentRepository;
+
+    @Mock
+    private FeedApplicantRepository feedApplicantRepository;
 
     @Mock
     private MemberRepository memberRepository;
@@ -94,13 +101,12 @@ class FeedReadServiceTest {
     @Test
     void 특정_아이디를_가지는_피드_단일_조회시_해당_피드의_정보를_반환한다() throws MalformedURLException {
         //given
-        final Member member = 사용자를_생성한다(1L, "test@test.com", "두두");
+        final Member member = 사용자를_생성한다(1L, "test@test.com", "사이드");
         final FeedCategory category = 피드_카테고리를_생성한다(1L, "운동");
         final FeedContent content = 피드_컨텐츠를_생성한다(1L, "콘텐츠 내용");
         final Feed feed = 피드을_생성한다("피드 제목", category);
         feed.addContent(content);
         final Long feedId = 1L;
-
 
         when(feedRepository.findFeedById(anyLong()))
                 .thenReturn(Optional.of(feed));
@@ -118,7 +124,7 @@ class FeedReadServiceTest {
                 new MemberResponse(1L, "닉네임", "http://example.com/serverFilePath"),
                 new FeedContentResponse(1L, "피드 본문", List.of(
                         new FeedNodeResponse(1L, "피드 노드1 제목", "피드 노드1 설명", Collections.emptyList())
-                )),  30, now,
+                )), 30, now,
                 List.of(new FeedTagResponse(1L, "태그1"),
                         new FeedTagResponse(2L, "태그2"))
         );
@@ -180,7 +186,7 @@ class FeedReadServiceTest {
 
         // then
         final FeedForListResponse firstFeedResponse = new FeedForListResponse(1L, "첫 번째 피드", "피드 소개글",
-                 30, LocalDateTime.now(),
+                30, LocalDateTime.now(),
                 new MemberResponse(1L, "닉네임", "http://example.com/serverFilePath"),
                 new FeedCategoryResponse(1, "여행"),
                 List.of(
@@ -229,7 +235,7 @@ class FeedReadServiceTest {
 
         // then
         final FeedForListResponse firstFeedResponse = new FeedForListResponse(
-                1L, "첫 번째 피드", "피드 소개글",  30, LocalDateTime.now(),
+                1L, "첫 번째 피드", "피드 소개글", 30, LocalDateTime.now(),
                 new MemberResponse(1L, "닉네임", "http://example.com/serverFilePath"),
                 new FeedCategoryResponse(1, "여행"),
                 List.of(
@@ -266,7 +272,7 @@ class FeedReadServiceTest {
 
         // then
         final FeedForListResponse firstFeedResponse = new FeedForListResponse(1L, "첫 번째 피드", "피드 소개글",
-                 30, LocalDateTime.now(),
+                30, LocalDateTime.now(),
                 new MemberResponse(1L, "닉네임", "http://example.com/serverFilePath"),
                 new FeedCategoryResponse(1, "여행"),
                 List.of(
@@ -274,7 +280,7 @@ class FeedReadServiceTest {
                         new FeedTagResponse(2L, "태그2")));
 
         final FeedForListResponse secondFeedResponse = new FeedForListResponse(1L, "두 번째 피드", "피드 소개글",
-                 30, LocalDateTime.now(),
+                30, LocalDateTime.now(),
                 new MemberResponse(1L, "닉네임", "http://example.com/serverFilePath"),
                 new FeedCategoryResponse(1, "여행"),
                 List.of(
@@ -313,7 +319,7 @@ class FeedReadServiceTest {
 
         // then
         final FeedForListResponse feedResponse = new FeedForListResponse(1L, "첫 번째 피드", "피드 소개글",
-                 30, LocalDateTime.now(),
+                30, LocalDateTime.now(),
                 new MemberResponse(1L, "닉네임", "http://example.com/serverFilePath"),
                 new FeedCategoryResponse(1, "여행"),
                 List.of(
@@ -367,7 +373,7 @@ class FeedReadServiceTest {
 
         // then
         final FeedForListResponse firstFeedResponse = new FeedForListResponse(1L, "첫 번째 피드", "피드 소개글",
-                 30, LocalDateTime.now(),
+                30, LocalDateTime.now(),
                 new MemberResponse(1L, "닉네임", "http://example.com/serverFilePath"),
                 new FeedCategoryResponse(1, "여행"),
                 List.of(
@@ -375,7 +381,7 @@ class FeedReadServiceTest {
                         new FeedTagResponse(2L, "태그2")));
 
         final FeedForListResponse secondFeedResponse = new FeedForListResponse(1L, "두 번째 피드", "피드 소개글",
-                 30, LocalDateTime.now(),
+                30, LocalDateTime.now(),
                 new MemberResponse(1L, "닉네임", "http://example.com/serverFilePath"),
                 new FeedCategoryResponse(1, "여행"),
                 List.of(
@@ -411,9 +417,9 @@ class FeedReadServiceTest {
 
         // then
         final MemberFeedResponses expected = new MemberFeedResponses(List.of(
-                new MemberFeedResponse(2L, "피드2",  LocalDateTime.now(),
+                new MemberFeedResponse(2L, "피드2", LocalDateTime.now(),
                         new FeedCategoryResponse(2L, "여가")),
-                new MemberFeedResponse(1L, "피드1",  LocalDateTime.now(),
+                new MemberFeedResponse(1L, "피드1", LocalDateTime.now(),
                         new FeedCategoryResponse(1L, "운동"))), false);
 
         assertThat(memberFeedResponse)
@@ -435,15 +441,89 @@ class FeedReadServiceTest {
                 .hasMessageContaining("존재하지 않는 회원입니다.");
     }
 
+    @Test
+    void 피드의_신청서_목록을_최신순으로_조회한다() throws MalformedURLException {
+        // given
+        final Member creator = 사용자를_생성한다(1L, "test@example.com", "생성자");
+        final Member subscriber1 = 사용자를_생성한다(2L, "subscriber1@example.com", "신청자1");
+        final Member subscriber2 = 사용자를_생성한다(3L, "subscriber2@example.com", "신청자2");
+        final FeedNode feedNode1 = new FeedNode("피드 1주차", "피드 1주차 내용");
+        final FeedNode feedNode2 = new FeedNode("피드 2주차", "피드 2주차 내용");
+        final FeedNodes feedNodes = new FeedNodes(List.of(feedNode1, feedNode2));
+        final FeedContent feedContent = new FeedContent("피드 본문");
+        feedContent.addNodes(feedNodes);
+        final Feed feed = new Feed(1L, "피드 제목", "피드 설명", 100, creator,
+                new FeedCategory("이커머스"));
+
+        final FeedApplicant feedApplicant1 = new FeedApplicant("신청서 내용", subscriber1);
+        final FeedApplicant feedApplicant2 = new FeedApplicant("신청서 내용", subscriber2);
+        feedApplicant1.updateFeed(feed);
+        feedApplicant2.updateFeed(feed);
+
+        when(feedRepository.findFeedById(anyLong())).thenReturn(Optional.of(feed));
+        when(feedRepository.findByIdAndMemberEmail(anyLong(), anyString()))
+                .thenReturn(Optional.of(feed));
+        when(feedApplicantRepository.findFeedApplicantWithMemberByFeedOrderByLatest(any(), any(), anyInt()))
+                .thenReturn(List.of(feedApplicant2, feedApplicant1));
+        given(fileService.generateUrl(anyString(), any()))
+                .willReturn(new URL("http://example.com/serverFilePath"));
+
+        // when
+        final List<FeedApplicantResponse> response = feedService.findFeedApplicants(1L, "test@example.com",
+                new CustomScrollRequest(null, 10));
+
+        final List<FeedApplicantResponse> expect = List.of(
+                new FeedApplicantResponse(2L, new MemberResponse(3L, "신청자2", "http://example.com/serverFilePath"),
+                        LocalDateTime.now(), "신청서 내용"),
+                new FeedApplicantResponse(1L, new MemberResponse(2L, "신청자1", "http://example.com/serverFilePath"),
+                        LocalDateTime.now(), "신청서 내용"));
+
+        // then
+        assertThat(response)
+                .usingRecursiveComparison()
+                .ignoringFields("id", "member.imageUrl", "createdAt")
+                .isEqualTo(expect);
+    }
+
+    @Test
+    void 피드_신청서_조회_시_유효하지_않은_피드_아이디라면_예외를_반환한다() {
+        // given
+        when(feedRepository.findFeedById(anyLong()))
+                .thenThrow(new NotFoundException("존재하지 않는 피드입니다. feedId = 1"));
+
+        // when, then
+        assertThatThrownBy(() -> feedService.findFeedApplicants(1L, "test@example.com",
+                new CustomScrollRequest(null, 2)))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessageContaining("존재하지 않는 피드입니다. feedId = 1");
+    }
+
+    @Test
+    void 피드_신청서_조회_시_본인_피드가_아니라면_예외를_반환한다() {
+        // given
+        final Member creator = 사용자를_생성한다(1L, "test@example.com", "생성자");
+        final Feed feed = new Feed(1L, "피드 제목", "피드 설명", 100, creator,
+                new FeedCategory("이커머스"));
+        when(feedRepository.findFeedById(anyLong())).thenReturn(Optional.of(feed));
+        when(feedRepository.findByIdAndMemberEmail(anyLong(), anyString()))
+                .thenThrow(new ForbiddenException("해당 피드를 생성한 사용자가 아닙니다."));
+
+        // when, then
+        assertThatThrownBy(() -> feedService.findFeedApplicants(1L, "example@test.com",
+                new CustomScrollRequest(null, 2)))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessageContaining("해당 피드를 생성한 사용자가 아닙니다.");
+    }
+
     private Member 사용자를_생성한다(final Long id, final String email, final String nickname) {
-        return new Member(id, new Email(email),null,
+        return new Member(id, new Email(email), null,
                 new EncryptedPassword(new Password("password1!")),
                 new Nickname(nickname),
                 new MemberImage("originalFileName", "default-profile-image", ImageContentType.JPG),
                 new MemberProfile(Position.BACKEND),
                 new MemberSkills(
-                List.of(new MemberSkill(1L, new SkillName("Java")),
-                        new MemberSkill(2L, new SkillName("CSS")))));
+                        List.of(new MemberSkill(1L, new SkillName("Java")),
+                                new MemberSkill(2L, new SkillName("CSS")))));
     }
 
     private Feed 피드을_생성한다(final String feedTitle, final FeedCategory category) {
