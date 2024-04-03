@@ -41,6 +41,7 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import sidepair.controller.helper.ControllerTestHelper;
 import sidepair.service.dto.ErrorResponse;
+import sidepair.service.dto.feed.requesst.FeedApplicantSaveRequest;
 import sidepair.service.dto.feed.requesst.FeedCategorySaveRequest;
 import sidepair.service.dto.feed.requesst.FeedNodeSaveRequest;
 import sidepair.service.dto.feed.requesst.FeedSaveRequest;
@@ -405,6 +406,182 @@ class FeedCreateApiTest extends ControllerTestHelper {
         // then
         final ErrorResponse errorResponse = objectMapper.readValue(response, ErrorResponse.class);
         final ErrorResponse expected = new ErrorResponse("해당 피드을 생성한 사용자가 아닙니다.");
+        assertThat(errorResponse)
+                .isEqualTo(expected);
+    }
+
+    @Test
+    void 피드의_신청서를_생성한다() throws Exception {
+        // given
+        doNothing().when(feedCreateService)
+                .createApplicant(any(), any(), any());
+
+        final FeedApplicantSaveRequest request = new FeedApplicantSaveRequest("신청서 내용");
+        final String jsonRequest = objectMapper.writeValueAsString(request);
+
+        // when
+        mockMvc.perform(post(API_PREFIX + "/feeds/{feedId}/applicant", 1L)
+                        .header(AUTHORIZATION, String.format(BEARER_TOKEN_FORMAT, "test-token"))
+                        .content(jsonRequest)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .contextPath(API_PREFIX))
+                .andExpect(status().isCreated())
+                .andDo(documentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("액세스 토큰")),
+                        requestFields(
+                                fieldWithPath("content").description("피드 신청서 내용")
+                                        .attributes(new Attribute(RESTRICT, "- 길이 : 0 ~ 1000"))
+                                        .optional()),
+                        pathParameters(
+                                parameterWithName("feedId").description("피드 아이디"))));
+    }
+
+    @Test
+    void 피드_신청서_생성시_내용이_1000자가_넘으면_예외가_발생한다() throws Exception {
+        // given
+        doThrow(new BadRequestException("신청서는 최대 1000글자까지 입력할 수 있습니다."))
+                .when(feedCreateService)
+                .createApplicant(any(), any(), any());
+
+        final String content = "a".repeat(1001);
+        final FeedApplicantSaveRequest request = new FeedApplicantSaveRequest(content);
+        final String jsonRequest = objectMapper.writeValueAsString(request);
+
+        // when
+        final String response = mockMvc.perform(post(API_PREFIX + "/feeds/{feedId}/applicant", 1L)
+                        .header(AUTHORIZATION, String.format(BEARER_TOKEN_FORMAT, "test-token"))
+                        .content(jsonRequest)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .contextPath(API_PREFIX))
+                .andExpectAll(
+                        status().is4xxClientError(),
+                        jsonPath("$.message").value("신청서는 최대 1000글자까지 입력할 수 있습니다."))
+                .andDo(documentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("액세스 토큰")),
+                        requestFields(
+                                fieldWithPath("content").description("피드 신청서 내용")),
+                        pathParameters(
+                                parameterWithName("feedId").description("피드 아이디"))))
+                .andReturn().getResponse()
+                .getContentAsString();
+
+        // then
+        final ErrorResponse errorResponse = objectMapper.readValue(response, ErrorResponse.class);
+        final ErrorResponse expected = new ErrorResponse("신청서는 최대 1000글자까지 입력할 수 있습니다.");
+        assertThat(errorResponse)
+                .isEqualTo(expected);
+    }
+
+    @Test
+    void 피드_신청서_생성시_존재하지_않은_피드이면_예외가_발생한다() throws Exception {
+        // given
+        doThrow(new NotFoundException("존재하지 않는 피드입니다. feedId = 1L"))
+                .when(feedCreateService)
+                .createApplicant(any(), any(), any());
+
+        final FeedApplicantSaveRequest request = new FeedApplicantSaveRequest("신청서 내용");
+        final String jsonRequest = objectMapper.writeValueAsString(request);
+
+        // when
+        final String response = mockMvc.perform(post(API_PREFIX + "/feeds/{feedId}/applicant", 1L)
+                        .header(AUTHORIZATION, String.format(BEARER_TOKEN_FORMAT, "test-token"))
+                        .content(jsonRequest)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .contextPath(API_PREFIX))
+                .andExpectAll(
+                        status().is4xxClientError(),
+                        jsonPath("$.message").value("존재하지 않는 피드입니다. feedId = 1L"))
+                .andDo(documentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("액세스 토큰")),
+                        requestFields(
+                                fieldWithPath("content").description("피드 신청서 내용")),
+                        pathParameters(
+                                parameterWithName("feedId").description("피드 아이디"))))
+                .andReturn().getResponse()
+                .getContentAsString();
+
+        // then
+        final ErrorResponse errorResponse = objectMapper.readValue(response, ErrorResponse.class);
+        final ErrorResponse expected = new ErrorResponse("존재하지 않는 피드입니다. feedId = 1L");
+        assertThat(errorResponse)
+                .isEqualTo(expected);
+    }
+
+    @Test
+    void 피드_신청서_생성시_피드_생성자가_신청서를_보내려고_하면_예외가_발생한다() throws Exception {
+        // given
+        doThrow(new BadRequestException("피드 생성자는 신청서를 보낼 수 없습니다. feedId = 1L memberId = 1L"))
+                .when(feedCreateService)
+                .createApplicant(any(), any(), any());
+
+        final FeedApplicantSaveRequest request = new FeedApplicantSaveRequest("신청서 내용");
+        final String jsonRequest = objectMapper.writeValueAsString(request);
+
+        // when
+        final String response = mockMvc.perform(post(API_PREFIX + "/feeds/{feedId}/applicant", 1L)
+                        .header(AUTHORIZATION, String.format(BEARER_TOKEN_FORMAT, "test-token"))
+                        .content(jsonRequest)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .contextPath(API_PREFIX))
+                .andExpectAll(
+                        status().is4xxClientError(),
+                        jsonPath("$.message")
+                                .value("피드 생성자는 신청서를 보낼 수 없습니다. feedId = 1L memberId = 1L"))
+                .andDo(documentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("액세스 토큰")),
+                        requestFields(
+                                fieldWithPath("content").description("피드 신청서 내용")),
+                        pathParameters(
+                                parameterWithName("feedId").description("피드 아이디"))))
+                .andReturn().getResponse()
+                .getContentAsString();
+
+        // then
+        final ErrorResponse errorResponse = objectMapper.readValue(response, ErrorResponse.class);
+        final ErrorResponse expected = new ErrorResponse(
+                "피드 생성자는 신청서를 보낼 수 없습니다. feedId = 1L memberId = 1L");
+        assertThat(errorResponse)
+                .isEqualTo(expected);
+    }
+
+    @Test
+    void 피드_신청서_생성시_이미_신청서를_단적이_있으면_예외가_발생한다() throws Exception {
+        // given
+        doThrow(new BadRequestException("이미 작성한 신청서가 존재합니다. feedId = 1L memberId = 1L"))
+                .when(feedCreateService)
+                .createApplicant(any(), any(), any());
+
+        final FeedApplicantSaveRequest request = new FeedApplicantSaveRequest("신청서 내용");
+        final String jsonRequest = objectMapper.writeValueAsString(request);
+
+        // when
+        final String response = mockMvc.perform(post(API_PREFIX + "/feeds/{feedId}/applicant", 1L)
+                        .header(AUTHORIZATION, String.format(BEARER_TOKEN_FORMAT, "test-token"))
+                        .content(jsonRequest)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .contextPath(API_PREFIX))
+                .andExpectAll(
+                        status().is4xxClientError(),
+                        jsonPath("$.message")
+                                .value("이미 작성한 신청서가 존재합니다. feedId = 1L memberId = 1L"))
+                .andDo(documentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("액세스 토큰")),
+                        requestFields(
+                                fieldWithPath("content").description("피드 신청서 내용")),
+                        pathParameters(
+                                parameterWithName("feedId").description("피드 아이디"))))
+                .andReturn().getResponse()
+                .getContentAsString();
+
+        // then
+        final ErrorResponse errorResponse = objectMapper.readValue(response, ErrorResponse.class);
+        final ErrorResponse expected = new ErrorResponse(
+                "이미 작성한 신청서가 존재합니다. feedId = 1L memberId = 1L");
         assertThat(errorResponse)
                 .isEqualTo(expected);
     }
