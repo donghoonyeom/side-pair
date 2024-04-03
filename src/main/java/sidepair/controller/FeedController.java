@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import sidepair.common.interceptor.Authenticated;
 import sidepair.common.resolver.MemberEmail;
+import sidepair.service.dto.feed.requesst.FeedApplicantSaveRequest;
+import sidepair.service.dto.feed.response.FeedApplicantResponse;
 import sidepair.service.feed.FeedCreateService;
 import sidepair.service.feed.FeedReadService;
 import sidepair.service.dto.feed.requesst.FeedCategorySaveRequest;
@@ -86,6 +88,16 @@ public class FeedController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @PostMapping("/{feedId}/applicant")
+    @Authenticated
+    public ResponseEntity<Void> createApplicant(
+            @PathVariable("feedId") final Long feedId,
+            @MemberEmail final String email,
+            @RequestBody @Valid final FeedApplicantSaveRequest request) {
+        feedCreateService.createApplicant(feedId, email, request);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
     @GetMapping("/me")
     @Authenticated
     public ResponseEntity<MemberFeedResponses> findAllMyFeeds(@MemberEmail final String email,
@@ -94,10 +106,20 @@ public class FeedController {
         return ResponseEntity.ok(responses);
     }
 
+    @GetMapping("/me/{feedId}/applicants")
+    public ResponseEntity<List<FeedApplicantResponse>> findFeedApplicants(
+            @PathVariable final Long feedId,
+            @MemberEmail final String email,
+            @ModelAttribute final CustomScrollRequest scrollRequest
+    ) {
+        final List<FeedApplicantResponse> responses = feedReadService.findFeedApplicants(feedId, email, scrollRequest);
+        return ResponseEntity.ok(responses);
+    }
+
     @DeleteMapping("/{feedId}")
     @Authenticated
     public ResponseEntity<Void> deleteFeed(@MemberEmail final String email,
-                                              @PathVariable("feedId") final Long feedId) {
+                                           @PathVariable("feedId") final Long feedId) {
         feedCreateService.deleteFeed(email, feedId);
         return ResponseEntity.noContent().build();
     }
