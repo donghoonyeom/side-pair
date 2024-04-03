@@ -1,4 +1,4 @@
-package sidepair.service.auth;
+package sidepair.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -25,6 +25,8 @@ import sidepair.domain.member.vo.Password;
 import sidepair.domain.member.vo.SkillName;
 import sidepair.persistence.auth.RefreshTokenRepository;
 import sidepair.persistence.member.MemberRepository;
+import sidepair.service.auth.AuthService;
+import sidepair.service.auth.TokenProvider;
 import sidepair.service.dto.auth.request.LoginRequest;
 import sidepair.service.dto.auth.request.ReissueTokenRequest;
 import sidepair.service.dto.auth.response.AuthenticationResponse;

@@ -1,4 +1,4 @@
-package sidepair.service.feed;
+package sidepair.service;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
@@ -50,6 +50,7 @@ import sidepair.domain.member.vo.Password;
 import sidepair.persistence.feed.FeedCategoryRepository;
 import sidepair.persistence.feed.FeedRepository;
 import sidepair.persistence.member.MemberRepository;
+import sidepair.service.feed.FeedCreateService;
 
 @ExtendWith(MockitoExtension.class)
 class FeedCreateServiceTest {

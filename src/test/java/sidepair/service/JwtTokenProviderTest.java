@@ -1,4 +1,4 @@
-package sidepair.service.auth;
+package sidepair.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
+import sidepair.service.auth.JwtTokenProvider;
+import sidepair.service.auth.TokenProvider;
 import sidepair.service.exception.AuthenticationException;
 
 class JwtTokenProviderTest {

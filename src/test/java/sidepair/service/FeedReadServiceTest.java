@@ -1,4 +1,4 @@
-package sidepair.service.feed;
+package sidepair.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -63,6 +63,7 @@ import sidepair.persistence.feed.FeedCategoryRepository;
 import sidepair.persistence.feed.FeedContentRepository;
 import sidepair.persistence.feed.FeedRepository;
 import sidepair.persistence.member.MemberRepository;
+import sidepair.service.feed.FeedReadService;
 
 @ExtendWith(MockitoExtension.class)
 class FeedReadServiceTest {

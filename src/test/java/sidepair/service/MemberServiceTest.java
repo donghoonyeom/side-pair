@@ -1,4 +1,4 @@
-package sidepair.service.member;
+package sidepair.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -45,6 +45,7 @@ import sidepair.service.dto.mamber.response.MemberInformationResponse;
 import sidepair.service.dto.mamber.response.MemberSkillResponse;
 import sidepair.service.exception.ConflictException;
 import sidepair.service.exception.NotFoundException;
+import sidepair.service.member.MemberService;
 
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {

@@ -19,7 +19,7 @@ class NicknameTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"abcdefghi", "123456789012345678901"})
+    @ValueSource(strings = {"a", "123456789012345678901"})
     void 닉네임_길이가_틀릴_경우_예외를_던진다(final String nickname) {
         //given
         //when

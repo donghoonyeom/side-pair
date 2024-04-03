@@ -3,6 +3,7 @@ package sidepair.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -23,11 +24,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.snippet.Attributes;
 import org.springframework.test.web.servlet.MvcResult;
 import sidepair.controller.helper.ControllerTestHelper;
 import sidepair.service.dto.ErrorResponse;
 import sidepair.service.dto.feed.requesst.FeedOrderTypeRequest;
+import sidepair.service.dto.feed.response.FeedApplicantResponse;
 import sidepair.service.dto.feed.response.FeedCategoryResponse;
 import sidepair.service.dto.feed.response.FeedContentResponse;
 import sidepair.service.dto.feed.response.FeedForListResponse;
@@ -38,6 +41,7 @@ import sidepair.service.dto.feed.response.FeedTagResponse;
 import sidepair.service.dto.feed.response.MemberFeedResponse;
 import sidepair.service.dto.feed.response.MemberFeedResponses;
 import sidepair.service.dto.mamber.response.MemberResponse;
+import sidepair.service.exception.ForbiddenException;
 import sidepair.service.exception.NotFoundException;
 import sidepair.service.feed.FeedCreateService;
 import sidepair.service.feed.FeedReadService;
@@ -424,6 +428,142 @@ class FeedReadApiTest extends ControllerTestHelper {
         final ErrorResponse expected = new ErrorResponse("존재하지 않는 회원입니다.");
         assertThat(errorResponse)
                 .isEqualTo(expected);
+    }
+
+    @Test
+    void 피드의_신청서들을_조회한다() throws Exception {
+        // given
+        final List<FeedApplicantResponse> expected = List.of(
+                new FeedApplicantResponse(1L, new MemberResponse(1L, "신청자1", "image1-file-path"),
+                        LocalDateTime.of(2023, 8, 15, 12, 30, 0, 123456), "신청서 내용"),
+                new FeedApplicantResponse(2L, new MemberResponse(2L, "신청자2", "image2-file-path"),
+                        LocalDateTime.of(2023, 8, 16, 12, 30, 0, 123456), "신청서 내용")
+        );
+
+        when(feedReadService.findFeedApplicants(anyLong(), any(), any()))
+                .thenReturn(expected);
+
+        // when
+        final String response = mockMvc.perform(
+                        get(API_PREFIX + "/feeds/me/{feedId}/applicants", 1L)
+                                .header(AUTHORIZATION, String.format(BEARER_TOKEN_FORMAT, "test-token"))
+                                .param("lastId", "1")
+                                .param("size", "10")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .contextPath(API_PREFIX))
+                .andExpect(status().isOk())
+                .andDo(documentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("액세스 토큰")),
+                        pathParameters(
+                                parameterWithName("feedId").description("피드 아이디")
+                        ),
+                        queryParameters(
+                                parameterWithName("lastId")
+                                        .description("이전 요청에서 받은 응답 중 가장 마지막 신청서 아이디 (첫 요청 시 미전송)")
+                                        .optional(),
+                                parameterWithName("size").description("한 번에 조회할 신청서갯수")
+                        ),
+                        responseFields(
+                                fieldWithPath("[0].id").description("신청서 아이디"),
+                                fieldWithPath("[0].member.id").description("작성자 아이디"),
+                                fieldWithPath("[0].member.name").description("작성자 닉네임"),
+                                fieldWithPath("[0].member.imageUrl").description("작성자 프로필 이미지 경로"),
+                                fieldWithPath("[0].createdAt").description("신청서 최종 작성날짜"),
+                                fieldWithPath("[0].content").description("신청서 내용")
+                        )))
+                .andReturn().getResponse()
+                .getContentAsString();
+
+        // then
+        final List<FeedApplicantResponse> applicantResponse = objectMapper.readValue(response,
+                new TypeReference<>() {
+                });
+
+        assertThat(applicantResponse)
+                .usingRecursiveComparison()
+                .ignoringFields("createdAt")
+                .isEqualTo(expected);
+    }
+
+    @Test
+    void 피드_신청서_조회_시_유효하지_않은_피드_아이디일_경우_예외를_반환한다() throws Exception {
+        // given
+        when(feedReadService.findFeedApplicants(anyLong(), anyString(), any()))
+                .thenThrow(new NotFoundException("존재하지 않는 피드입니다. feedId = 1"));
+
+        // when
+        final String response = mockMvc.perform(
+                        get(API_PREFIX + "/feeds/me/{feedId}/applicants", 1L)
+                                .header(AUTHORIZATION, String.format(BEARER_TOKEN_FORMAT, "test-token"))
+                                .param("size", "10")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .contextPath(API_PREFIX))
+                .andExpect(status().isNotFound())
+                .andDo(documentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("액세스 토큰")),
+                        pathParameters(
+                                parameterWithName("feedId").description("피드 아이디")
+                        ),
+                        queryParameters(
+                                parameterWithName("lastId")
+                                        .description("이전 요청에서 받은 응답 중 가장 마지막 신청서 아이디 (첫 요청 시 미전송)")
+                                        .optional(),
+                                parameterWithName("size").description("한 번에 조회할 신청서갯수")
+                        ),
+                        responseFields(
+                                fieldWithPath("message").description("예외 메시지")
+                        )))
+                .andReturn().getResponse()
+                .getContentAsString();
+
+        // then
+        final ErrorResponse errorResponse = objectMapper.readValue(response, new TypeReference<>() {
+        });
+
+        assertThat(errorResponse.message())
+                .isEqualTo("존재하지 않는 피드입니다. feedId = 1");
+    }
+
+    @Test
+    void 피드_신청서_조회_시_피드_생성자와_일치하지_않은_셍성자일_경우_예외를_반환한다() throws Exception {
+        // given
+        when(feedReadService.findFeedApplicants(anyLong(), anyString(), any()))
+                .thenThrow(new ForbiddenException("해당 피드를 생성한 사용자가 아닙니다."));
+
+        // when
+        final String response = mockMvc.perform(
+                        get(API_PREFIX + "/feeds/me/{feedId}/applicants", 1L)
+                                .header(AUTHORIZATION, String.format(BEARER_TOKEN_FORMAT, "test-token"))
+                                .param("size", "10")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .contextPath(API_PREFIX))
+                .andExpectAll(status().isForbidden())
+                .andDo(documentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("액세스 토큰")),
+                        pathParameters(
+                                parameterWithName("feedId").description("피드 아이디")
+                        ),
+                        queryParameters(
+                                parameterWithName("lastId")
+                                        .description("이전 요청에서 받은 응답 중 가장 마지막 신청서 아이디 (첫 요청 시 미전송)")
+                                        .optional(),
+                                parameterWithName("size").description("한 번에 조회할 신청서갯수")
+                        ),
+                        responseFields(
+                                fieldWithPath("message").description("예외 메시지")
+                        )))
+                .andReturn().getResponse()
+                .getContentAsString();
+
+        // then
+        final ErrorResponse errorResponse = objectMapper.readValue(response, new TypeReference<>() {
+        });
+
+        assertThat(errorResponse.message())
+                .isEqualTo("해당 피드를 생성한 사용자가 아닙니다.");
     }
 
     private FeedResponse 단일_피드_조회에_대한_응답() {
