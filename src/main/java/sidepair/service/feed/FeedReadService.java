@@ -7,6 +7,11 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sidepair.domain.feed.FeedApplicant;
+import sidepair.persistence.feed.FeedApplicantRepository;
+import sidepair.service.dto.feed.FeedApplicantReadDto;
+import sidepair.service.dto.feed.response.FeedApplicantResponse;
+import sidepair.service.exception.ForbiddenException;
 import sidepair.service.mapper.FeedMapper;
 import sidepair.service.dto.feed.FeedNodeDto;
 import sidepair.service.dto.feed.FeedTagDto;
@@ -51,6 +56,7 @@ public class FeedReadService {
     private final FeedRepository feedRepository;
     private final FeedCategoryRepository feedCategoryRepository;
     private final FeedContentRepository feedContentRepository;
+    private final FeedApplicantRepository feedApplicantRepository;
     private final MemberRepository memberRepository;
     private final FileService fileService;
 
@@ -203,5 +209,34 @@ public class FeedReadService {
         return memberRepository.findByEmail(new Email(email))
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 회원입니다."));
     }
-}
 
+    public List<FeedApplicantResponse> findFeedApplicants(final Long feedId,
+                                                          final String email,
+                                                          final CustomScrollRequest scrollRequest) {
+        final Feed feed = findFeedById(feedId);
+        validateFeedCreator(feedId, email);
+        final List<FeedApplicant> feedApplicants = feedApplicantRepository.findFeedApplicantWithMemberByFeedOrderByLatest(
+                feed, scrollRequest.lastId(), scrollRequest.size());
+        final List<FeedApplicantReadDto> feedApplicantReadDtos = makeFeedApplicantReadDtos(feedApplicants);
+        return FeedMapper.convertToFeedApplicantResponses(feedApplicantReadDtos);
+    }
+
+    public List<FeedApplicantReadDto> makeFeedApplicantReadDtos(final List<FeedApplicant> feedApplicants) {
+        return feedApplicants.stream()
+                .map(this::makeFeedApplicantReadDto)
+                .toList();
+    }
+
+    private FeedApplicantReadDto makeFeedApplicantReadDto(final FeedApplicant applicant) {
+        final Member member = applicant.getMember();
+        final URL memberImageURl = fileService.generateUrl(member.getImage().getServerFilePath(), HttpMethod.GET);
+        return new FeedApplicantReadDto(applicant.getId(),
+                new MemberDto(member.getId(), member.getNickname().getValue(), memberImageURl.toExternalForm()),
+                applicant.getCreatedAt(), applicant.getContent());
+    }
+
+    private void validateFeedCreator(final Long feedId, final String email) {
+        feedRepository.findByIdAndMemberEmail(feedId, email)
+                .orElseThrow(() -> new ForbiddenException("해당 피드를 생성한 사용자가 아닙니다."));
+    }
+}
