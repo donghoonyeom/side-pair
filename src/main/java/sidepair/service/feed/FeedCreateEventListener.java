@@ -54,14 +54,14 @@ public class FeedCreateEventListener {
     }
 
     private FeedNode findFeedNodeByTitle(final FeedContent lastFeedContent,
-                                               final FeedNodeSaveDto feedNodeSaveDto) {
+                                         final FeedNodeSaveDto feedNodeSaveDto) {
         return lastFeedContent.findFeedNodeByTitle(feedNodeSaveDto.title())
                 .orElseThrow(() -> new BadRequestException(
                         "해당 제목을 가지고있는 피드 노드가 없습니다. title = " + feedNodeSaveDto.title()));
     }
 
     private FeedNodeImages makeFeedNodeImages(final FeedNodeSaveDto feedNodeSaveDto,
-                                                    final FeedNode feedNode) {
+                                              final FeedNode feedNode) {
         final List<FileInformation> fileInformations = feedNodeSaveDto.fileInformations();
         final FeedNodeImages feedNodeImages = new FeedNodeImages();
         for (final FileInformation fileInformation : fileInformations) {

@@ -84,8 +84,8 @@ public class FeedQueryRepositoryImpl extends QuerydslRepositorySupporter impleme
 
     @Override
     public List<Feed> findFeedsWithCategoryByMemberOrderByLatest(final Member member,
-                                                                       final Long lastId,
-                                                                       final int pageSize) {
+                                                                 final Long lastId,
+                                                                 final int pageSize) {
         final FeedOrderType orderType = FeedOrderType.LATEST;
         return selectFrom(feed)
                 .innerJoin(feed.category, feedCategory)

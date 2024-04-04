@@ -168,7 +168,7 @@ public final class FeedMapper {
     }
 
     public static MemberFeedResponses convertMemberFeedResponses(final List<Feed> feeds,
-                                                                       final int requestSize) {
+                                                                 final int requestSize) {
         final List<MemberFeedResponse> responses = feeds.stream()
                 .map(FeedMapper::convertMemberFeedResponse)
                 .toList();

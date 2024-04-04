@@ -2,7 +2,7 @@ package sidepair.service.dto.mamber;
 
 import java.util.List;
 
-public record MemberInformationDto (
+public record MemberInformationDto(
         Long id,
         String nickname,
         String profileImageUrl,

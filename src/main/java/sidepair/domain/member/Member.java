@@ -56,7 +56,8 @@ public class Member extends BaseUpdatedTimeEntity {
     }
 
     public Member(final Long id, final Email email, final String oauthId, final EncryptedPassword encryptedPassword,
-                  final Nickname nickname, final MemberImage image, final MemberProfile memberProfile, MemberSkills skills) {
+                  final Nickname nickname, final MemberImage image, final MemberProfile memberProfile,
+                  MemberSkills skills) {
         this.id = id;
         this.email = email;
         this.oauthId = oauthId;
@@ -91,5 +92,7 @@ public class Member extends BaseUpdatedTimeEntity {
         return email;
     }
 
-    public MemberSkills getSkills() {return skills;}
+    public MemberSkills getSkills() {
+        return skills;
+    }
 }

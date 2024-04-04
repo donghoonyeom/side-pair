@@ -578,7 +578,7 @@ class FeedReadApiTest extends ControllerTestHelper {
                 new FeedTagResponse(2L, "태그2")
         );
         return new FeedResponse(1L, category, "제목", "소개글", creator,
-                new FeedContentResponse(1L, "본문", nodes),  100, 오늘, tags);
+                new FeedContentResponse(1L, "본문", nodes), 100, 오늘, tags);
     }
 
     private FeedForListResponses 피드_리스트_응답을_생성한다() {
@@ -591,7 +591,7 @@ class FeedReadApiTest extends ControllerTestHelper {
                 10, 오늘, new MemberResponse(1L, "사이드페어", "default-member-image"), new FeedCategoryResponse(1L, "여행"),
                 tags);
         final FeedForListResponse feedResponse2 = new FeedForListResponse(2L, "피드 제목2", "피드 소개글2",
-                 7, 오늘, new MemberResponse(2L, "페어사이드", "default-member-image"),
+                7, 오늘, new MemberResponse(2L, "페어사이드", "default-member-image"),
                 new FeedCategoryResponse(2L, "IT"), tags);
         final List<FeedForListResponse> responses = List.of(feedResponse1, feedResponse2);
         return new FeedForListResponses(responses, false);

@@ -14,7 +14,7 @@ import static sidepair.domain.member.QMember.member;
 public class FeedApplicantQueryRepositoryImpl extends QuerydslRepositorySupporter
         implements FeedApplicantQueryRepository {
 
-    public FeedApplicantQueryRepositoryImpl(){
+    public FeedApplicantQueryRepositoryImpl() {
         super(FeedApplicant.class);
     }
 

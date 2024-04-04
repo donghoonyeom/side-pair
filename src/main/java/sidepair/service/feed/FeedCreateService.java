@@ -98,7 +98,7 @@ public class FeedCreateService {
     }
 
     private Feed createFeed(final Member member, final FeedSaveDto feedSaveDto,
-                                  final FeedCategory feedCategory) {
+                            final FeedCategory feedCategory) {
         final FeedNodes feedNodes = makeFeedNodes(feedSaveDto.feedNodes());
         final FeedContent feedContent = makeFeedContent(feedSaveDto, feedNodes);
         final FeedTags feedTags = makeFeedTags(feedSaveDto.tags());
@@ -141,7 +141,7 @@ public class FeedCreateService {
     }
 
     private Feed makeFeed(final Member member, final FeedSaveDto feedSaveDto,
-                                final FeedCategory feedCategory) {
+                          final FeedCategory feedCategory) {
         return new Feed(feedSaveDto.title(), feedSaveDto.introduction(),
                 feedSaveDto.requiredPeriod(), member, feedCategory);
     }

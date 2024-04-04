@@ -121,8 +121,8 @@ public class FeedReadService {
 
     @Cacheable(value = "feedList", keyGenerator = "cacheKeyGenerator", cacheManager = "redisCacheManager")
     public FeedForListResponses findFeedsByOrderType(final Long categoryId,
-                                                           final FeedOrderTypeRequest orderTypeRequest,
-                                                           final CustomScrollRequest scrollRequest) {
+                                                     final FeedOrderTypeRequest orderTypeRequest,
+                                                     final CustomScrollRequest scrollRequest) {
         final FeedCategory category = findCategoryById(categoryId);
         final FeedOrderType orderType = FeedMapper.convertFeedOrderType(orderTypeRequest);
         final List<Feed> feeds = feedRepository.findFeedsByCategory(category, orderType,

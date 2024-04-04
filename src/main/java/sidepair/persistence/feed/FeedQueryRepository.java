@@ -13,14 +13,14 @@ public interface FeedQueryRepository {
     Optional<Feed> findFeedById(final Long feedId);
 
     List<Feed> findFeedsByCategory(final FeedCategory category,
-                                         final FeedOrderType orderType,
-                                         final Long lastId,
-                                         final int pageSize);
+                                   final FeedOrderType orderType,
+                                   final Long lastId,
+                                   final int pageSize);
 
     List<Feed> findFeedsByCond(final FeedSearchDto searchRequest,
-                                     final FeedOrderType orderType,
-                                     final Long lastId,
-                                     final int pageSize);
+                               final FeedOrderType orderType,
+                               final Long lastId,
+                               final int pageSize);
 
     List<Feed> findFeedsWithCategoryByMemberOrderByLatest(final Member member,
                                                           final Long lastId,

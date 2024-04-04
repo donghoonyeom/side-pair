@@ -39,8 +39,8 @@ class FeedRepositoryTest {
     private final FeedCategoryRepository feedCategoryRepository;
 
     public FeedRepositoryTest(final MemberRepository memberRepository,
-                                 final FeedRepository feedRepository,
-                                 final FeedCategoryRepository feedCategoryRepository) {
+                              final FeedRepository feedRepository,
+                              final FeedCategoryRepository feedCategoryRepository) {
         this.memberRepository = memberRepository;
         this.feedRepository = feedRepository;
         this.feedCategoryRepository = feedCategoryRepository;
@@ -408,7 +408,7 @@ class FeedRepositoryTest {
     }
 
     private Feed 피드을_태그와_저장한다(final String title, final Member creator, final FeedCategory category,
-                                  final FeedTags feedTags) {
+                              final FeedTags feedTags) {
         final Feed feed = new Feed(title, "피드 소개글", 10, creator, category);
         feed.addTags(feedTags);
         return feedRepository.save(feed);

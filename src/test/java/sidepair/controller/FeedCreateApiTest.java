@@ -223,7 +223,7 @@ class FeedCreateApiTest extends ControllerTestHelper {
         // given
         final String nodeTitle = "a".repeat(41);
         final FeedSaveRequest request = 피드_생성_요청을_생성한다(1L, "피드 제목", "피드 소개글", "피드 본문",
-               30,
+                30,
                 List.of(new FeedNodeSaveRequest(nodeTitle, "프로젝트 1주차에는 erd를 만들거에요.", null)),
                 List.of(new FeedTagSaveRequest("태그1")));
 
@@ -687,10 +687,10 @@ class FeedCreateApiTest extends ControllerTestHelper {
     }
 
     private FeedSaveRequest 피드_생성_요청을_생성한다(final Long categoryId, final String feedTitle,
-                                               final String feedIntroduction, final String feedContent,
-                                               final Integer requiredPeriod,
-                                               final List<FeedNodeSaveRequest> feedNodesSaveRequests,
-                                               final List<FeedTagSaveRequest> feedTagSaveRequests) {
+                                           final String feedIntroduction, final String feedContent,
+                                           final Integer requiredPeriod,
+                                           final List<FeedNodeSaveRequest> feedNodesSaveRequests,
+                                           final List<FeedTagSaveRequest> feedTagSaveRequests) {
         return new FeedSaveRequest(categoryId, feedTitle, feedIntroduction, feedContent,
                 requiredPeriod, feedNodesSaveRequests, feedTagSaveRequests);
     }

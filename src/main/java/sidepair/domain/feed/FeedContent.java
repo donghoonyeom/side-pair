@@ -18,16 +18,13 @@ import sidepair.domain.BaseUpdatedTimeEntity;
 @Getter
 public class FeedContent extends BaseUpdatedTimeEntity {
     private static final int CONTENT_MAX_LENGTH = 2000;
-
+    @Embedded
+    private final FeedNodes nodes = new FeedNodes();
     @Column(length = 2200)
     private String content;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "feed_id", nullable = false)
     private Feed feed;
-
-    @Embedded
-    private final FeedNodes nodes = new FeedNodes();
 
     public FeedContent(final String content) {
         this(null, content);

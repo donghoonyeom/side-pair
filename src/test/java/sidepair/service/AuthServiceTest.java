@@ -55,7 +55,7 @@ class AuthServiceTest {
         final Password password = new Password("password1!");
         final EncryptedPassword encryptedPassword = new EncryptedPassword(password);
         final Nickname nickname = new Nickname("nickname");
-        final MemberSkills skills= new MemberSkills(
+        final MemberSkills skills = new MemberSkills(
                 List.of(new MemberSkill(1L, new SkillName("Java"))));
         final MemberProfile memberProfile = new MemberProfile(Position.BACKEND);
         member = new Member(email, encryptedPassword, nickname, null, memberProfile, skills);
