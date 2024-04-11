@@ -39,7 +39,9 @@ import sidepair.service.dto.feed.response.FeedTagResponse;
 import sidepair.service.dto.feed.response.MemberFeedResponse;
 import sidepair.service.dto.feed.response.MemberFeedResponses;
 import sidepair.service.dto.mamber.MemberDto;
+import sidepair.service.dto.mamber.MemberSkillDto;
 import sidepair.service.dto.mamber.response.MemberResponse;
+import sidepair.service.dto.mamber.response.MemberSkillResponse;
 import sidepair.service.exception.ServerException;
 import sidepair.persistence.dto.FeedOrderType;
 
@@ -95,7 +97,8 @@ public final class FeedMapper {
                 feedDto.feedTitle(),
                 feedDto.introduction(),
                 new MemberResponse(feedDto.creator().id(), feedDto.creator().name(),
-                        feedDto.creator().imageUrl()),
+                        feedDto.creator().imageUrl(), feedDto.creator().position(),
+                        convertMemberSkillResponses(feedDto.creator().skills())),
                 convertToFeedContentResponse(feedDto.content()),
                 feedDto.recommendedFeedPeriod(),
                 feedDto.createdAt(),
@@ -118,13 +121,19 @@ public final class FeedMapper {
         return new FeedForListResponses(responses, feedForListScrollDto.hasNext());
     }
 
+    private static List<MemberSkillResponse> convertMemberSkillResponses(final List<MemberSkillDto> memberSkillDtos) {
+        return memberSkillDtos.stream()
+                .map(skill -> new MemberSkillResponse(skill.id(), skill.name()))
+                .toList();
+    }
+
     private static FeedForListResponse convertFeedResponse(final FeedForListDto feedForListDto) {
         final FeedCategoryDto feedCategoryDto = feedForListDto.category();
         final FeedCategoryResponse categoryResponse = new FeedCategoryResponse(feedCategoryDto.id(),
                 feedCategoryDto.name());
         final MemberDto memberDto = feedForListDto.creator();
         final MemberResponse creatorResponse = new MemberResponse(memberDto.id(), memberDto.name(),
-                memberDto.imageUrl());
+                memberDto.imageUrl(), memberDto.position(), convertMemberSkillResponses(memberDto.skills()));
         final List<FeedTagResponse> feedTagResponses = convertFeedTagResponses(feedForListDto.tags());
 
         return new FeedForListResponse(
@@ -194,7 +203,8 @@ public final class FeedMapper {
             final FeedApplicantReadDto feedApplicantReadDto) {
         final MemberDto memberDto = feedApplicantReadDto.member();
         return new FeedApplicantResponse(feedApplicantReadDto.id(),
-                new MemberResponse(memberDto.id(), memberDto.name(), memberDto.imageUrl()),
+                new MemberResponse(memberDto.id(), memberDto.name(), memberDto.imageUrl(), memberDto.position(),
+                        convertMemberSkillResponses(memberDto.skills())),
                 feedApplicantReadDto.createdAt(), feedApplicantReadDto.content());
     }
 
