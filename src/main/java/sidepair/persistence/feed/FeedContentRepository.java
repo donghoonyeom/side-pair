@@ -8,6 +8,7 @@ import sidepair.domain.feed.Feed;
 import sidepair.domain.feed.FeedContent;
 
 public interface FeedContentRepository extends JpaRepository<FeedContent, Long> {
+
     Optional<FeedContent> findFirstByFeedOrderByCreatedAtDesc(final Feed feed);
 
     @Query("select rc from FeedContent rc "

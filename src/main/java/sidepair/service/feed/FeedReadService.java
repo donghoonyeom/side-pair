@@ -8,9 +8,12 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sidepair.domain.feed.FeedApplicant;
+import sidepair.domain.member.MemberProfile;
+import sidepair.domain.member.MemberSkills;
 import sidepair.persistence.feed.FeedApplicantRepository;
 import sidepair.service.dto.feed.FeedApplicantReadDto;
 import sidepair.service.dto.feed.response.FeedApplicantResponse;
+import sidepair.service.dto.mamber.MemberSkillDto;
 import sidepair.service.exception.ForbiddenException;
 import sidepair.service.mapper.FeedMapper;
 import sidepair.service.dto.feed.FeedNodeDto;
@@ -37,6 +40,7 @@ import sidepair.service.dto.feed.response.FeedResponse;
 import sidepair.service.dto.feed.response.MemberFeedResponses;
 import sidepair.service.dto.mamber.MemberDto;
 import sidepair.service.exception.NotFoundException;
+import sidepair.service.mapper.ProjectMapper;
 import sidepair.service.mapper.ScrollResponseMapper;
 import sidepair.domain.member.Member;
 import sidepair.domain.member.vo.Email;
@@ -83,7 +87,9 @@ public class FeedReadService {
 
     private MemberDto makeMemberDto(final Member creator) {
         final URL url = fileService.generateUrl(creator.getImage().getServerFilePath(), HttpMethod.GET);
-        return new MemberDto(creator.getId(), creator.getNickname().getValue(), url.toExternalForm());
+        final MemberProfile profile = creator.getMemberProfile();
+        return new MemberDto(creator.getId(), creator.getNickname().getValue(), url.toExternalForm(),
+                profile.getPosition().name(), makeMemberSkillDtos(creator.getSkills()));
     }
 
     private List<FeedNodeDto> makeFeedNodeDtos(final FeedNodes nodes) {
@@ -154,9 +160,11 @@ public class FeedReadService {
         final FeedCategoryDto feedCategoryDto = new FeedCategoryDto(category.getId(),
                 category.getName());
         final Member creator = feed.getCreator();
+        final MemberProfile profile = creator.getMemberProfile();
         final URL creatorImageUrl = fileService.generateUrl(creator.getImage().getServerFilePath(), HttpMethod.GET);
         final MemberDto memberDto = new MemberDto(creator.getId(), creator.getNickname().getValue(),
-                creatorImageUrl.toExternalForm());
+                creatorImageUrl.toExternalForm(), profile.getPosition().name(),
+                makeMemberSkillDtos(creator.getSkills()));
         final List<FeedTagDto> feedTagDtos = makeFeedTagDto(feed.getTags());
 
         return new FeedForListDto(
@@ -175,6 +183,13 @@ public class FeedReadService {
         return feedTags.getValues()
                 .stream()
                 .map(tag -> new FeedTagDto(tag.getId(), tag.getName().getValue()))
+                .toList();
+    }
+
+    private List<MemberSkillDto> makeMemberSkillDtos(final MemberSkills memberSkills) {
+        return memberSkills.getValues()
+                .stream()
+                .map(it -> new MemberSkillDto(it.getId(), it.getName().getValue()))
                 .toList();
     }
 
@@ -229,9 +244,11 @@ public class FeedReadService {
 
     private FeedApplicantReadDto makeFeedApplicantReadDto(final FeedApplicant applicant) {
         final Member member = applicant.getMember();
+        final MemberProfile profile = member.getMemberProfile();
         final URL memberImageURl = fileService.generateUrl(member.getImage().getServerFilePath(), HttpMethod.GET);
         return new FeedApplicantReadDto(applicant.getId(),
-                new MemberDto(member.getId(), member.getNickname().getValue(), memberImageURl.toExternalForm()),
+                new MemberDto(member.getId(), member.getNickname().getValue(), memberImageURl.toExternalForm(),
+                        profile.getPosition().name(), makeMemberSkillDtos(member.getSkills())),
                 applicant.getCreatedAt(), applicant.getContent());
     }
 
