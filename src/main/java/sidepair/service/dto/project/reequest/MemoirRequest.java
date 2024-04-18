@@ -1,6 +1,6 @@
 package sidepair.service.dto.project.reequest;
 
-public record CheckFeedRequest(
+public record MemoirRequest(
         String description
 ) {
 }

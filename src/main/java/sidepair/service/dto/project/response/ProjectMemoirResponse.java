@@ -2,8 +2,8 @@ package sidepair.service.dto.project.response;
 
 import sidepair.service.dto.mamber.response.MemberResponse;
 
-public record ProjectCheckFeedResponse(
+public record ProjectMemoirResponse(
         MemberResponse member,
-        CheckFeedResponse checkFeed
+        MemoirResponse memoir
 ) {
 }

@@ -20,7 +20,7 @@ import sidepair.domain.member.vo.SkillName;
 class FeedApplicantTest {
 
     @Test
-    void 리뷰_내용이_1000자를_넘으면_예외가_발생한다() {
+    void 신청서_내용이_1000자를_넘으면_예외가_발생한다() {
         // given
         final String content = "a".repeat(1001);
         final MemberProfile profile = new MemberProfile(Position.FRONTEND);

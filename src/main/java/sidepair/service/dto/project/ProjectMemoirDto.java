@@ -2,9 +2,9 @@ package sidepair.service.dto.project;
 
 import sidepair.service.dto.mamber.MemberDto;
 
-public record ProjectCheckFeedDto(
+public record ProjectMemoirDto(
         MemberDto memberDto,
-        CheckFeedDto checkFeedDto
+        MemoirDto memoirDto
 ) {
 
 }

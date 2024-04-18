@@ -12,7 +12,7 @@ import sidepair.domain.BaseCreatedTimeEntity;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CheckFeed extends BaseCreatedTimeEntity {
+public class Memoir extends BaseCreatedTimeEntity {
 
     private String description;
 
@@ -24,13 +24,13 @@ public class CheckFeed extends BaseCreatedTimeEntity {
     @JoinColumn(name = "project_member_id", nullable = false)
     private ProjectMember projectMember;
 
-    public CheckFeed(final String description, final ProjectFeedNode projectFeedNode,
-                     final ProjectMember projectMember) {
+    public Memoir(final String description, final ProjectFeedNode projectFeedNode,
+                  final ProjectMember projectMember) {
         this(description, projectFeedNode, projectMember, null);
     }
 
-    public CheckFeed(final String description, final ProjectFeedNode projectFeedNode,
-                     final ProjectMember projectMember, final LocalDateTime createdAt) {
+    public Memoir(final String description, final ProjectFeedNode projectFeedNode,
+                  final ProjectMember projectMember, final LocalDateTime createdAt) {
         this.description = description;
         this.projectFeedNode = projectFeedNode;
         this.projectMember = projectMember;
