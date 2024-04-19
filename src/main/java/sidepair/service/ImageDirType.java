@@ -1,7 +1,6 @@
 package sidepair.service;
 
 public enum ImageDirType {
-    CHECK_FEED("project/checkfeed"),
     FEED_NODE("feed"),
     USER_PROFILE("member/profile");
 
