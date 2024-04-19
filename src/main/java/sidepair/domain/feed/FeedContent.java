@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sidepair.domain.feed.exception.FeedException;
 import sidepair.domain.BaseUpdatedTimeEntity;
+import sidepair.domain.member.Member;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -91,4 +92,6 @@ public class FeedContent extends BaseUpdatedTimeEntity {
     public Feed getFeed() {
         return feed;
     }
+
+    public Member getCreator() {return feed.getCreator();}
 }

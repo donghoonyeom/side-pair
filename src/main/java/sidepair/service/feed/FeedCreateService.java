@@ -7,7 +7,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sidepair.domain.feed.FeedApplicant;
+import sidepair.domain.project.Project;
 import sidepair.persistence.feed.FeedApplicantRepository;
+import sidepair.persistence.project.ProjectRepository;
 import sidepair.service.dto.feed.FeedApplicantDto;
 import sidepair.service.dto.feed.requesst.FeedApplicantSaveRequest;
 import sidepair.service.event.FeedCreateEvent;
@@ -47,6 +49,7 @@ public class FeedCreateService {
     private final FeedRepository feedRepository;
     private final FeedCategoryRepository feedCategoryRepository;
     private final FeedApplicantRepository feedApplicantRepository;
+    private final ProjectRepository projectRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @CacheEvict(value = "feedList", allEntries = true)
@@ -93,7 +96,7 @@ public class FeedCreateService {
     private void validateApplicantCount(final Feed feed, final Member member) {
         if (feedApplicantRepository.findByFeedAndMember(feed, member).isPresent()) {
             throw new BadRequestException(
-                    "이미 작성한 신청서가 존재합니다. roadmapId = " + feed.getId() + " memberId = " + member.getId());
+                    "이미 작성한 신청서가 존재합니다. feedId = " + feed.getId() + " memberId = " + member.getId());
         }
     }
 
@@ -150,8 +153,11 @@ public class FeedCreateService {
     public void deleteFeed(final String email, final Long feedId) {
         final Feed feed = findFeedById(feedId);
         validateFeedCreator(feedId, email);
-        feedRepository.delete(feed);
-        // 프로젝트 확인
+        final List<Project> project = projectRepository.findByFeed(feed);
+        if (project.isEmpty()) {
+            feedRepository.delete(feed);
+            return;
+        }
         feed.delete();
     }
 
