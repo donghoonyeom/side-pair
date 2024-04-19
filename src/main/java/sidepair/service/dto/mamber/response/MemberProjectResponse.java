@@ -2,7 +2,7 @@ package sidepair.service.dto.mamber.response;
 
 import java.time.LocalDate;
 import java.util.List;
-import sidepair.service.dto.project.response.CheckFeedResponse;
+import sidepair.service.dto.project.response.MemoirResponse;
 import sidepair.service.dto.project.response.ProjectFeedNodesResponse;
 import sidepair.service.dto.project.response.ProjectTodoResponse;
 
@@ -17,7 +17,7 @@ public record MemberProjectResponse(
         Long feedContentId,
         ProjectFeedNodesResponse projectFeedNodes,
         List<ProjectTodoResponse> projectTodos,
-        List<CheckFeedResponse> checkFeeds
+        List<MemoirResponse> memoirs
 ) {
 
 }
