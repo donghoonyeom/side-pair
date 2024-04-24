@@ -106,7 +106,7 @@ class MemberCreateApiTest extends ControllerTestHelper {
     void 회원가입_시_기술_형식에_맞지않을때() throws Exception {
         //given
         final MemberJoinRequest memberJoinRequest = new MemberJoinRequest("test@email.com", "password1!",
-                "nickname", PositionType.BACKEND,  List.of(new MemberSkillSaveRequest
+                "nickname", PositionType.BACKEND, List.of(new MemberSkillSaveRequest
                 ("최대10글자12345456")));
         final String jsonRequest = objectMapper.writeValueAsString(memberJoinRequest);
 

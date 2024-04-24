@@ -18,19 +18,15 @@ public class FeedNode extends BaseEntity {
     private static final int TITLE_MAX_LENGTH = 40;
     private static final int CONTENT_MIN_LENGTH = 1;
     private static final int CONTENT_MAX_LENGTH = 2000;
-
+    @Embedded
+    private final FeedNodeImages feedNodeImages = new FeedNodeImages();
     @Column(length = 50, nullable = false)
     private String title;
-
     @Column(length = 2200, nullable = false)
     private String content;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "feed_content_id", nullable = false)
     private FeedContent feedContent;
-
-    @Embedded
-    private final FeedNodeImages feedNodeImages = new FeedNodeImages();
 
     public FeedNode(final String title, final String content) {
         this(null, title, content);

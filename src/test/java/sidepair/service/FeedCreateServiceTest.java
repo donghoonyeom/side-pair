@@ -1,4 +1,4 @@
-package sidepair.service.feed;
+package sidepair.service;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,6 +10,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
+import sidepair.domain.ImageContentType;
+import sidepair.domain.feed.FeedApplicant;
+import sidepair.domain.member.vo.MemberImage;
+import sidepair.persistence.feed.FeedApplicantRepository;
+import sidepair.service.dto.feed.requesst.FeedApplicantSaveRequest;
 import sidepair.service.dto.feed.requesst.FeedCategorySaveRequest;
 import sidepair.service.dto.feed.requesst.FeedNodeSaveRequest;
 import sidepair.service.dto.feed.requesst.FeedSaveRequest;
@@ -30,6 +37,7 @@ import sidepair.domain.member.MemberSkills;
 import sidepair.domain.member.Position;
 import sidepair.domain.member.vo.SkillName;
 import sidepair.service.exception.AuthenticationException;
+import sidepair.service.exception.BadRequestException;
 import sidepair.service.exception.ConflictException;
 import sidepair.service.exception.ForbiddenException;
 import sidepair.service.exception.NotFoundException;
@@ -42,25 +50,32 @@ import sidepair.domain.member.vo.Password;
 import sidepair.persistence.feed.FeedCategoryRepository;
 import sidepair.persistence.feed.FeedRepository;
 import sidepair.persistence.member.MemberRepository;
+import sidepair.service.feed.FeedCreateService;
 
 @ExtendWith(MockitoExtension.class)
 class FeedCreateServiceTest {
 
-    private static final Member MEMBER = new Member(1L, new Email("test@email.com"),null,
+    private static final Member MEMBER = new Member(1L, new Email("test@email.com"), null,
             new EncryptedPassword(new Password("password123!")), new Nickname("닉네임"),
             null, new MemberProfile(Position.BACKEND),
             new MemberSkills(
-            List.of(new MemberSkill(1L, new SkillName("Java")),
-                    new MemberSkill(2L, new SkillName("CSS")))));
+                    List.of(new MemberSkill(1L, new SkillName("Java")),
+                            new MemberSkill(2L, new SkillName("CSS")))));
 
     @Mock
     private MemberRepository memberRepository;
+
+    @Mock
+    private FeedApplicantRepository feedApplicantRepository;
 
     @Mock
     private FeedRepository feedRepository;
 
     @Mock
     private FeedCategoryRepository feedCategoryRepository;
+
+    @Mock
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @InjectMocks
     private FeedCreateService feedCreateService;
@@ -72,7 +87,7 @@ class FeedCreateServiceTest {
         final String feedIntroduction = "피드 소개글";
         final String feedContent = "피드 본문";
         final int requiredPeriod = 30;
-        final FeedCategory category = new FeedCategory(1L, "운동");
+        final FeedCategory category = new FeedCategory(1L, "이커머스");
 
         final List<FeedNodeSaveRequest> feedNodes = List.of(
                 new FeedNodeSaveRequest("피드 노드1 제목", "피드 노드1 설명", Collections.emptyList()));
@@ -89,6 +104,85 @@ class FeedCreateServiceTest {
 
         // expect
         assertDoesNotThrow(() -> feedCreateService.create(request, "test@email.com"));
+    }
+
+    @Test
+    void 피드에_대한_신청서를_추가한다() {
+        // given
+        final Member subscriber = 신청자를_생성한다(2L, "subscriber@example.com", "신청자");
+        final FeedCategory category = new FeedCategory(1L, "이커머스");
+
+        final Feed feed = 피드를_생성한다(MEMBER, category);
+
+        when(feedRepository.findById(anyLong()))
+                .thenReturn(Optional.of(feed));
+        when(feedApplicantRepository.findByFeedAndMember(any(), any()))
+                .thenReturn(Optional.empty());
+        when(memberRepository.findByEmail(subscriber.getEmail()))
+                .thenReturn(Optional.of(subscriber));
+
+        final FeedApplicantSaveRequest feedApplicantSaveRequest = new FeedApplicantSaveRequest("자바 백엔드 개발자 신청합니다.");
+
+        // expected
+        assertDoesNotThrow(
+                () -> feedCreateService.createApplicant(1L, "subscriber@example.com", feedApplicantSaveRequest));
+    }
+
+    @Test
+    void 피드_신청서_작성시_존재하지_않는_피드_아이디를_받으면_예외가_발생한다() {
+        // given
+        when(feedRepository.findById(anyLong()))
+                .thenReturn(Optional.empty());
+
+        final FeedApplicantSaveRequest feedApplicantSaveRequest = new FeedApplicantSaveRequest("신청서 내용");
+
+        // expected
+        assertThatThrownBy(() ->
+                feedCreateService.createApplicant(1L, "subscriber@example.com", feedApplicantSaveRequest))
+                .isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void 피드_신청서_작성시_이미_작성을_완료했으면_예외가_발생한다() {
+        // given
+        final Member subscriber = 신청자를_생성한다(2L, "subscriber@example.com", "신청자");
+
+        final FeedCategory category = new FeedCategory(1L, "이커머스");
+
+        final Feed feed = 피드를_생성한다(MEMBER, category);
+
+        when(feedRepository.findById(anyLong()))
+                .thenReturn(Optional.of(feed));
+        when(memberRepository.findByEmail(subscriber.getEmail()))
+                .thenReturn(Optional.of(subscriber));
+        when(feedApplicantRepository.findByFeedAndMember(any(), any()))
+                .thenReturn(Optional.of(new FeedApplicant("같이 프로젝트 하고싶어요!", subscriber)));
+
+        final FeedApplicantSaveRequest feedApplicantSaveRequest = new FeedApplicantSaveRequest("프로젝트 신청합니다.");
+
+        // expected
+        assertThatThrownBy(
+                () -> feedCreateService.createApplicant(1L, "subscriber@example.com", feedApplicantSaveRequest))
+                .isInstanceOf(BadRequestException.class);
+    }
+
+    @Test
+    void 피드_신청서_작성시_피드_작성자이면_예외가_발생한다() {
+        // given
+        final FeedCategory category = new FeedCategory(1L, "운동");
+
+        final Feed feed = 피드를_생성한다(MEMBER, category);
+
+        when(feedRepository.findById(anyLong()))
+                .thenReturn(Optional.of(feed));
+        when(memberRepository.findByEmail(any(Email.class)))
+                .thenReturn(Optional.of(MEMBER));
+
+        final FeedApplicantSaveRequest feedApplicantSaveRequest = new FeedApplicantSaveRequest("프로젝트 신청합니다.");
+
+        // expected
+        assertThatThrownBy(() -> feedCreateService.createApplicant(1L, "test@example.com", feedApplicantSaveRequest))
+                .isInstanceOf(BadRequestException.class);
     }
 
     @Test
@@ -156,7 +250,7 @@ class FeedCreateServiceTest {
     @Test
     void 피드를_삭제할_때_자신이_생성한_피드가_아니면_예외가_발생한다() {
         // given
-        final FeedCategory category = new FeedCategory(1L, "운동");
+        final FeedCategory category = new FeedCategory(1L, "헬스케어");
         final Feed feed = 피드를_생성한다(MEMBER, category);
 
         when(feedRepository.findById(anyLong()))
@@ -203,5 +297,14 @@ class FeedCreateServiceTest {
         final Feed feed = new Feed("피드 제목", "피드 설명", 100, creator, category);
         feed.addContent(content);
         return feed;
+    }
+
+    private Member 신청자를_생성한다(final Long id, final String email, final String nickname) {
+        return new Member(id, new Email(email),
+                null, new EncryptedPassword(new Password("password1!")),
+                new Nickname(nickname),
+                new MemberImage("originalFileName", "default-profile-image", ImageContentType.JPG),
+                new MemberProfile(Position.BACKEND),
+                new MemberSkills(List.of(new MemberSkill(1L, new SkillName("Java")))));
     }
 }

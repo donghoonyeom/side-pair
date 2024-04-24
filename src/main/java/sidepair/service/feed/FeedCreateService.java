@@ -6,7 +6,14 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sidepair.domain.feed.FeedApplicant;
+import sidepair.domain.project.Project;
+import sidepair.persistence.feed.FeedApplicantRepository;
+import sidepair.persistence.project.ProjectRepository;
+import sidepair.service.dto.feed.FeedApplicantDto;
+import sidepair.service.dto.feed.requesst.FeedApplicantSaveRequest;
 import sidepair.service.event.FeedCreateEvent;
+import sidepair.service.exception.BadRequestException;
 import sidepair.service.mapper.FeedMapper;
 import sidepair.service.dto.feed.FeedNodeSaveDto;
 import sidepair.service.dto.feed.FeedSaveDto;
@@ -41,6 +48,8 @@ public class FeedCreateService {
     private final MemberRepository memberRepository;
     private final FeedRepository feedRepository;
     private final FeedCategoryRepository feedCategoryRepository;
+    private final FeedApplicantRepository feedApplicantRepository;
+    private final ProjectRepository projectRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @CacheEvict(value = "feedList", allEntries = true)
@@ -56,6 +65,17 @@ public class FeedCreateService {
         return savedFeed.getId();
     }
 
+    public void createApplicant(final Long feedId, final String email, final FeedApplicantSaveRequest request) {
+        final Feed feed = findFeedById(feedId);
+        final Member member = findMemberByEmail(email);
+        final FeedApplicantDto feedApplicantDto = FeedMapper.convertFeedApplicantDto(request, member);
+        validateApplicantQualification(feed, member);
+        validateApplicantCount(feed, member);
+        final FeedApplicant feedApplicant = new FeedApplicant(feedApplicantDto.content(), feedApplicantDto.member());
+
+        feed.addApplicant(feedApplicant);
+    }
+
     private Member findMemberByEmail(final String email) {
         return memberRepository.findByEmail(new Email(email))
                 .orElseThrow(() -> new AuthenticationException("존재하지 않는 회원입니다."));
@@ -66,8 +86,22 @@ public class FeedCreateService {
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 카테고리입니다. categoryId = " + categoryId));
     }
 
+    private void validateApplicantQualification(final Feed feed, final Member member) {
+        if (feed.isCreator(member)) {
+            throw new BadRequestException(
+                    "피드 생성자는 신청서를 보낼 수 없습니다. feedId = " + feed.getId() + " memberId = " + member.getId());
+        }
+    }
+
+    private void validateApplicantCount(final Feed feed, final Member member) {
+        if (feedApplicantRepository.findByFeedAndMember(feed, member).isPresent()) {
+            throw new BadRequestException(
+                    "이미 작성한 신청서가 존재합니다. feedId = " + feed.getId() + " memberId = " + member.getId());
+        }
+    }
+
     private Feed createFeed(final Member member, final FeedSaveDto feedSaveDto,
-                                  final FeedCategory feedCategory) {
+                            final FeedCategory feedCategory) {
         final FeedNodes feedNodes = makeFeedNodes(feedSaveDto.feedNodes());
         final FeedContent feedContent = makeFeedContent(feedSaveDto, feedNodes);
         final FeedTags feedTags = makeFeedTags(feedSaveDto.tags());
@@ -110,7 +144,7 @@ public class FeedCreateService {
     }
 
     private Feed makeFeed(final Member member, final FeedSaveDto feedSaveDto,
-                                final FeedCategory feedCategory) {
+                          final FeedCategory feedCategory) {
         return new Feed(feedSaveDto.title(), feedSaveDto.introduction(),
                 feedSaveDto.requiredPeriod(), member, feedCategory);
     }
@@ -119,8 +153,11 @@ public class FeedCreateService {
     public void deleteFeed(final String email, final Long feedId) {
         final Feed feed = findFeedById(feedId);
         validateFeedCreator(feedId, email);
-        feedRepository.delete(feed);
-        // 프로젝트 확인
+        final List<Project> project = projectRepository.findByFeed(feed);
+        if (project.isEmpty()) {
+            feedRepository.delete(feed);
+            return;
+        }
         feed.delete();
     }
 

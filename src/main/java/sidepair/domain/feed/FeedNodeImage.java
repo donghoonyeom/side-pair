@@ -23,12 +23,12 @@ public class FeedNodeImage extends BaseEntity {
     private ImageContentType imageContentType;
 
     public FeedNodeImage(final String originalFileName, final String serverFilePath,
-                            final ImageContentType imageContentType) {
+                         final ImageContentType imageContentType) {
         this(null, originalFileName, serverFilePath, imageContentType);
     }
 
     public FeedNodeImage(final Long id, final String originalFileName, final String serverFilePath,
-                            final ImageContentType imageContentType) {
+                         final ImageContentType imageContentType) {
         this.id = id;
         this.originalFileName = originalFileName;
         this.serverFilePath = serverFilePath;

@@ -40,24 +40,23 @@ class RefreshTokenRepositoryTest {
 
     private RefreshTokenRepositoryImpl refreshTokenRepository;
 
-    @BeforeEach
-    void init() {
-        when(redisTemplate.opsForValue())
-                .thenReturn(valueOperations);
-        refreshTokenRepository = new RefreshTokenRepositoryImpl(redisTemplate, refreshTokenValidityInSeconds);
-    }
-
-
     @BeforeAll
     static void setUp() {
         final Email email = new Email("test@example.com");
         final Password password = new Password("password1!");
         final EncryptedPassword encryptedPassword = new EncryptedPassword(password);
         final Nickname nickname = new Nickname("nickname");
-        final MemberSkills skills= new MemberSkills(
+        final MemberSkills skills = new MemberSkills(
                 List.of(new MemberSkill(1L, new SkillName("Java"))));
         final MemberProfile memberProfile = new MemberProfile(Position.BACKEND);
         member = new Member(email, encryptedPassword, nickname, null, memberProfile, skills);
+    }
+
+    @BeforeEach
+    void init() {
+        when(redisTemplate.opsForValue())
+                .thenReturn(valueOperations);
+        refreshTokenRepository = new RefreshTokenRepositoryImpl(redisTemplate, refreshTokenValidityInSeconds);
     }
 
     @Test

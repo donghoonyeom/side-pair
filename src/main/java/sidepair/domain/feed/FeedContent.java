@@ -12,12 +12,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sidepair.domain.feed.exception.FeedException;
 import sidepair.domain.BaseUpdatedTimeEntity;
+import sidepair.domain.member.Member;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class FeedContent extends BaseUpdatedTimeEntity {
+
     private static final int CONTENT_MAX_LENGTH = 2000;
+
+    @Embedded
+    private final FeedNodes nodes = new FeedNodes();
 
     @Column(length = 2200)
     private String content;
@@ -25,9 +30,6 @@ public class FeedContent extends BaseUpdatedTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "feed_id", nullable = false)
     private Feed feed;
-
-    @Embedded
-    private final FeedNodes nodes = new FeedNodes();
 
     public FeedContent(final String content) {
         this(null, content);
@@ -90,4 +92,6 @@ public class FeedContent extends BaseUpdatedTimeEntity {
     public Feed getFeed() {
         return feed;
     }
+
+    public Member getCreator() {return feed.getCreator();}
 }

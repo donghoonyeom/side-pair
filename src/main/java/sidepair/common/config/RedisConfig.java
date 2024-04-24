@@ -35,7 +35,8 @@ public class RedisConfig {
     public CacheManager redisCacheManager(final RedisConnectionFactory redisConnectionFactory) {
         final ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.EVERYTHING);
+        objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(),
+                ObjectMapper.DefaultTyping.EVERYTHING);
 
         final RedisSerializer<Object> serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
 

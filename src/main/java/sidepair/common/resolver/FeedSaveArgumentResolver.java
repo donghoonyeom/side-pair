@@ -72,7 +72,7 @@ public class FeedSaveArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     private FeedSaveRequest makeFeedSaveRequestIncludeImage(final FeedSaveRequest feedSaveRequest,
-                                                                  final MultipartHttpServletRequest multipartRequest) {
+                                                            final MultipartHttpServletRequest multipartRequest) {
         for (final FeedNodeSaveRequest feedNode : feedSaveRequest.feedNodes()) {
             final List<MultipartFile> images = multipartRequest.getFiles(feedNode.getTitle());
             feedNode.setImages(images);

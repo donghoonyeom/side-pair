@@ -30,9 +30,9 @@ class FeedContentRepositoryTest {
     private final FeedContentRepository feedContentRepository;
 
     public FeedContentRepositoryTest(final MemberRepository memberRepository,
-                                        final FeedCategoryRepository feedCategoryRepository,
-                                        final FeedRepository feedRepository,
-                                        final FeedContentRepository feedContentRepository) {
+                                     final FeedCategoryRepository feedCategoryRepository,
+                                     final FeedRepository feedRepository,
+                                     final FeedContentRepository feedContentRepository) {
         this.memberRepository = memberRepository;
         this.feedCategoryRepository = feedCategoryRepository;
         this.feedRepository = feedRepository;

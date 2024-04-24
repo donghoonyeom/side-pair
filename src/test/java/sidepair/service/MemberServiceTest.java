@@ -1,4 +1,4 @@
-package sidepair.service.member;
+package sidepair.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -45,6 +45,7 @@ import sidepair.service.dto.mamber.response.MemberInformationResponse;
 import sidepair.service.dto.mamber.response.MemberSkillResponse;
 import sidepair.service.exception.ConflictException;
 import sidepair.service.exception.NotFoundException;
+import sidepair.service.member.MemberService;
 
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
@@ -103,7 +104,7 @@ class MemberServiceTest {
     void 회원가입_시_이미_존재하는_아이디가_존재할때_예외를_던진다() {
         //given
         final MemberJoinRequest request = new MemberJoinRequest("sidepair@email.com", "password1!",
-                "nickname",PositionType.BACKEND, List.of(new MemberSkillSaveRequest("Java")));
+                "nickname", PositionType.BACKEND, List.of(new MemberSkillSaveRequest("Java")));
         final Email email = new Email("sidepair@email.com");
         final Password password = new Password("password1!");
         final MemberSkills skills = new MemberSkills(List.of(new MemberSkill(1L, new SkillName("Java"))));
@@ -139,12 +140,11 @@ class MemberServiceTest {
         // when
         final MemberInformationResponse response = memberService.findMemberInformation(email.getValue());
 
-
         // then
         final MemberInformationResponse expected = new MemberInformationResponse(1L, "nickname",
                 "http://example.com/serverFilePath", Position.BACKEND.name(),
-                 List.of(new MemberSkillResponse(1L, "Java")),
-                 "sidepair@email.com");
+                List.of(new MemberSkillResponse(1L, "Java")),
+                "sidepair@email.com");
 
         assertThat(response).isEqualTo(expected);
     }
@@ -226,7 +226,8 @@ class MemberServiceTest {
     @Test
     void oauth_회원가입을_한다() {
         //given
-        final OauthMemberJoinDto request = new OauthMemberJoinDto("oauthId", "sidepair@email.com", PositionType.ETC,"nickname");
+        final OauthMemberJoinDto request = new OauthMemberJoinDto("oauthId", "sidepair@email.com", PositionType.ETC,
+                "nickname");
 
         given(memberRepository.save(any()))
                 .willReturn(new Member(1L, null, null, null, null, null, null, null));
@@ -254,7 +255,8 @@ class MemberServiceTest {
     @ValueSource(strings = {"kkk", "kkkk"})
     void oauth_회원가입_시_이메일의_아이디와_UUID_길이의_합이_40이하일때_회원을_생성한다(final String value) {
         //given
-        final OauthMemberJoinDto request = new OauthMemberJoinDto("oauthId", value + "@email.com", PositionType.ETC, "nickname");
+        final OauthMemberJoinDto request = new OauthMemberJoinDto("oauthId", value + "@email.com", PositionType.ETC,
+                "nickname");
 
         given(memberRepository.save(any()))
                 .willReturn(new Member(1L, null, null, null, null, null, null, null));
@@ -282,10 +284,11 @@ class MemberServiceTest {
     @ValueSource(strings = {"kkkkk", "kkkkkk", "kkkkkkkkkkkkkkkkk"})
     void oauth_회원가입_시_이메일의_아이디와_UUID_길이의_합이_40초과일때_회원을_생성한다(final String value) {
         //given
-        final OauthMemberJoinDto request = new OauthMemberJoinDto("oauthId", value + "@email.com", PositionType.ETC, "nickname");
+        final OauthMemberJoinDto request = new OauthMemberJoinDto("oauthId", value + "@email.com", PositionType.ETC,
+                "nickname");
 
         given(memberRepository.save(any()))
-                .willReturn(new Member(1L, null, null, null, null, null, null,null));
+                .willReturn(new Member(1L, null, null, null, null, null, null, null));
         given(environment.getProperty(IMAGE_DEFAULT_ORIGINAL_FILE_NAME_PROPERTY))
                 .willReturn("default-member-image");
         given(environment.getProperty(IMAGE_DEFAULT_SERVER_FILE_PATH_PROPERTY))
