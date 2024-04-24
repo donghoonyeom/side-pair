@@ -28,5 +28,7 @@ public interface FeedQueryRepository {
 
     Optional<Feed> findByIdAndMemberEmail(final Long feedId, final String email);
 
+    Optional<Feed> findByIdAndMember(final Long feedId, final Member member);
+
     List<Feed> findWithFeedContentByStatus(final FeedStatus status);
 }
