@@ -107,6 +107,14 @@ public class FeedQueryRepositoryImpl extends QuerydslRepositorySupporter impleme
     }
 
     @Override
+    public Optional<Feed> findByIdAndMember(final Long feedId, final Member member) {
+        return Optional.ofNullable(selectFrom(feed)
+                .where(feed.id.eq(feedId),
+                        feed.creator.eq(member))
+                .fetchOne());
+    }
+
+    @Override
     public List<Feed> findWithFeedContentByStatus(final FeedStatus status) {
         return selectFrom(feed)
                 .innerJoin(feed.contents.values, feedContent)
