@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public record ProjectFeedNodeDto(
         Long feedNodeId,
-        int checkCount,
+        int memoirCount,
         LocalDate startDate,
         LocalDate endDate
 ) {

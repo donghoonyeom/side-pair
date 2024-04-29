@@ -123,8 +123,8 @@ public class Project extends BaseUpdatedTimeEntity {
         return (int) ChronoUnit.DAYS.between(startDate, endDate) + DATE_OFFSET;
     }
 
-    public int getAllCheckCount() {
-        return projectFeedNodes.calculateAllCheckCount();
+    public int getAllMemoirCount() {
+        return projectFeedNodes.calculateAllMemoirCount();
     }
 
     public boolean isRecruiting() {

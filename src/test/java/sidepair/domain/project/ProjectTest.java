@@ -147,7 +147,7 @@ class ProjectTest {
     }
 
     @Test
-    void 프로젝트의_총_인증_횟수를_구한다() {
+    void 프로젝트의_총_회고_횟수를_구한다() {
         //given
         final Member creator = 크리에이터를_생성한다();
         final Feed feed = 피드를_생성한다(creator);
@@ -157,7 +157,7 @@ class ProjectTest {
         final Project project = 프로젝트를_생성한다(targetFeedContent, creator);
 
         //expect
-        assertThat(project.getAllCheckCount()).isEqualTo(12);
+        assertThat(project.getAllMemoirCount()).isEqualTo(12);
     }
 
     @Test
