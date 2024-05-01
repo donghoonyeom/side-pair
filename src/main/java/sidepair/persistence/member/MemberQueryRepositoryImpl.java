@@ -3,6 +3,7 @@ package sidepair.persistence.member;
 
 import static sidepair.domain.member.QMember.member;
 import static sidepair.domain.member.QMemberProfile.memberProfile;
+import static sidepair.domain.member.QMemberSkill.memberSkill;
 import static sidepair.domain.member.vo.QMemberImage.memberImage;
 
 import java.util.Optional;
@@ -22,6 +23,7 @@ public class MemberQueryRepositoryImpl extends QuerydslRepositorySupporter imple
                 .fetchJoin()
                 .innerJoin(member.image, memberImage)
                 .fetchJoin()
+                .leftJoin(member.skills.values, memberSkill)
                 .where(member.email.value.eq(email))
                 .fetchOne());
     }
@@ -33,6 +35,7 @@ public class MemberQueryRepositoryImpl extends QuerydslRepositorySupporter imple
                 .fetchJoin()
                 .innerJoin(member.image, memberImage)
                 .fetchJoin()
+                .leftJoin(member.skills.values, memberSkill)
                 .where(member.id.eq(memberId))
                 .fetchOne());
     }
