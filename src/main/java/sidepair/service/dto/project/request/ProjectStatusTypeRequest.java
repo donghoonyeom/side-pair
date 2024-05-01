@@ -1,4 +1,4 @@
-package sidepair.service.dto.project.reequest;
+package sidepair.service.dto.project.request;
 
 public enum ProjectStatusTypeRequest {
     RECRUITING("모집 중"),
