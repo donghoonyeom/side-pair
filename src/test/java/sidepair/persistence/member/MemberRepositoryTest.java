@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import sidepair.domain.ImageContentType;
@@ -38,7 +39,7 @@ class MemberRepositoryTest {
         final Password password = new Password("password1!");
         final EncryptedPassword encryptedPassword = new EncryptedPassword(password);
         final Nickname nickname = new Nickname("nickname");
-        final MemberSkills skills = new MemberSkills(List.of(new MemberSkill(1L, new SkillName("Java"))));
+        final MemberSkills skills = new MemberSkills(List.of(new MemberSkill(new SkillName("Java"))));
         final MemberProfile memberProfile = new MemberProfile(Position.BACKEND);
         final MemberImage memberImage = new MemberImage("originalFileName", "serverFilePath", ImageContentType.PNG);
         member = new Member(email, encryptedPassword, nickname, memberImage, memberProfile, skills);
@@ -68,10 +69,16 @@ class MemberRepositoryTest {
         // then
         final MemberProfile memberProfile = findMember.getMemberProfile();
         final MemberImage memberImage = findMember.getImage();
+        final MemberSkills skills = findMember.getSkills();
 
         assertAll(
-                () -> assertThat(member.getEmail().getValue()).isEqualTo("test@example.com"),
+                () -> assertThat(findMember.getEmail().getValue()).isEqualTo("test@example.com"),
                 () -> assertThat(memberProfile.getPosition()).isEqualTo(Position.BACKEND),
+                () -> assertThat(skills.getValues().stream()
+                        .map(MemberSkill::getName)
+                        .map(SkillName::getValue)
+                        .collect(Collectors.toList()))
+                        .containsExactlyInAnyOrder("Java"),
                 () -> assertThat(memberImage.getServerFilePath()).isEqualTo("serverFilePath")
         );
     }
