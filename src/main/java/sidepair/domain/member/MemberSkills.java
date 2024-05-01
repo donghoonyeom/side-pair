@@ -23,7 +23,7 @@ public class MemberSkills {
     private static final int MAX_COUNT = 5;
 
     @OneToMany(fetch = FetchType.LAZY,
-            cascade = {CascadeType.MERGE, CascadeType.REMOVE},
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
             orphanRemoval = true)
     @JoinColumn(name = "member_id", nullable = false)
     @BatchSize(size = 20)
