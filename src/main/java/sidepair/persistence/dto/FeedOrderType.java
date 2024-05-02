@@ -1,5 +1,5 @@
 package sidepair.persistence.dto;
 
 public enum FeedOrderType {
-    LATEST
+    LATEST, APPLICANT_COUNT
 }
