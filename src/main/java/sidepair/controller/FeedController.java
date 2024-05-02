@@ -107,6 +107,7 @@ public class FeedController {
     }
 
     @GetMapping("/me/{feedId}/applicants")
+    @Authenticated
     public ResponseEntity<List<FeedApplicantResponse>> findFeedApplicants(
             @PathVariable final Long feedId,
             @MemberEmail final String email,

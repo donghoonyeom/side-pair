@@ -50,7 +50,7 @@ public class FeedContent extends BaseUpdatedTimeEntity {
 
     private void validateContentLength(final String content) {
         if (content.length() > CONTENT_MAX_LENGTH) {
-            throw new FeedException(String.format("개시물 본문의 길이는 최대 %d글자입니다.", CONTENT_MAX_LENGTH));
+            throw new FeedException(String.format("피드 본문의 길이는 최대 %d글자입니다.", CONTENT_MAX_LENGTH));
         }
     }
 
