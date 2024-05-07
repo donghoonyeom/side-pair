@@ -8,6 +8,7 @@ import static sidepair.integration.fixture.MemberAPIFixture.기본_회원가입;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import sidepair.domain.feed.FeedCategory;
+import sidepair.service.dto.feed.requesst.FeedApplicantSaveRequest;
 import sidepair.service.dto.feed.requesst.FeedNodeSaveRequest;
 import sidepair.service.dto.feed.requesst.FeedSaveRequest;
 import sidepair.service.dto.feed.requesst.FeedTagSaveRequest;
@@ -19,6 +20,7 @@ public class InitIntegrationTest extends IntegrationTest {
     protected static String 기본_재발행_토큰;
     protected static FeedCategory 기본_카테고리;
     protected static FeedSaveRequest 기본_피드_생성_요청;
+    protected static FeedApplicantSaveRequest 피드_기본_신청서_생성_요청;
 
     @BeforeEach
     void init() {
@@ -30,5 +32,6 @@ public class InitIntegrationTest extends IntegrationTest {
                 "피드 본문",  30,
                 List.of(new FeedNodeSaveRequest("feed 1st week", "피드 1주차 내용", null)),
                 List.of(new FeedTagSaveRequest("태그1")));
+        피드_기본_신청서_생성_요청 = new FeedApplicantSaveRequest("신청서 내용");
     }
 }
