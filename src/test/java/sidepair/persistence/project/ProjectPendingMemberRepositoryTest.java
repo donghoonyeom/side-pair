@@ -313,7 +313,7 @@ class ProjectPendingMemberRepositoryTest {
 
     private Member 크리에이터를_저장한다() {
         final MemberProfile memberProfile = new MemberProfile(Position.BACKEND);
-        final MemberSkills skills = new MemberSkills(List.of(new MemberSkill(1L, new SkillName("Java"))));
+        final MemberSkills skills = new MemberSkills(List.of(new MemberSkill(new SkillName("Java"))));
         final Member creator = new Member(new Email("test@example.com"),
                 new EncryptedPassword(new Password("password1!")), new Nickname("페어"),
                 new MemberImage("originalFileName", "serverFilePath", ImageContentType.PNG), memberProfile, skills);
@@ -322,7 +322,7 @@ class ProjectPendingMemberRepositoryTest {
 
     private Member 사용자를_생성한다(final String email, final String password, final String nickname) {
         final MemberProfile memberProfile = new MemberProfile(Position.DESIGNER);
-        final MemberSkills skills = new MemberSkills(List.of(new MemberSkill(1L, new SkillName("CSS"))));
+        final MemberSkills skills = new MemberSkills(List.of(new MemberSkill(new SkillName("CSS"))));
         final Member member = new Member(new Email(email), new EncryptedPassword(new Password(password)),
                 new Nickname(nickname), new MemberImage("originalFileName", "serverFilePath", ImageContentType.PNG),
                 memberProfile, skills);

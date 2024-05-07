@@ -161,7 +161,7 @@ class ProjectToDoCheckRepositoryTest {
 
     private Member 사용자를_생성한다(final String nickname,final String email, final String password) {
         final MemberProfile memberProfile = new MemberProfile(Position.FRONTEND);
-        final MemberSkills skills = new MemberSkills(List.of(new MemberSkill(1L, new SkillName("JavaScript"))));
+        final MemberSkills skills = new MemberSkills(List.of(new MemberSkill(new SkillName("JavaScript"))));
         final Member creator = new Member(new Email(email),
                 new EncryptedPassword(new Password(password)), new Nickname(nickname), null, memberProfile, skills);
         return memberRepository.save(creator);

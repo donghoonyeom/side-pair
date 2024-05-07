@@ -536,7 +536,7 @@ class ProjectRepositoryTest {
 
     private Member 크리에이터를_저장한다() {
         final MemberProfile memberProfile = new MemberProfile(Position.FRONTEND);
-        final MemberSkills skills = new MemberSkills(List.of(new MemberSkill(1L, new SkillName("JavaScript"))));
+        final MemberSkills skills = new MemberSkills(List.of(new MemberSkill(new SkillName("JavaScript"))));
         final Member creator = new Member(new Email("test@example.com"),
                 new EncryptedPassword(new Password("password1!")), new Nickname("사이드페어"), null,
                 memberProfile, skills);
@@ -545,7 +545,7 @@ class ProjectRepositoryTest {
 
     private Member 사용자를_생성한다(final String nickname, final String email, final String password) {
         final MemberProfile memberProfile = new MemberProfile(Position.BACKEND);
-        final MemberSkills skills = new MemberSkills(List.of(new MemberSkill(1L, new SkillName("Java"))));
+        final MemberSkills skills = new MemberSkills(List.of(new MemberSkill(new SkillName("Java"))));
         final Member creator = new Member(new Email(email),
                 new EncryptedPassword(new Password(password)), new Nickname(nickname), null, memberProfile, skills);
         return memberRepository.save(creator);
