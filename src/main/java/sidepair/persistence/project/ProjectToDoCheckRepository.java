@@ -13,32 +13,32 @@ import sidepair.domain.project.ProjectToDoCheck;
 
 public interface ProjectToDoCheckRepository extends JpaRepository<ProjectToDoCheck, Long> {
 
-    @Query("select gc from ProjectToDoCheck gc "
-            + "inner join fetch gc.projectMember gcm "
-            + "inner join fetch gcm.member m "
-            + "inner join fetch gcm.project g "
+    @Query("select pc from ProjectToDoCheck pc "
+            + "inner join fetch pc.projectMember pcm "
+            + "inner join fetch pcm.member m "
+            + "inner join fetch pcm.project p "
             + "where m.email = :email "
-            + "and gc.projectToDo = :projectTodo "
-            + "and g.id = :projectId")
+            + "and pc.projectToDo = :projectTodo "
+            + "and p.id = :projectId")
     Optional<ProjectToDoCheck> findByProjectIdAndTodoAndMemberEmail(
             @Param("projectId") final Long projectId,
             @Param("projectTodo") final ProjectToDo projectToDo,
             @Param("email") final Email email);
 
-    @Query("select gc from ProjectToDoCheck gc "
-            + "inner join fetch gc.projectMember gcm "
-            + "inner join fetch gcm.member m "
-            + "inner join fetch gcm.project g "
+    @Query("select pc from ProjectToDoCheck pc "
+            + "inner join fetch pc.projectMember pcm "
+            + "inner join fetch pcm.member m "
+            + "inner join fetch pcm.project p "
             + "where m.email = :email "
-            + "and g.id = :projectId ")
+            + "and p.id = :projectId ")
     List<ProjectToDoCheck> findByProjectIdAndMemberEmail(
             @Param("projectId") final Long projectId,
             @Param("email") final Email email);
 
     @Modifying
-    @Query("delete from ProjectToDoCheck gc "
-            + "where gc.projectMember = :projectMember "
-            + "and gc.projectToDo.id = :todoId")
+    @Query("delete from ProjectToDoCheck pc "
+            + "where pc.projectMember = :projectMember "
+            + "and pc.projectToDo.id = :todoId")
     void deleteByProjectMemberAndToDoId(@Param("projectMember") final ProjectMember projectMember,
                                         @Param("todoId") final Long todoId);
 }
