@@ -430,7 +430,7 @@ class MemoirRepositoryTest {
 
     private Member 사용자를_저장한다(final String email, final String nickname) {
         final MemberProfile memberProfile = new MemberProfile(Position.BACKEND);
-        final MemberSkills skills = new MemberSkills(List.of(new MemberSkill(1L, new SkillName("Java"))));
+        final MemberSkills skills = new MemberSkills(List.of(new MemberSkill(new SkillName("Java"))));
         final MemberImage memberImage = new MemberImage("file-name", "file-path", ImageContentType.PNG);
         final Member creator = new Member(new Email(email), new EncryptedPassword(new Password("password1!")),
                 new Nickname(nickname), memberImage, memberProfile, skills);

@@ -13,24 +13,24 @@ import sidepair.domain.project.ProjectPendingMember;
 public interface ProjectPendingMemberRepository extends JpaRepository<ProjectPendingMember, Long>,
         ProjectPendingMemberQueryRepository {
 
-    @Query("select gp from ProjectPendingMember gp "
-            + "inner join fetch gp.project g "
-            + "inner join fetch gp.member m "
-            + "where g=:project "
+    @Query("select pp from ProjectPendingMember pp "
+            + "inner join fetch pp.project p "
+            + "inner join fetch pp.member m "
+            + "where p=:project "
             + "and m.email =:email")
     Optional<ProjectPendingMember> findByProjectAndMemberEmail(
             @Param("project") final Project project, @Param("email") final Email email);
 
     List<ProjectPendingMember> findByProject(final Project project);
 
-    @Query("select gp from ProjectPendingMember gp "
-            + "join fetch gp.project g "
-            + "join fetch gp.member m "
-            + "where g=:project "
-            + "and gp.member = m")
+    @Query("select pp from ProjectPendingMember pp "
+            + "join fetch pp.project p "
+            + "join fetch pp.member m "
+            + "where p=:project "
+            + "and pp.member = m")
     List<ProjectPendingMember> findAllByProject(@Param("project") final Project project);
 
     @Modifying
-    @Query("DELETE FROM ProjectPendingMember gp WHERE gp.id IN :ids")
+    @Query("DELETE FROM ProjectPendingMember pp WHERE pp.id IN :ids")
     void deleteAllByIdIn(@Param("ids") final List<Long> ids);
 }
