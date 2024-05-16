@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import sidepair.domain.ImageContentType;
+import sidepair.domain.feed.FeedApplicant;
 import sidepair.domain.member.EncryptedPassword;
 import sidepair.domain.member.Member;
 import sidepair.domain.member.MemberProfile;
@@ -90,6 +91,26 @@ class MemberRepositoryTest {
 
         // when
         final Member findMember = memberRepository.findWithMemberProfileAndImageById(savedMember.getId()).get();
+
+        // then
+        final MemberProfile memberProfile = findMember.getMemberProfile();
+        final MemberImage memberImage = findMember.getImage();
+
+        assertAll(
+                () -> assertThat(member.getEmail().getValue()).isEqualTo("test@example.com"),
+                () -> assertThat(memberProfile.getPosition()).isEqualTo(Position.BACKEND),
+                () -> assertThat(memberImage.getServerFilePath()).isEqualTo("serverFilePath")
+        );
+    }
+
+    @Test
+    void 신청서로_사용자의_프로필과_이미지를_함께_조회한다() {
+        // given
+        final Member savedMember = memberRepository.save(member);
+        final FeedApplicant applicant = new FeedApplicant("신청서 내용", savedMember);
+
+        // when
+        final Member findMember = memberRepository.findWithMemberProfileAndImageByApplicant(applicant).get();
 
         // then
         final MemberProfile memberProfile = findMember.getMemberProfile();
