@@ -31,7 +31,6 @@ import sidepair.service.dto.mamber.response.MemberResponse;
 import sidepair.service.dto.mamber.response.MemberSkillResponse;
 import sidepair.service.dto.project.MemoirDto;
 import sidepair.service.dto.project.FeedProjectDto;
-import sidepair.service.dto.project.FeedProjectScrollDto;
 import sidepair.service.dto.project.FeedProjectsOrderTypeDto;
 import sidepair.service.dto.project.MemberProjectForListDto;
 import sidepair.service.dto.project.ProjectMemoirDto;
@@ -139,12 +138,11 @@ public class ProjectMapper {
     }
 
     public static FeedProjectResponses convertToFeedProjectResponses(
-            final FeedProjectScrollDto feedProjectScrollDto) {
-        final List<FeedProjectResponse> responses = feedProjectScrollDto.feedProjectDtos()
-                .stream()
+            final List<FeedProjectDto> feedProjectDtos) {
+        final List<FeedProjectResponse> responses = feedProjectDtos.stream()
                 .map(ProjectMapper::convertToFeedProjectResponse)
                 .toList();
-        return new FeedProjectResponses(responses, feedProjectScrollDto.hasNext());
+        return new FeedProjectResponses(responses);
     }
 
     private static FeedProjectResponse convertToFeedProjectResponse(
@@ -218,12 +216,12 @@ public class ProjectMapper {
                 project.getProjectFeedNodes());
         final List<ProjectTodoResponse> todoResponses = convertProjectTodoResponsesLimit(project.getProjectToDos(),
                 checkedTodos);
-        final List<MemoirResponse> memoirRespons = convertToMemoirResponses(memoirDtos);
+        final List<MemoirResponse> memoirResponses = convertToMemoirResponses(memoirDtos);
 
         return new MemberProjectResponse(project.getName().getValue(), project.getStatus().name(),
                 project.findProjectLeader().getId(), project.getCurrentMemberCount(),
                 project.getLimitedMemberCount().getValue(), project.getStartDate(), project.getEndDate(),
-                project.getFeedContent().getId(), nodeResponses, todoResponses, memoirRespons);
+                project.getFeedContent().getId(), nodeResponses, todoResponses, memoirResponses);
     }
 
     private static ProjectFeedNodesResponse convertToProjectFeedNodesResponse(
