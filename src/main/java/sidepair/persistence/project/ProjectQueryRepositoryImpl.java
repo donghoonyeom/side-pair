@@ -7,7 +7,6 @@ import static sidepair.domain.project.QProjectMember.projectMember;
 import static sidepair.domain.project.QProjectPendingMember.projectPendingMember;
 import static sidepair.domain.project.QProjectToDo.projectToDo;
 
-import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import jakarta.persistence.LockModeType;
 import java.time.LocalDate;
@@ -18,22 +17,19 @@ import sidepair.domain.member.Member;
 import sidepair.domain.project.Project;
 import sidepair.domain.project.ProjectStatus;
 import sidepair.persistence.QuerydslRepositorySupporter;
-import sidepair.persistence.project.dto.FeedProjectsOrderType;
 
 public class ProjectQueryRepositoryImpl extends QuerydslRepositorySupporter implements ProjectQueryRepository {
-
-    private static final int LIMIT_OFFSET = 1;
 
     public ProjectQueryRepositoryImpl() {
         super(Project.class);
     }
 
     @Override
-    public Optional<Project> findProjectByIdWithPessimisticLock(final Long projectId) {
+    public Optional<Project> findProjectByFeedIdWithPessimisticLock(final Long feedId) {
         return Optional.ofNullable(selectFrom(project)
                 .innerJoin(project.projectPendingMembers.values, projectPendingMember)
                 .fetchJoin()
-                .where(project.id.eq(projectId))
+                .where(project.feedContent.feed.id.eq(feedId))
                 .setLockMode(LockModeType.PESSIMISTIC_WRITE)
                 .fetchOne());
     }
@@ -59,20 +55,11 @@ public class ProjectQueryRepositoryImpl extends QuerydslRepositorySupporter impl
     }
 
     @Override
-    public List<Project> findProjectsByFeedAndCond(final Feed feed,
-                                                        final FeedProjectsOrderType orderType,
-                                                        final Long lastId,
-                                                        final int pageSize) {
-        return selectFrom(project)
+    public Optional<Project> findProjectByFeedAndCond(final Feed feed) {
+        return Optional.ofNullable(selectFrom(project)
                 .innerJoin(project.feedContent, feedContent)
-                .on(feedContent.feed.eq(feed))
-                .where(
-                        statusCond(orderType),
-                        lessThanLastId(lastId, orderType),
-                        feedCond(feed))
-                .limit(pageSize + LIMIT_OFFSET)
-                .orderBy(sortCond(orderType))
-                .fetch();
+                .where(feedCond(feed))
+                .fetchOne());
     }
 
     @Override
@@ -142,36 +129,6 @@ public class ProjectQueryRepositoryImpl extends QuerydslRepositorySupporter impl
         return project.status.eq(status);
     }
 
-    private BooleanExpression statusCond(final FeedProjectsOrderType orderType) {
-        if (orderType == FeedProjectsOrderType.CLOSE_TO_DEADLINE) {
-            return statusCond(ProjectStatus.RECRUITING);
-        }
-        return null;
-    }
-
-    private OrderSpecifier<?> sortCond(final FeedProjectsOrderType orderType) {
-        if (orderType == FeedProjectsOrderType.CLOSE_TO_DEADLINE) {
-            return project.startDate.asc();
-        }
-        return project.createdAt.desc();
-    }
-
-    private BooleanExpression lessThanLastId(final Long lastId, final FeedProjectsOrderType orderType) {
-        if (lastId == null) {
-            return null;
-        }
-        if (orderType == FeedProjectsOrderType.CLOSE_TO_DEADLINE) {
-            return select(project.startDate)
-                    .from(project)
-                    .where(project.id.eq(lastId))
-                    .lt(project.startDate);
-        }
-        return project.createdAt.lt(
-                select(project.createdAt)
-                        .from(project)
-                        .where(project.id.eq(lastId))
-        );
-    }
 
     private BooleanExpression feedCond(final Feed feed) {
         return project.feedContent.feed.eq(feed);
