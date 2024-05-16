@@ -10,10 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 import sidepair.domain.feed.FeedApplicant;
 import sidepair.domain.member.MemberProfile;
 import sidepair.domain.member.MemberSkills;
+import sidepair.domain.project.Project;
 import sidepair.persistence.feed.FeedApplicantRepository;
+import sidepair.persistence.project.ProjectRepository;
 import sidepair.service.dto.feed.FeedApplicantReadDto;
 import sidepair.service.dto.feed.response.FeedApplicantResponse;
+import sidepair.service.dto.feed.response.FeedProjectResponses;
 import sidepair.service.dto.mamber.MemberSkillDto;
+import sidepair.service.dto.project.FeedProjectDto;
 import sidepair.service.exception.ForbiddenException;
 import sidepair.service.mapper.FeedMapper;
 import sidepair.service.dto.feed.FeedNodeDto;
@@ -58,6 +62,7 @@ import sidepair.persistence.member.MemberRepository;
 public class FeedReadService {
 
     private final FeedRepository feedRepository;
+    private final ProjectRepository projectRepository;
     private final FeedCategoryRepository feedCategoryRepository;
     private final FeedContentRepository feedContentRepository;
     private final FeedApplicantRepository feedApplicantRepository;
@@ -193,6 +198,27 @@ public class FeedReadService {
                 .toList();
     }
 
+    public FeedProjectResponses findFeedProjects(final Long feedId) {
+        final Feed feed = findFeedById(feedId);
+        final List<Project> project = projectRepository.findByFeed(feed);
+        final List<FeedProjectDto> feedProjectDtos = makeProjectDtos(project);
+        return ProjectMapper.convertToFeedProjectResponses(feedProjectDtos);
+    }
+
+    public List<FeedProjectDto> makeProjectDtos(final List<Project> projects) {
+        return projects.stream()
+                .map(this::makeProjectDto)
+                .toList();
+    }
+
+    private FeedProjectDto makeProjectDto(final Project project) {
+        final Member projectLeader = project.findProjectLeader();
+        return new FeedProjectDto(project.getId(), project.getName().getValue(), project.getStatus(),
+                project.getCurrentMemberCount(), project.getLimitedMemberCount().getValue(),
+                project.getCreatedAt(), project.getStartDate(),
+                project.getEndDate(), makeMemberDto(projectLeader));
+    }
+
     public FeedForListResponses search(final FeedOrderTypeRequest orderTypeRequest,
                                        final FeedSearchRequest searchRequest,
                                        final CustomScrollRequest scrollRequest) {
@@ -229,7 +255,8 @@ public class FeedReadService {
                                                           final String email,
                                                           final CustomScrollRequest scrollRequest) {
         final Feed feed = findFeedById(feedId);
-        validateFeedCreator(feedId, email);
+        final Member member = findMemberByEmail(email);
+        validateFeedCreator(feedId, member);
         final List<FeedApplicant> feedApplicants = feedApplicantRepository.findFeedApplicantWithMemberByFeedOrderByLatest(
                 feed, scrollRequest.lastId(), scrollRequest.size());
         final List<FeedApplicantReadDto> feedApplicantReadDtos = makeFeedApplicantReadDtos(feedApplicants);
@@ -252,8 +279,8 @@ public class FeedReadService {
                 applicant.getCreatedAt(), applicant.getContent());
     }
 
-    private void validateFeedCreator(final Long feedId, final String email) {
-        feedRepository.findByIdAndMemberEmail(feedId, email)
+    private void validateFeedCreator(final Long feedId, final Member member) {
+        feedRepository.findByIdAndMember(feedId, member)
                 .orElseThrow(() -> new ForbiddenException("해당 피드를 생성한 사용자가 아닙니다."));
     }
 }
