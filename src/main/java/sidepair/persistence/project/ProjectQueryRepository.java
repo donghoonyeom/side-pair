@@ -7,20 +7,16 @@ import sidepair.domain.feed.Feed;
 import sidepair.domain.member.Member;
 import sidepair.domain.project.Project;
 import sidepair.domain.project.ProjectStatus;
-import sidepair.persistence.project.dto.FeedProjectsOrderType;
 
 public interface ProjectQueryRepository {
 
-    Optional<Project> findProjectByIdWithPessimisticLock(Long projectId);
+    Optional<Project> findProjectByFeedIdWithPessimisticLock(Long projectId);
 
     Optional<Project> findByIdWithFeedContent(final Long projectId);
 
     Optional<Project> findByIdWithContentAndTodos(final Long projectId);
 
-    List<Project> findProjectsByFeedAndCond(final Feed feed,
-                                            final FeedProjectsOrderType filterType,
-                                            final Long lastId,
-                                            final int pageSize);
+    Optional<Project> findProjectByFeedAndCond(final Feed feed);
 
     Optional<Project> findByIdWithTodos(final Long projectId);
 
