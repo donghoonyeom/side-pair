@@ -91,7 +91,7 @@ class FeedContentRepositoryTest {
     private Member 사용자를_생성한다() {
         final MemberProfile memberProfile = new MemberProfile(Position.BACKEND);
         final MemberSkills skills = new MemberSkills(
-                List.of(new MemberSkill(1L, new SkillName("Java"))));
+                List.of(new MemberSkill(new SkillName("Java"))));
         final Member member = new Member(new Email("test@email.com"),
                 new EncryptedPassword(new Password("password1!")), new Nickname("두두"), null, memberProfile, skills);
 
