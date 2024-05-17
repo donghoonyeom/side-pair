@@ -167,7 +167,7 @@ public class FeedAPIFixture {
                 .when()
                 .header(AUTHORIZATION, 팔로워_토큰_정보)
                 .body(피드_신청서_생성_요청)
-                .post("/api/feeds/" + 피드_아이디 + "/applicant")
+                .post("/api/feeds/" + 피드_아이디 + "/applicants")
                 .then()
                 .log().all()
                 .extract();
@@ -182,6 +182,17 @@ public class FeedAPIFixture {
                 .param("lastId", 스크롤_요청.lastId())
                 .param("size", 스크롤_요청.size())
                 .get("/api/feeds/me/{feedId}/applicants", 피드_아이디)
+                .then()
+                .log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 프로젝트_참가_허용(final Long 피드_아이디, final Long 신청서_아이디,
+                                                           final String 로그인_토큰_정보) {
+        return given().log().all()
+                .header(AUTHORIZATION, 로그인_토큰_정보)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .post(API_PREFIX + "/feeds/me/" + 피드_아이디 + "/applicants/" + 신청서_아이디 + "/join")
                 .then()
                 .log().all()
                 .extract();
