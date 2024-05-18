@@ -63,6 +63,10 @@ public class FeedContent extends BaseUpdatedTimeEntity {
         return this.feed == null || !this.feed.equals(feed);
     }
 
+    public boolean isNotFeedCreator(final Member member) {
+        return !feed.isCreator(member);
+    }
+
     public void updateFeed(final Feed feed) {
         if (this.feed == null) {
             this.feed = feed;
@@ -92,6 +96,4 @@ public class FeedContent extends BaseUpdatedTimeEntity {
     public Feed getFeed() {
         return feed;
     }
-
-    public Member getCreator() {return feed.getCreator();}
 }
