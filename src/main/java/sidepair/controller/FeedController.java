@@ -54,9 +54,8 @@ public class FeedController {
             @PathVariable("feedId") final Long feedId,
             @MemberEmail final String email,
             @RequestBody @Valid final FeedApplicantSaveRequest request) {
-        Long applicantId = feedCreateService.createApplicant(feedId, email, request);
-        URI location = URI.create("/api/feeds/" + feedId + "/applicants/" + applicantId);
-        return ResponseEntity.created(location).build();
+        final Long applicantId = feedCreateService.createApplicant(feedId, email, request);
+        return ResponseEntity.created(URI.create("/api/feeds/" + feedId + "/applicants/" + applicantId)).build();
     }
 
     @GetMapping("/{feedId}")
@@ -77,8 +76,7 @@ public class FeedController {
     }
 
     @GetMapping("/{feedId}/projects")
-    public ResponseEntity<FeedProjectResponses> findProjects(
-            @PathVariable final Long feedId) {
+    public ResponseEntity<FeedProjectResponses> findProjects(@PathVariable final Long feedId) {
         final FeedProjectResponses responses = feedReadService.findFeedProjects(feedId);
         return ResponseEntity.ok(responses);
     }
