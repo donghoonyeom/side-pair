@@ -119,7 +119,7 @@ class ProjectTest {
         //when, then
         assertThatThrownBy(() -> project.join(member))
                 .isInstanceOf(ProjectException.class)
-                .hasMessage("모집 중이지 않은 프로젝트에는 참여할 수 없습니다.");
+                .hasMessage("모집 중이지 않은 프로젝트에는 멤버를 추가할 수 없습니다.");
     }
 
     @Test
@@ -131,7 +131,23 @@ class ProjectTest {
         //when,then
         assertThatThrownBy(() -> project.join(member))
                 .isInstanceOf(ProjectException.class)
-                .hasMessage("제한 인원이 꽉 찬 프로젝트에는 참여할 수 없습니다.");
+                .hasMessage("제한 인원이 꽉 찬 프로젝트에는 멤버를 추가할 수 없습니다.");
+    }
+
+    @Test
+    void 피드_작성자가_아닌_사용자가_프로젝트를_생성하면_예외가_발생한다() {
+        //given
+        final Member creator = 크리에이터를_생성한다();
+        final Feed feed = 피드를_생성한다(creator);
+        final FeedContents feedContents = feed.getContents();
+        final FeedContent targetFeedContent = feedContents.getValues().get(0);
+        final Member 작성자가_아닌_사용자 = 사용자를_생성한다(2L, "test1@example.com", "닉네임");
+
+        //when, then
+        assertThatThrownBy(() -> Project.createProject(PROJECT_NAME, new LimitedMemberCount(6), targetFeedContent,
+                작성자가_아닌_사용자))
+                .isInstanceOf(ProjectException.class)
+                .hasMessage("피드를 생성한 사용자가 아닙니다.");
     }
 
     @Test
@@ -143,7 +159,7 @@ class ProjectTest {
         //when,then
         assertThatThrownBy(() -> project.join(member))
                 .isInstanceOf(ProjectException.class)
-                .hasMessage("이미 참여한 프로젝트에는 참여할 수 없습니다.");
+                .hasMessage("이미 프로젝트에 추가한 멤버는 추가할 수 없습니다.");
     }
 
     @Test
@@ -284,7 +300,7 @@ class ProjectTest {
     }
 
     private Project 프로젝트를_생성한다(final FeedContent feedContent, final Member creator) {
-        final Project project = new Project(new ProjectName("프로젝트"),
+        final Project project = Project.createProject(new ProjectName("프로젝트"),
                 new LimitedMemberCount(6), feedContent, creator);
         final List<FeedNode> feedNodes = feedContent.getNodes().getValues();
 
