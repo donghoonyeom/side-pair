@@ -64,7 +64,7 @@ class FeedCreateApiTest extends ControllerTestHelper {
     private FeedReadService feedReadService;
 
     @Test
-    void 정상적으로_피드을_생성한다() throws Exception {
+    void 정상적으로_피드를_생성한다() throws Exception {
         // given
         final FeedSaveRequest request = 피드_생성_요청을_생성한다(1L, "피드 제목", "피드 소개글", "피드 본문",
                 30, List.of(new FeedNodeSaveRequest("피드 1주차", "프로젝트 1주차에는 erd를 만들거에요.", null)),
@@ -326,7 +326,109 @@ class FeedCreateApiTest extends ControllerTestHelper {
     }
 
     @Test
-    void 정상적으로_피드을_삭제한다() throws Exception {
+    void 프로젝트_참가_요청을_허용한다() throws Exception {
+        //given
+        final Long feedId = 1L;
+        final Long applicantId = 1L;
+        doNothing().when(feedCreateService)
+                .projectJoinPermission(anyString(), anyLong(), anyLong());
+
+        //when
+        //then
+        mockMvc.perform(post(API_PREFIX + "/feeds/me/{feedId}/applicants/{applicantId}/join", feedId, applicantId)
+                        .header(AUTHORIZATION, "Bearer <AccessToken>")
+                        .contextPath(API_PREFIX))
+                .andDo(documentationResultHandler.document(
+                        requestHeaders(headerWithName(AUTHORIZATION).description("액세스 토큰")),
+                        pathParameters(
+                                parameterWithName("feedId").description("피드 아이디"),
+                                parameterWithName("applicantId").description("신청서 아이디")
+                        )))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void 존재하지_않는_프로젝트에_대한_참가_요청은_실패한다() throws Exception {
+        //given
+        final Long feedId = 1L;
+        final Long applicantId = 1L;
+        doThrow(new NotFoundException("존재하지 않는 프로젝트입니다. feedId = 1"))
+                .when(feedCreateService)
+                .projectJoinPermission(anyString(), anyLong(), anyLong());
+
+        //when
+        //given
+        mockMvc.perform(post(API_PREFIX + "/feeds/me/{feedId}/applicants/{applicantId}/join", feedId, applicantId)
+                                .header("Authorization", "Bearer <AccessToken>")
+                                .content(MediaType.APPLICATION_JSON_VALUE)
+                                .contextPath(API_PREFIX))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("존재하지 않는 프로젝트입니다. feedId = 1"))
+                .andDo(documentationResultHandler.document(
+                        requestHeaders(headerWithName(AUTHORIZATION).description("액세스 토큰")),
+                        pathParameters(
+                                parameterWithName("feedId").description("피드 아이디"),
+                                parameterWithName("applicantId").description("신청서 아이디")
+                        ),
+                        responseFields(fieldWithPath("message").description("예외 메세지"))));
+    }
+
+    @Test
+    void 이미_참여한_프로젝트에_대한_참가_요청은_실패한다() throws Exception {
+        //given
+        final Long feedId = 1L;
+        final Long applicantId = 1L;
+        doThrow(new BadRequestException("이미 참가되어 있는 프로젝트입니다."))
+                .when(feedCreateService)
+                .projectJoinPermission(anyString(), anyLong(), anyLong());
+
+        //when
+        //then
+        mockMvc.perform(
+                        post(API_PREFIX + "/feeds/me/{feedId}/applicants/{applicantId}/join", feedId, applicantId)
+                                .header("Authorization", "Bearer <AccessToken>")
+                                .content(MediaType.APPLICATION_JSON_VALUE)
+                                .contextPath(API_PREFIX))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("이미 참가되어 있는 프로젝트입니다."))
+                .andDo(documentationResultHandler.document(
+                        requestHeaders(headerWithName(AUTHORIZATION).description("액세스 토큰")),
+                        pathParameters(
+                                parameterWithName("feedId").description("피드 아이디"),
+                                parameterWithName("applicantId").description("신청서 아이디")
+                        ),
+                        responseFields(fieldWithPath("message").description("예외 메세지"))));
+    }
+
+    @Test
+    void 제한_인원이_가득_찬_프로젝트에_대한_참가_요청은_실패한다() throws Exception {
+        //given
+        final Long feedId = 1L;
+        final Long applicantId = 1L;
+        doThrow(new BadRequestException("제한 인원이 가득 찬 프로젝트에는 참가할 수 없습니다."))
+                .when(feedCreateService)
+                .projectJoinPermission(anyString(), anyLong(), anyLong());
+
+        //when
+        //then
+        mockMvc.perform(
+                        post(API_PREFIX + "/feeds/me/{feedId}/applicants/{applicantId}/join", feedId, applicantId)
+                                .header("Authorization", "Bearer <AccessToken>")
+                                .content(MediaType.APPLICATION_JSON_VALUE)
+                                .contextPath(API_PREFIX))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("제한 인원이 가득 찬 프로젝트에는 참가할 수 없습니다."))
+                .andDo(documentationResultHandler.document(
+                        requestHeaders(headerWithName(AUTHORIZATION).description("액세스 토큰")),
+                        pathParameters(
+                                parameterWithName("feedId").description("피드 아이디"),
+                                parameterWithName("applicantId").description("신청서 아이디")
+                        ),
+                        responseFields(fieldWithPath("message").description("예외 메세지"))));
+    }
+
+    @Test
+    void 정상적으로_피드를_삭제한다() throws Exception {
         // given
         doNothing()
                 .when(feedCreateService)
@@ -381,7 +483,7 @@ class FeedCreateApiTest extends ControllerTestHelper {
     @Test
     void 피드_삭제시_자신이_생성한_피드이_아닌_경우_예외가_발생한다() throws Exception {
         // given
-        doThrow(new ForbiddenException("해당 피드을 생성한 사용자가 아닙니다."))
+        doThrow(new ForbiddenException("해당 피드를 생성한 사용자가 아닙니다."))
                 .when(feedCreateService)
                 .deleteFeed(anyString(), anyLong());
 
@@ -392,7 +494,7 @@ class FeedCreateApiTest extends ControllerTestHelper {
                         .contextPath(API_PREFIX))
                 .andExpectAll(status().isForbidden(),
                         jsonPath("$.message")
-                                .value("해당 피드을 생성한 사용자가 아닙니다."))
+                                .value("해당 피드를 생성한 사용자가 아닙니다."))
                 .andDo(documentationResultHandler.document(
                         requestHeaders(
                                 headerWithName(AUTHORIZATION).description("액세스 토큰")),
@@ -405,7 +507,7 @@ class FeedCreateApiTest extends ControllerTestHelper {
 
         // then
         final ErrorResponse errorResponse = objectMapper.readValue(response, ErrorResponse.class);
-        final ErrorResponse expected = new ErrorResponse("해당 피드을 생성한 사용자가 아닙니다.");
+        final ErrorResponse expected = new ErrorResponse("해당 피드를 생성한 사용자가 아닙니다.");
         assertThat(errorResponse)
                 .isEqualTo(expected);
     }
@@ -413,14 +515,14 @@ class FeedCreateApiTest extends ControllerTestHelper {
     @Test
     void 피드의_신청서를_생성한다() throws Exception {
         // given
-        doNothing().when(feedCreateService)
-                .createApplicant(any(), any(), any());
+        given(feedCreateService.createApplicant(any(), any(), any()))
+                .willReturn(1L);
 
         final FeedApplicantSaveRequest request = new FeedApplicantSaveRequest("신청서 내용");
         final String jsonRequest = objectMapper.writeValueAsString(request);
 
         // when
-        mockMvc.perform(post(API_PREFIX + "/feeds/{feedId}/applicant", 1L)
+        mockMvc.perform(post(API_PREFIX + "/feeds/{feedId}/applicants", 1L)
                         .header(AUTHORIZATION, String.format(BEARER_TOKEN_FORMAT, "test-token"))
                         .content(jsonRequest)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -449,7 +551,7 @@ class FeedCreateApiTest extends ControllerTestHelper {
         final String jsonRequest = objectMapper.writeValueAsString(request);
 
         // when
-        final String response = mockMvc.perform(post(API_PREFIX + "/feeds/{feedId}/applicant", 1L)
+        final String response = mockMvc.perform(post(API_PREFIX + "/feeds/{feedId}/applicants", 1L)
                         .header(AUTHORIZATION, String.format(BEARER_TOKEN_FORMAT, "test-token"))
                         .content(jsonRequest)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -485,7 +587,7 @@ class FeedCreateApiTest extends ControllerTestHelper {
         final String jsonRequest = objectMapper.writeValueAsString(request);
 
         // when
-        final String response = mockMvc.perform(post(API_PREFIX + "/feeds/{feedId}/applicant", 1L)
+        final String response = mockMvc.perform(post(API_PREFIX + "/feeds/{feedId}/applicants", 1L)
                         .header(AUTHORIZATION, String.format(BEARER_TOKEN_FORMAT, "test-token"))
                         .content(jsonRequest)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -521,7 +623,7 @@ class FeedCreateApiTest extends ControllerTestHelper {
         final String jsonRequest = objectMapper.writeValueAsString(request);
 
         // when
-        final String response = mockMvc.perform(post(API_PREFIX + "/feeds/{feedId}/applicant", 1L)
+        final String response = mockMvc.perform(post(API_PREFIX + "/feeds/{feedId}/applicants", 1L)
                         .header(AUTHORIZATION, String.format(BEARER_TOKEN_FORMAT, "test-token"))
                         .content(jsonRequest)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -559,7 +661,7 @@ class FeedCreateApiTest extends ControllerTestHelper {
         final String jsonRequest = objectMapper.writeValueAsString(request);
 
         // when
-        final String response = mockMvc.perform(post(API_PREFIX + "/feeds/{feedId}/applicant", 1L)
+        final String response = mockMvc.perform(post(API_PREFIX + "/feeds/{feedId}/applicants", 1L)
                         .header(AUTHORIZATION, String.format(BEARER_TOKEN_FORMAT, "test-token"))
                         .content(jsonRequest)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
