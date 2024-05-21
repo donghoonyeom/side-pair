@@ -3,6 +3,7 @@ package sidepair.integration.fixture;
 import static io.restassured.RestAssured.given;
 import static sidepair.integration.fixture.CommonFixture.API_PREFIX;
 import static sidepair.integration.fixture.CommonFixture.AUTHORIZATION;
+import static sidepair.integration.fixture.CommonFixture.LOCATION;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -36,8 +37,9 @@ public class FeedAPIFixture {
 
     public static Long 신청서를_생성하고_아이디를_반환한다(final FeedApplicantSaveRequest 피드_신청서_생성_요청, final String 액세스_토큰,
                                            final Long 피드_아이디) {
-        final Response 응답 = 신청서를_생성한다(액세스_토큰, 피드_아이디, 피드_신청서_생성_요청).response();
-        return Long.parseLong(응답.header(HttpHeaders.LOCATION).split("/")[3]);
+        final String 신청서_생성_응답_Location_헤더 = 신청서를_생성한다(액세스_토큰, 피드_아이디, 피드_신청서_생성_요청)
+                .response().getHeader(LOCATION);
+        return Long.parseLong(신청서_생성_응답_Location_헤더.substring(24));
     }
 
     public static ExtractableResponse<Response> 요청을_받는_이미지가_포함된_피드_생성(final FeedSaveRequest 피드_생성_요청값,
