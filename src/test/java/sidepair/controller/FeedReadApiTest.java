@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -17,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +30,9 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.snippet.Attributes;
 import org.springframework.test.web.servlet.MvcResult;
 import sidepair.controller.helper.ControllerTestHelper;
+import sidepair.domain.member.Position;
+import sidepair.domain.project.ProjectStatus;
+import sidepair.service.dto.CustomScrollRequest;
 import sidepair.service.dto.ErrorResponse;
 import sidepair.service.dto.feed.requesst.FeedOrderTypeRequest;
 import sidepair.service.dto.feed.response.FeedApplicantResponse;
@@ -36,11 +41,14 @@ import sidepair.service.dto.feed.response.FeedContentResponse;
 import sidepair.service.dto.feed.response.FeedForListResponse;
 import sidepair.service.dto.feed.response.FeedForListResponses;
 import sidepair.service.dto.feed.response.FeedNodeResponse;
+import sidepair.service.dto.feed.response.FeedProjectResponse;
+import sidepair.service.dto.feed.response.FeedProjectResponses;
 import sidepair.service.dto.feed.response.FeedResponse;
 import sidepair.service.dto.feed.response.FeedTagResponse;
 import sidepair.service.dto.feed.response.MemberFeedResponse;
 import sidepair.service.dto.feed.response.MemberFeedResponses;
 import sidepair.service.dto.mamber.response.MemberResponse;
+import sidepair.service.dto.mamber.response.MemberSkillResponse;
 import sidepair.service.exception.ForbiddenException;
 import sidepair.service.exception.NotFoundException;
 import sidepair.service.feed.FeedCreateService;
@@ -82,6 +90,9 @@ class FeedReadApiTest extends ControllerTestHelper {
                                 fieldWithPath("creator.id").description("피드 크리에이터 아이디"),
                                 fieldWithPath("creator.name").description("피드 크리에이터 닉네임"),
                                 fieldWithPath("creator.imageUrl").description("피드 크리에이터 프로필 이미지 경로"),
+                                fieldWithPath("creator.position").description("피드 크리에이터 포지션"),
+                                fieldWithPath("creator.skills[0].id").description("피드 크리에이터 기술 아이디"),
+                                fieldWithPath("creator.skills[0].name").description("피드 크리에이터 기술 이름"),
                                 fieldWithPath("content.id").description("피드 컨텐츠 아이디"),
                                 fieldWithPath("content.content").description("피드 컨텐츠 본문"),
                                 fieldWithPath("content.nodes[0].id").description("피드 노드 아이디"),
@@ -142,7 +153,7 @@ class FeedReadApiTest extends ControllerTestHelper {
                                         parameterWithName("categoryId").description("카테고리 아이디(미전송 시 전체 조회)")
                                                 .optional(),
                                         parameterWithName("filterCond").description(
-                                                        "필터 조건(GOAL_ROOM_COUNT, LATEST, PARTICIPANT_COUNT, REVIEW_RATE)")
+                                                        "필터 조건(LATEST, PARTICIPANT_COUNT)")
                                                 .optional(),
                                         parameterWithName("lastId")
                                                 .description("이전 요청에서 받은 응답 중 가장 마지막 피드 아이디 (첫 요청 시 미전송)")
@@ -158,6 +169,9 @@ class FeedReadApiTest extends ControllerTestHelper {
                                         fieldWithPath("responses[0].creator.name").description("피드 크리에이터 이름"),
                                         fieldWithPath("responses[0].creator.imageUrl").description(
                                                 "피드 크리에이터 프로필 이미지 경로"),
+                                        fieldWithPath("responses[0].creator.position").description("피드 포지션 이름"),
+                                        fieldWithPath("responses[0].creator.skills[0].id").description("피드 크리에이터 기술 아이디"),
+                                        fieldWithPath("responses[0].creator.skills[0].name").description("피드 크리에이터 기술 이름"),
                                         fieldWithPath("responses[0].category.id").description("피드 카테고리 아이디"),
                                         fieldWithPath("responses[0].category.name").description("피드 카테고리 이름"),
                                         fieldWithPath("responses[0].tags[0].id").description("피드 태그 아이디"),
@@ -196,7 +210,7 @@ class FeedReadApiTest extends ControllerTestHelper {
                         queryParameters(
                                 parameterWithName("categoryId").description("잘못된 카테고리 아이디"),
                                 parameterWithName("filterCond").description(
-                                                "필터 조건(GOAL_ROOM_COUNT, LATEST, PARTICIPANT_COUNT, REVIEW_RATE)")
+                                                "필터 조건(LATEST, PARTICIPANT_COUNT)")
                                         .optional(),
                                 parameterWithName("size").description("한 페이지에서 받아올 피드의 수")),
                         responseFields(fieldWithPath("message").description("예외 메시지"))))
@@ -233,6 +247,87 @@ class FeedReadApiTest extends ControllerTestHelper {
     }
 
     @Test
+    void 피드의_프로젝트를_조회한다() throws Exception {
+        // given
+        final FeedProjectResponses 프로젝트_페이지_응답 = 프로젝트_응답들을_생성한다();
+        given(feedReadService.findFeedProjects(any()))
+                .willReturn(프로젝트_페이지_응답);
+
+        // when
+        final String 응답값 = mockMvc.perform(
+                        get(API_PREFIX + "/feeds/{feedId}/projects", 1L)
+                                .contextPath(API_PREFIX))
+                .andExpect(status().isOk())
+                .andDo(
+                        documentationResultHandler.document(
+                                pathParameters(
+                                        parameterWithName("feedId").description("피드 아이디")),
+                                responseFields(
+                                        fieldWithPath("responses[0].projectId").description("프로젝트 아이디"),
+                                        fieldWithPath("responses[0].name").description("프로젝트 이름"),
+                                        fieldWithPath("responses[0].status").description("프로젝트 상태"),
+                                        fieldWithPath("responses[0].currentMemberCount").description("현재 프로젝트에 참여한 인원 수"),
+                                        fieldWithPath("responses[0].limitedMemberCount").description(
+                                                "프로젝트에 참여할 수 있는 제한 인원 수"),
+                                        fieldWithPath("responses[0].createdAt").description("프로젝트 생성 날짜와 시간"),
+                                        fieldWithPath("responses[0].startDate").description("프로젝트의 시작 날짜"),
+                                        fieldWithPath("responses[0].endDate").description("프로젝트의 종료 날짜"),
+                                        fieldWithPath("responses[0].projectLeader.id").description("프로젝트 리더의 아이디"),
+                                        fieldWithPath("responses[0].projectLeader.name").description("프로젝트 리더의 닉네임"),
+                                        fieldWithPath("responses[0].projectLeader.imageUrl").description(
+                                                "프로젝트 리더의 프로필 이미지 경로"),
+                                        fieldWithPath("responses[0].projectLeader.position").description(
+                                                "프로젝트 리더 포지션"),
+                                        fieldWithPath("responses[0].projectLeader.skills[].id").description(
+                                                "프로젝트 리더 기술 ID"),
+                                        fieldWithPath("responses[0].projectLeader.skills[].name").description(
+                                                "프로젝트 리더 기술 이름")
+                                )
+                        )
+                )
+                .andReturn().getResponse()
+                .getContentAsString();
+
+        // then
+        final FeedProjectResponses 응답값으로_생성한_프로젝트_페이지 = objectMapper.readValue(응답값,
+                new TypeReference<>() {
+                });
+
+        final FeedProjectResponses 예상되는_프로젝트_페이지_응답 = 프로젝트_응답들을_생성한다();
+        assertThat(응답값으로_생성한_프로젝트_페이지)
+                .usingRecursiveComparison()
+                .isEqualTo(예상되는_프로젝트_페이지_응답);
+    }
+
+    @Test
+    void 피드의_프로젝트룰_조회할_때_피드가_존재하지_않으면_예외_발생() throws Exception {
+        // given
+        given(feedReadService.findFeedProjects(any()))
+                .willThrow(new NotFoundException("존재하지 않는 피드입니다. feedId = 1"));
+
+        // when
+        final MvcResult 응답값 = mockMvc.perform(
+                        get(API_PREFIX + "/feeds/{feedId}/projects", 1L)
+                                .contextPath(API_PREFIX))
+                .andExpectAll(
+                        status().is4xxClientError(),
+                        jsonPath("$.message").value("존재하지 않는 피드입니다. feedId = 1"))
+                .andDo(
+                        documentationResultHandler.document(
+                                pathParameters(
+                                        parameterWithName("feedId").description("피드 아이디")),
+                                responseFields(fieldWithPath("message").description("예외 메시지")))
+                )
+                .andReturn();
+        // then
+        final ErrorResponse errorResponse = jsonToClass(응답값, new TypeReference<>() {
+        });
+        final ErrorResponse expected = new ErrorResponse("존재하지 않는 피드입니다. feedId = 1");
+        assertThat(errorResponse)
+                .isEqualTo(expected);
+    }
+
+    @Test
     void 피드_카테고리_목록을_조회한다() throws Exception {
         // given
         final List<FeedCategoryResponse> expected = 피드_카테고리_응답_리스트를_반환한다();
@@ -265,7 +360,7 @@ class FeedReadApiTest extends ControllerTestHelper {
     }
 
     @Test
-    void 피드을_조건별로_검색한다() throws Exception {
+    void 피드를_조건별로_검색한다() throws Exception {
         // given
         final FeedForListResponses expected = 피드_리스트_응답을_생성한다();
         when(feedReadService.search(any(), any(), any()))
@@ -276,7 +371,7 @@ class FeedReadApiTest extends ControllerTestHelper {
                         get(API_PREFIX + "/feeds/search")
                                 .param("feedTitle", "feed")
                                 .param("lastId", "1")
-                                .param("creatorName", "코끼리")
+                                .param("creatorName", "사이드페어")
                                 .param("tagName", "Java")
                                 .param("filterCond", FeedOrderTypeRequest.LATEST.name())
                                 .param("size", "10")
@@ -294,7 +389,7 @@ class FeedReadApiTest extends ControllerTestHelper {
                                                 .attributes(new Attributes.Attribute(RESTRICT, "- 길이: 1자 이상"))
                                                 .optional(),
                                         parameterWithName("filterCond").description(
-                                                        "필터 조건(GOAL_ROOM_COUNT, LATEST, PARTICIPANT_COUNT, REVIEW_RATE)")
+                                                        "필터 조건(LATEST, PARTICIPANT_COUNT)")
                                                 .optional(),
                                         parameterWithName("lastId")
                                                 .description("이전 요청에서 받은 응답 중 가장 마지막 피드 아이디 (첫 요청 시 미전송)")
@@ -310,6 +405,9 @@ class FeedReadApiTest extends ControllerTestHelper {
                                         fieldWithPath("responses[0].creator.name").description("피드 크리에이터 이름"),
                                         fieldWithPath("responses[0].creator.imageUrl").description(
                                                 "피드 크리에이터 프로필 이미지 경로"),
+                                        fieldWithPath("responses[0].creator.position").description("피드 포지션 이름"),
+                                        fieldWithPath("responses[0].creator.skills[0].id").description("피드 크리에이터 기술 아이디"),
+                                        fieldWithPath("responses[0].creator.skills[0].name").description("피드 크리에이터 기술 이름"),
                                         fieldWithPath("responses[0].category.id").description("피드 카테고리 아이디"),
                                         fieldWithPath("responses[0].category.name").description("피드 카테고리 이름"),
                                         fieldWithPath("responses[0].tags[0].id").description("피드 태그 아이디"),
@@ -351,7 +449,7 @@ class FeedReadApiTest extends ControllerTestHelper {
     }
 
     @Test
-    void 사용자가_생성한_피드을_조회한다() throws Exception {
+    void 사용자가_생성한_피드를_조회한다() throws Exception {
         // given
         final MemberFeedResponses expected = 사용자_피드_조회에_대한_응답을_생성한다();
 
@@ -395,7 +493,7 @@ class FeedReadApiTest extends ControllerTestHelper {
     }
 
     @Test
-    void 사용자가_생성한_피드을_조회할_때_존재하지_않는_회원이면_예외가_발생한다() throws Exception {
+    void 사용자가_생성한_피드를_조회할_때_존재하지_않는_회원이면_예외가_발생한다() throws Exception {
         // given
         when(feedReadService.findAllMemberFeeds(any(), any()))
                 .thenThrow(new NotFoundException("존재하지 않는 회원입니다."));
@@ -434,9 +532,11 @@ class FeedReadApiTest extends ControllerTestHelper {
     void 피드의_신청서들을_조회한다() throws Exception {
         // given
         final List<FeedApplicantResponse> expected = List.of(
-                new FeedApplicantResponse(1L, new MemberResponse(1L, "신청자1", "image1-file-path"),
+                new FeedApplicantResponse(1L, new MemberResponse(1L, "신청자1", "image1-file-path", Position.BACKEND.name(),
+                        List.of(new MemberSkillResponse(1L, "Java"))),
                         LocalDateTime.of(2023, 8, 15, 12, 30, 0, 123456), "신청서 내용"),
-                new FeedApplicantResponse(2L, new MemberResponse(2L, "신청자2", "image2-file-path"),
+                new FeedApplicantResponse(2L, new MemberResponse(2L, "신청자2", "image2-file-path", Position.FRONTEND.name(),
+                        List.of(new MemberSkillResponse(1L, "HTML"))),
                         LocalDateTime.of(2023, 8, 16, 12, 30, 0, 123456), "신청서 내용")
         );
 
@@ -468,6 +568,9 @@ class FeedReadApiTest extends ControllerTestHelper {
                                 fieldWithPath("[0].id").description("신청서 아이디"),
                                 fieldWithPath("[0].member.id").description("작성자 아이디"),
                                 fieldWithPath("[0].member.name").description("작성자 닉네임"),
+                                fieldWithPath("[0].member.position").description("사용자 포지션"),
+                                fieldWithPath("[0].member.skills[].id").description("기술 ID"),
+                                fieldWithPath("[0].member.skills[].name").description("기술 이름"),
                                 fieldWithPath("[0].member.imageUrl").description("작성자 프로필 이미지 경로"),
                                 fieldWithPath("[0].createdAt").description("신청서 최종 작성날짜"),
                                 fieldWithPath("[0].content").description("신청서 내용")
@@ -568,7 +671,8 @@ class FeedReadApiTest extends ControllerTestHelper {
 
     private FeedResponse 단일_피드_조회에_대한_응답() {
         final FeedCategoryResponse category = new FeedCategoryResponse(1, "운동");
-        final MemberResponse creator = new MemberResponse(1, "닉네임", "profile-image-filepath");
+        final MemberResponse creator = new MemberResponse(1, "닉네임", "profile-image-filepath",
+                Position.BACKEND.name(), List.of(new MemberSkillResponse(1L, "Java")));
         final List<FeedNodeResponse> nodes = List.of(
                 new FeedNodeResponse(1L, "1번 노드", "1번 노드 설명", List.of("image1-filepath", "image2-filepath")),
                 new FeedNodeResponse(2L, "2번 노드", "2번 노드 설명", Collections.emptyList())
@@ -588,10 +692,12 @@ class FeedReadApiTest extends ControllerTestHelper {
         );
 
         final FeedForListResponse feedResponse1 = new FeedForListResponse(1L, "피드 제목1", "피드 소개글1",
-                10, 오늘, new MemberResponse(1L, "사이드페어", "default-member-image"), new FeedCategoryResponse(1L, "여행"),
-                tags);
+                10, 오늘, new MemberResponse(1L, "사이드페어", "default-member-image",
+                Position.BACKEND.name(), List.of(new MemberSkillResponse(1L, "Java"))),
+                new FeedCategoryResponse(1L, "여행"), tags);
         final FeedForListResponse feedResponse2 = new FeedForListResponse(2L, "피드 제목2", "피드 소개글2",
-                7, 오늘, new MemberResponse(2L, "페어사이드", "default-member-image"),
+                7, 오늘, new MemberResponse(2L, "페어사이드", "default-member-image",
+                Position.FRONTEND.name(), List.of(new MemberSkillResponse(1L, "HTML"))),
                 new FeedCategoryResponse(2L, "IT"), tags);
         final List<FeedForListResponse> responses = List.of(feedResponse1, feedResponse2);
         return new FeedForListResponses(responses, false);
@@ -618,5 +724,23 @@ class FeedReadApiTest extends ControllerTestHelper {
                 new MemberFeedResponse(1L, "첫 번째 피드", LocalDateTime.now(),
                         new FeedCategoryResponse(1L, "커뮤니티")));
         return new MemberFeedResponses(responses, true);
+    }
+
+    private FeedProjectResponses 프로젝트_응답들을_생성한다() {
+        final FeedProjectResponse feedProjectResponse1 = new FeedProjectResponse(1L, "프로젝트 이름1",
+                ProjectStatus.RECRUITING, 3, 6,
+                LocalDateTime.of(2023, 7, 20, 13, 0, 0),
+                LocalDate.now(), LocalDate.now().plusDays(100),
+                new MemberResponse(1L, "사이드", "default-member-image", Position.BACKEND.name(),
+                        List.of(new MemberSkillResponse(1L, "Java"))));
+        final FeedProjectResponse feedProjectResponse2 = new FeedProjectResponse(2L, "프로젝트 이름2",
+                ProjectStatus.RECRUITING, 4, 10,
+                LocalDateTime.of(2023, 7, 10, 13, 0, 0),
+                LocalDate.now(), LocalDate.now().plusDays(100),
+                new MemberResponse(2L, "페어", "default-member-image", Position.BACKEND.name(),
+                        List.of(new MemberSkillResponse(1L, "Java"))));
+        final List<FeedProjectResponse> responses = List.of(feedProjectResponse1,
+                feedProjectResponse2);
+        return new FeedProjectResponses(responses);
     }
 }

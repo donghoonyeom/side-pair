@@ -62,7 +62,7 @@ class FeedRepositoryTest {
     }
 
     @Test
-    void 단일_피드을_조회한다() {
+    void 단일_피드를_조회한다() {
         // given
         final Member creator = 사용자를_생성한다("test2@email.com", "페어");
         final FeedCategory category = 카테고리를_생성한다("헬스케어");
@@ -77,7 +77,7 @@ class FeedRepositoryTest {
     }
 
     @Test
-    void 카테고리_값이_null이라면_삭제되지_않은_전체_피드을_최신순으로_조회한다() {
+    void 카테고리_값이_null이라면_삭제되지_않은_전체_피드를_최신순으로_조회한다() {
         // given
         final Member creator = 사용자를_생성한다("test2@email.com", "페어");
         final FeedCategory gameCategory = 카테고리를_생성한다("게임");
@@ -105,7 +105,7 @@ class FeedRepositoryTest {
     }
 
     @Test
-    void 카테고리_값으로_1이상의_유효한_값이_들어오면_해당_카테고리의_삭제되지_않은_피드을_최신순으로_조회한다() {
+    void 카테고리_값으로_1이상의_유효한_값이_들어오면_해당_카테고리의_삭제되지_않은_피드를_최신순으로_조회한다() {
         // given
         final Member creator = 사용자를_생성한다("test2@email.com", "페어");
         final FeedCategory gameCategory = 카테고리를_생성한다("게임");
@@ -283,7 +283,7 @@ class FeedRepositoryTest {
     }
 
     @Test
-    void 사용자가_생성한_피드을_조회한다() {
+    void 사용자가_생성한_피드를_조회한다() {
         // given
         final Member creator = 사용자를_생성한다("test2@email.com", "페어");
         final FeedCategory gameCategory = 카테고리를_생성한다("게임");
@@ -312,7 +312,7 @@ class FeedRepositoryTest {
     }
 
     @Test
-    void 사용자_이메일로_피드을_조회한다() {
+    void 사용자_이메일로_피드를_조회한다() {
         // given
         final Member creator1 = 사용자를_생성한다("test@email.com", "페어1");
         final FeedCategory gameCategory = 카테고리를_생성한다("게임");
@@ -338,7 +338,7 @@ class FeedRepositoryTest {
     }
 
     @Test
-    void 사용자_이메일로_피드을_조회시_없으면_빈_값을_감싸서_반환한다() {
+    void 사용자_이메일로_피드를_조회시_없으면_빈_값을_감싸서_반환한다() {
         // given
         final Member creator1 = 사용자를_생성한다("test@email.com", "페어");
         final FeedCategory gameCategory = 카테고리를_생성한다("게임");
@@ -359,7 +359,7 @@ class FeedRepositoryTest {
     }
 
     @Test
-    void 삭제된_피드을_피드_본문과_함께_조회한다() {
+    void 삭제된_피드를_피드_본문과_함께_조회한다() {
         // given
         final Member creator = 사용자를_생성한다("test2@email.com", "페어");
         final FeedCategory gameCategory = 카테고리를_생성한다("게임");
