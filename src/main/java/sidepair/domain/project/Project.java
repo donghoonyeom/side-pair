@@ -80,6 +80,18 @@ public class Project extends BaseUpdatedTimeEntity {
         projectPendingMembers.add(leader);
     }
 
+    public static Project createProject(final ProjectName name, final LimitedMemberCount limitedMemberCount,
+                                        final FeedContent feedContent, final Member member) {
+        validateFeedCreator(feedContent, member);
+        return new Project(name, limitedMemberCount, feedContent, member);
+    }
+
+    private static void validateFeedCreator(final FeedContent feedContent, final Member member) {
+        if (feedContent.isNotFeedCreator(member)) {
+            throw new ProjectException("피드를 생성한 사용자가 아닙니다.");
+        }
+    }
+
     public void join(final Member member) {
         final ProjectPendingMember newMember = new ProjectPendingMember(ProjectRole.FOLLOWER, member);
         newMember.initProject(this);
@@ -95,19 +107,19 @@ public class Project extends BaseUpdatedTimeEntity {
 
     private void validateMemberCount() {
         if (getCurrentMemberCount() >= limitedMemberCount.getValue()) {
-            throw new ProjectException("제한 인원이 꽉 찬 프로젝트에는 참여할 수 없습니다.");
+            throw new ProjectException("제한 인원이 꽉 찬 프로젝트에는 멤버를 추가할 수 없습니다.");
         }
     }
 
     private void validateStatus() {
         if (status != ProjectStatus.RECRUITING) {
-            throw new ProjectException("모집 중이지 않은 프로젝트에는 참여할 수 없습니다.");
+            throw new ProjectException("모집 중이지 않은 프로젝트에는 멤버를 추가할 수 없습니다.");
         }
     }
 
     private void validateAlreadyParticipated(final ProjectPendingMember member) {
         if (projectPendingMembers.containProjectPendingMember(member)) {
-            throw new ProjectException("이미 참여한 프로젝트에는 참여할 수 없습니다.");
+            throw new ProjectException("이미 프로젝트에 추가한 멤버는 추가할 수 없습니다.");
         }
     }
 
@@ -164,6 +176,10 @@ public class Project extends BaseUpdatedTimeEntity {
             return projectPendingMembers.isNotLeader(member);
         }
         return projectMembers.isNotLeader(member);
+    }
+
+    public boolean isNotPendingLeader(final Member member) {
+        return projectPendingMembers.isNotLeader(member);
     }
 
     public boolean isCompleted() {
