@@ -271,7 +271,7 @@ public class ProjectAPIFixture {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 피드_아이디로_프로젝트_목록_조회(final String 로그인_토큰, final Long 피드_아이디) {
+    public static ExtractableResponse<Response> 피드_아이디로_프로젝트_조회(final String 로그인_토큰, final Long 피드_아이디) {
         return given().log().all()
                 .header(AUTHORIZATION, 로그인_토큰)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
