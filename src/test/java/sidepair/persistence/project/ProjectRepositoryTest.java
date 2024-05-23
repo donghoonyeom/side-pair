@@ -34,7 +34,6 @@ import sidepair.persistence.feed.FeedCategoryRepository;
 import sidepair.persistence.feed.FeedRepository;
 import sidepair.persistence.helper.RepositoryTest;
 import sidepair.persistence.member.MemberRepository;
-import sidepair.persistence.project.dto.FeedProjectsOrderType;
 
 @RepositoryTest
 class ProjectRepositoryTest {
@@ -90,7 +89,7 @@ class ProjectRepositoryTest {
     }
 
     @Test
-    void 프로젝트_최신순으로_조회한다() {
+    void 프로젝트를_조회한다() {
         //given
         final Member creator = 사용자를_생성한다("name1", "test1@example.com", "password!1");
         final FeedCategory category = 카테고리를_저장한다("커뮤니티");
@@ -108,63 +107,11 @@ class ProjectRepositoryTest {
                 new ProjectFeedNodes(List.of(projectFeedNode1, projectFeedNode2)), projectPendingMember1);
         projectRepository.save(project1);
 
-        final ProjectFeedNode projectFeedNode3 = 프로젝트_피드_노드를_생성한다(TODAY, TODAY.plusDays(10),
-                feedNode1);
-        final ProjectFeedNode projectFeedNode4 = 프로젝트_피드_노드를_생성한다(TODAY.plusDays(11), TODAY.plusDays(20),
-                feedNode2);
-        final Member projectPendingMember2 = 사용자를_생성한다("name3", "test3@example.com", "password!3");
-        final Project project2 = 프로젝트를_생성한다("project2", 6, feedContent,
-                new ProjectFeedNodes(List.of(projectFeedNode3, projectFeedNode4)), projectPendingMember2);
-        projectRepository.save(project2);
-
         // when
-        final List<Project> projects1 = projectRepository.findProjectsByFeedAndCond(feed,
-                FeedProjectsOrderType.LATEST, null, 1);
-        final List<Project> projects2 = projectRepository.findProjectsByFeedAndCond(feed,
-                FeedProjectsOrderType.LATEST, project2.getId(), 10);
+        final Project projects1 = projectRepository.findProjectByFeedAndCond(feed).get();
 
         assertThat(projects1)
-                .isEqualTo(List.of(project2, project1));
-        assertThat(projects2)
-                .isEqualTo(List.of(project1));
-    }
-
-    @Test
-    void 프로젝트_마감임박_순으로_조회한다() {
-        //given
-        final Member creator = 사용자를_생성한다("name1", "test1@example.com", "password!1");
-        final FeedCategory category = 카테고리를_저장한다("커뮤니티");
-        final FeedNode feedNode1 = 피드_노드를_생성한다("피드 1주차", "피드 1주차 내용");
-        final FeedNode feedNode2 = 피드_노드를_생성한다("피드 2주차", "피드 2주차 내용");
-        final FeedContent feedContent = 피드_본문을_생성한다(List.of(feedNode1, feedNode2));
-        final Feed feed = 피드를_생성한다(creator, category, feedContent);
-
-        final ProjectFeedNode projectFeedNode1 = 프로젝트_피드_노드를_생성한다(TODAY, TODAY.plusDays(10), feedNode1);
-        final ProjectFeedNode projectFeedNode2 = 프로젝트_피드_노드를_생성한다(TODAY.plusDays(11), TODAY.plusDays(20),
-                feedNode2);
-        final Member projectPendingMember1 = 사용자를_생성한다("name2", "test2@example.com", "password!2");
-        final Project project1 = 프로젝트를_생성한다("project1", 6, feedContent,
-                new ProjectFeedNodes(List.of(projectFeedNode1, projectFeedNode2)), projectPendingMember1);
-        projectRepository.save(project1);
-
-        final ProjectFeedNode projectFeedNode3 = 프로젝트_피드_노드를_생성한다(TODAY.plusDays(1), TODAY.plusDays(10),
-                feedNode1);
-        final ProjectFeedNode projectFeedNode4 = 프로젝트_피드_노드를_생성한다(TODAY.plusDays(11), TODAY.plusDays(20),
-                feedNode2);
-        final Member projectPendingMember3 = 사용자를_생성한다("name4", "test4@example.com", "password!4");
-        final Project project2 = 프로젝트를_생성한다("project2", 6, feedContent,
-                new ProjectFeedNodes(List.of(projectFeedNode3, projectFeedNode4)), projectPendingMember3);
-        projectRepository.save(project2);
-
-        // when
-        final List<Project> projects1 = projectRepository.findProjectsByFeedAndCond(feed,
-                FeedProjectsOrderType.CLOSE_TO_DEADLINE, null, 1);
-        final List<Project> projects2 = projectRepository.findProjectsByFeedAndCond(feed,
-                FeedProjectsOrderType.CLOSE_TO_DEADLINE, project1.getId(), 10);
-
-        // then
-        assertThat(projects1).isEqualTo(List.of(project1, project2));
-        assertThat(projects2).isEqualTo(List.of(project2));
+                .isEqualTo(project1);
     }
 
     @Test
