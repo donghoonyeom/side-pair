@@ -73,6 +73,7 @@ jacocoTestReport {
 					fileTree(dir: it, excludes: [
 							"sidepair/persistence/QuerydslRepositorySupporter",
 							"sidepair/domain/**",
+							"sidepair/persistence/project/dto/**",
 							"**/*Application*",
 							"**/*Config*",
 							"**/*Dto*",
@@ -115,6 +116,7 @@ jacocoTestCoverageVerification {
 			excludes = [
 					"sidepair.persistence.QuerydslRepositorySupporter",
 					"sidepair.domain.**.**",
+					"sidepair.persistence.project.dto.**",
 					"**.*Application*",
 					"**.*Config*",
 					"**.*Dto*",
