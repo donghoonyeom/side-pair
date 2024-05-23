@@ -312,7 +312,7 @@ class FeedCreateIntegrationTest extends InitIntegrationTest {
     }
 
     @Test
-    void 프로젝트가_생성된_적이_없는_피드을_정상적으로_삭제한다() throws IOException {
+    void 프로젝트가_생성된_적이_없는_피드를_정상적으로_삭제한다() throws IOException {
         // given
         final Long 피드_아이디 = 피드_생성(기본_피드_생성_요청, 기본_로그인_토큰);
 

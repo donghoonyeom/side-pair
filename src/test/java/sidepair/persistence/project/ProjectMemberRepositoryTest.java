@@ -68,7 +68,7 @@ class ProjectMemberRepositoryTest {
     }
 
     @Test
-    void 프로젝트와_사용자_아이디로_프로젝트_사용자_목록을_조회한다() {
+    void 프로젝트와_사용자_이메일로_프로젝트_사용자_목록을_조회한다() {
         // given
         final Member creator = 크리에이터를_저장한다();
         final FeedCategory category = 카테고리를_저장한다("게임");
@@ -96,7 +96,7 @@ class ProjectMemberRepositoryTest {
     }
 
     @Test
-    void 프로젝트과_사용자_아이디로_프로젝트_사용자_목록_조회시_없으면_빈값을_반환한다() {
+    void 프로젝트와_사용자_이메일로_프로젝트_사용자_목록_조회시_없으면_빈값을_반환한다() {
         // given
         final Member creator = 크리에이터를_저장한다();
         final FeedCategory category = 카테고리를_저장한다("게임");
@@ -118,7 +118,7 @@ class ProjectMemberRepositoryTest {
     }
 
     @Test
-    void 프로젝트으로_사용자_목록과_멤버를_함께_조회한다() {
+    void 프로젝트로_사용자_목록과_멤버를_함께_조회한다() {
         // given
         final Member creator = 크리에이터를_저장한다();
         final FeedCategory category = 카테고리를_저장한다("게임");
