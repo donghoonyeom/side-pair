@@ -101,9 +101,9 @@ public class ProjectFeedNodes {
         return Optional.empty();
     }
 
-    public int calculateAllCheckCount() {
+    public int calculateAllMemoirCount() {
         return values.stream()
-                .mapToInt(ProjectFeedNode::getCheckCount)
+                .mapToInt(ProjectFeedNode::getMemoirCount)
                 .sum();
     }
 

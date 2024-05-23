@@ -1,6 +1,5 @@
 package sidepair.persistence.project;
 
-import static sidepair.domain.feed.QFeedContent.feedContent;
 import static sidepair.domain.member.QMember.member;
 import static sidepair.domain.member.vo.QMemberImage.memberImage;
 import static sidepair.domain.project.QProject.project;
@@ -14,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 import sidepair.domain.member.vo.Email;
 import sidepair.domain.project.ProjectMember;
-import sidepair.domain.project.ProjectStatus;
 import sidepair.persistence.QuerydslRepositorySupporter;
 import sidepair.persistence.project.dto.ProjectMemberSortType;
 
@@ -23,24 +21,6 @@ public class ProjectMemberQueryRepositoryImpl extends QuerydslRepositorySupporte
 
     public ProjectMemberQueryRepositoryImpl() {
         super(ProjectMember.class);
-    }
-
-    @Override
-    public Optional<ProjectMember> findByFeedIdAndMemberEmailAndProjectStatus(final Long feedId,
-                                                                              final Email email,
-                                                                              final ProjectStatus status) {
-        return Optional.ofNullable(selectFrom(projectMember)
-                .innerJoin(projectMember.project, project)
-                .fetchJoin()
-                .innerJoin(project.feedContent, feedContent)
-                .fetchJoin()
-                .innerJoin(projectMember.member, member)
-                .fetchJoin()
-                .where(
-                        project.feedContent.feed.id.eq(feedId),
-                        member.email.eq(email),
-                        project.status.eq(status))
-                .fetchOne());
     }
 
     @Override

@@ -1,5 +1,5 @@
-package sidepair.persistence.project.dto;
+    package sidepair.persistence.project.dto;
 
-public enum FeedProjectsOrderType {
-    LATEST
-}
+    public enum FeedProjectsOrderType {
+        LATEST, CLOSE_TO_DEADLINE
+    }

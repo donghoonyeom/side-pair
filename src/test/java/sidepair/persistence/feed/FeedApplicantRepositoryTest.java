@@ -143,7 +143,7 @@ class FeedApplicantRepositoryTest {
 
     private Member 사용자를_저장한다(final String name, final String email) {
         final MemberProfile memberProfile = new MemberProfile(Position.BACKEND);
-        final MemberSkills skills = new MemberSkills(List.of(new MemberSkill(1L, new SkillName("CSS"))));
+        final MemberSkills skills = new MemberSkills(List.of(new MemberSkill(new SkillName("CSS"))));
         final MemberImage memberImage = new MemberImage("test-name", "test-path", ImageContentType.PNG);
         final Member creator = new Member(new Email(email), new EncryptedPassword(new Password("password1!")),
                 new Nickname(name), memberImage, memberProfile, skills);

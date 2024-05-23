@@ -31,7 +31,7 @@ public class Member extends BaseUpdatedTimeEntity {
     private EncryptedPassword encryptedPassword;
 
     @Embedded
-    private MemberSkills skills;
+    private MemberSkills skills = new MemberSkills();
 
     @OneToOne(fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},

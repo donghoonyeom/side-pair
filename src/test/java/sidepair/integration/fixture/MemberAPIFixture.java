@@ -17,7 +17,7 @@ import sidepair.service.dto.mamber.request.PositionType;
 
 public class MemberAPIFixture {
 
-    public static final String DEFAULT_EMAIL = "test@gmail.com";
+    public static final String DEFAULT_EMAIL = "test@email.com";
     public static final String DEFAULT_PASSWORD = "password1!";
     public static final String DEFAULT_NICKNAME = "nickname";
     public static final PositionType DEFAULT_POSITION_TYPE = PositionType.BACKEND;

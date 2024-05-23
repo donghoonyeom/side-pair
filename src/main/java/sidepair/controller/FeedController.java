@@ -20,6 +20,7 @@ import sidepair.common.interceptor.Authenticated;
 import sidepair.common.resolver.MemberEmail;
 import sidepair.service.dto.feed.requesst.FeedApplicantSaveRequest;
 import sidepair.service.dto.feed.response.FeedApplicantResponse;
+import sidepair.service.dto.feed.response.FeedProjectResponses;
 import sidepair.service.feed.FeedCreateService;
 import sidepair.service.feed.FeedReadService;
 import sidepair.service.dto.feed.requesst.FeedCategorySaveRequest;
@@ -47,6 +48,16 @@ public class FeedController {
         return ResponseEntity.created(URI.create("/api/feeds/" + feedId)).build();
     }
 
+    @PostMapping("/{feedId}/applicants")
+    @Authenticated
+    public ResponseEntity<Void> createApplicant(
+            @PathVariable("feedId") final Long feedId,
+            @MemberEmail final String email,
+            @RequestBody @Valid final FeedApplicantSaveRequest request) {
+        final Long applicantId = feedCreateService.createApplicant(feedId, email, request);
+        return ResponseEntity.created(URI.create("/api/feeds/" + feedId + "/applicants/" + applicantId)).build();
+    }
+
     @GetMapping("/{feedId}")
     public ResponseEntity<FeedResponse> findFeed(@PathVariable final Long feedId) {
         final FeedResponse response = feedReadService.findFeed(feedId);
@@ -62,6 +73,12 @@ public class FeedController {
         final FeedForListResponses feedResponses = feedReadService.findFeedsByOrderType(
                 categoryId, orderTypeRequest, scrollRequest);
         return ResponseEntity.ok(feedResponses);
+    }
+
+    @GetMapping("/{feedId}/projects")
+    public ResponseEntity<FeedProjectResponses> findProjects(@PathVariable final Long feedId) {
+        final FeedProjectResponses responses = feedReadService.findFeedProjects(feedId);
+        return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/search")
@@ -88,16 +105,6 @@ public class FeedController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping("/{feedId}/applicant")
-    @Authenticated
-    public ResponseEntity<Void> createApplicant(
-            @PathVariable("feedId") final Long feedId,
-            @MemberEmail final String email,
-            @RequestBody @Valid final FeedApplicantSaveRequest request) {
-        feedCreateService.createApplicant(feedId, email, request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
     @GetMapping("/me")
     @Authenticated
     public ResponseEntity<MemberFeedResponses> findAllMyFeeds(@MemberEmail final String email,
@@ -107,6 +114,7 @@ public class FeedController {
     }
 
     @GetMapping("/me/{feedId}/applicants")
+    @Authenticated
     public ResponseEntity<List<FeedApplicantResponse>> findFeedApplicants(
             @PathVariable final Long feedId,
             @MemberEmail final String email,
@@ -114,6 +122,15 @@ public class FeedController {
     ) {
         final List<FeedApplicantResponse> responses = feedReadService.findFeedApplicants(feedId, email, scrollRequest);
         return ResponseEntity.ok(responses);
+    }
+
+    @PostMapping("/me/{feedId}/applicants/{applicantId}/join")
+    @Authenticated
+    public ResponseEntity<Void> joinProject(@MemberEmail final String email,
+                                            @PathVariable final Long feedId,
+                                            @PathVariable final Long applicantId) {
+        feedCreateService.projectJoinPermission(email, feedId, applicantId);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/{feedId}")

@@ -65,7 +65,7 @@ public class FeedCreateService {
         return savedFeed.getId();
     }
 
-    public void createApplicant(final Long feedId, final String email, final FeedApplicantSaveRequest request) {
+    public Long createApplicant(final Long feedId, final String email, final FeedApplicantSaveRequest request) {
         final Feed feed = findFeedById(feedId);
         final Member member = findMemberByEmail(email);
         final FeedApplicantDto feedApplicantDto = FeedMapper.convertFeedApplicantDto(request, member);
@@ -74,6 +74,8 @@ public class FeedCreateService {
         final FeedApplicant feedApplicant = new FeedApplicant(feedApplicantDto.content(), feedApplicantDto.member());
 
         feed.addApplicant(feedApplicant);
+        feedApplicantRepository.save(feedApplicant);
+        return feedApplicant.getId();
     }
 
     private Member findMemberByEmail(final String email) {
@@ -97,6 +99,36 @@ public class FeedCreateService {
         if (feedApplicantRepository.findByFeedAndMember(feed, member).isPresent()) {
             throw new BadRequestException(
                     "이미 작성한 신청서가 존재합니다. feedId = " + feed.getId() + " memberId = " + member.getId());
+        }
+    }
+
+    public void projectJoinPermission(final String email, final Long feedId, final Long applicantId) {
+        final Member leader = findMemberByEmail(email);
+        final FeedApplicant applicant = findByApplicantId(applicantId);
+        final Project project = findProjectByFeedIdWithPessimisticLock(feedId);
+        final Member member = findMemberInformationByApplicant(applicant);
+        checkProjectPendingLeader(leader, project);
+        project.join(member);
+    }
+
+    public FeedApplicant findByApplicantId(Long applicantId) {
+        return feedApplicantRepository.findById(applicantId)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 신청서입니다."));
+    }
+
+    private Member findMemberInformationByApplicant(final FeedApplicant applicant) {
+        return memberRepository.findWithMemberProfileAndImageByApplicant(applicant)
+                .orElseThrow(() -> new NotFoundException("작성한 신청서가 존재하지 않는 회원입니다."));
+    }
+
+    private Project findProjectByFeedIdWithPessimisticLock(final Long feedId) {
+        return projectRepository.findProjectByFeedIdWithPessimisticLock(feedId)
+                .orElseThrow(() -> new NotFoundException("프로젝트가 존재하지 않는 피드입니다. feedId = " + feedId));
+    }
+
+    private void checkProjectPendingLeader(final Member member, final Project project) {
+        if (project.isNotPendingLeader(member)) {
+            throw new BadRequestException("프로젝트의 리더만 멤버를 추가할 수 있습니다.");
         }
     }
 

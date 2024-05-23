@@ -1,4 +1,4 @@
-package sidepair.service.dto.project.reequest;
+package sidepair.service.dto.project.request;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -13,7 +13,7 @@ public record ProjectCreateRequest(
         @NotBlank(message = "프로젝트 이름을 빈 값일 수 없습니다.")
         String name,
 
-        @NotNull(message = "프로잭트 제한 인원은 빈 값일 수 없습니다.")
+        @NotNull(message = "프로젝트 제한 인원은 빈 값일 수 없습니다.")
         Integer limitedMemberCount,
 
         @Valid

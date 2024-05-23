@@ -2,15 +2,19 @@ package sidepair.persistence.feed;
 
 
 import static sidepair.domain.feed.QFeed.feed;
+import static sidepair.domain.feed.QFeedApplicant.feedApplicant;
 import static sidepair.domain.feed.QFeedCategory.feedCategory;
 import static sidepair.domain.feed.QFeedContent.feedContent;
 import static sidepair.domain.feed.QFeedTag.feedTag;
 import static sidepair.domain.member.QMember.member;
 
+import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.StringExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import java.util.List;
 import java.util.Optional;
 import sidepair.domain.feed.Feed;
@@ -107,6 +111,14 @@ public class FeedQueryRepositoryImpl extends QuerydslRepositorySupporter impleme
     }
 
     @Override
+    public Optional<Feed> findByIdAndMember(final Long feedId, final Member member) {
+        return Optional.ofNullable(selectFrom(feed)
+                .where(feed.id.eq(feedId),
+                        creatorIdCond(member.getId()))
+                .fetchOne());
+    }
+
+    @Override
     public List<Feed> findWithFeedContentByStatus(final FeedStatus status) {
         return selectFrom(feed)
                 .innerJoin(feed.contents.values, feedContent)
@@ -165,13 +177,30 @@ public class FeedQueryRepositoryImpl extends QuerydslRepositorySupporter impleme
                 .equalsIgnoreCase(tagName.value());
     }
 
+    private JPAQuery<Long> applicantCountCond(final BooleanExpression isSatisfiedFeed) {
+        return select(feedApplicant.count())
+                .from(feedApplicant)
+                .where(isSatisfiedFeed);
+    }
+
     private OrderSpecifier<?> sortCond(final FeedOrderType orderType) {
+        if (orderType == FeedOrderType.APPLICANT_COUNT) {
+            return new OrderSpecifier<>(
+                    Order.DESC,
+                    applicantCountCond(feedApplicant.feed.eq(feed))
+            );
+        }
         return feed.createdAt.desc();
     }
 
     private BooleanExpression lessThanLastId(final Long lastId, final FeedOrderType orderType) {
         if (lastId == null) {
             return null;
+        }
+        if (orderType == FeedOrderType.APPLICANT_COUNT) {
+            final NumberPath<Long> feedApplicantFeedId = feedApplicant.feed.id;
+            return applicantCountCond(feedApplicantFeedId.eq(feed.id))
+                    .lt(applicantCountCond(feedApplicantFeedId.eq(lastId)));
         }
         return feed.createdAt.lt(
                 select(feed.createdAt)

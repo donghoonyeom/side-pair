@@ -42,7 +42,7 @@ class FeedContentRepositoryTest {
     @Test
     void 피드_컨텐츠를_피드과_함께_조회한다() {
         // given
-        final Feed feed = 피드을_생성한다();
+        final Feed feed = 피드를_생성한다();
         final Feed savedFeed = feedRepository.save(feed);
         final Long feedContentId = savedFeed.getContents().getValues().get(0).getId();
 
@@ -59,7 +59,7 @@ class FeedContentRepositoryTest {
     @Test
     void 피드의_가장_최근_컨텐츠를_조회한다() {
         // given
-        final Feed savedFeed = feedRepository.save(피드을_생성한다());
+        final Feed savedFeed = feedRepository.save(피드를_생성한다());
         final FeedContent oldFeedContent = feedContentRepository.findFirstByFeedOrderByCreatedAtDesc(
                 savedFeed).get();
 
@@ -77,7 +77,7 @@ class FeedContentRepositoryTest {
         );
     }
 
-    private Feed 피드을_생성한다() {
+    private Feed 피드를_생성한다() {
         final Member creator = 사용자를_생성한다();
         final FeedCategory category = 피드_카테고리를_생성한다();
         final FeedContent content = new FeedContent("피드 제목");
@@ -91,7 +91,7 @@ class FeedContentRepositoryTest {
     private Member 사용자를_생성한다() {
         final MemberProfile memberProfile = new MemberProfile(Position.BACKEND);
         final MemberSkills skills = new MemberSkills(
-                List.of(new MemberSkill(1L, new SkillName("Java"))));
+                List.of(new MemberSkill(new SkillName("Java"))));
         final Member member = new Member(new Email("test@email.com"),
                 new EncryptedPassword(new Password("password1!")), new Nickname("두두"), null, memberProfile, skills);
 

@@ -56,11 +56,11 @@ class ProjectTest {
     void 프로젝트의_총_기간을_계산한다() {
         // given
         final Member creator = 크리에이터를_생성한다();
-        final Feed feed = 피드을_생성한다(creator);
+        final Feed feed = 피드를_생성한다(creator);
 
         final FeedContents feedContents = feed.getContents();
         final FeedContent targetFeedContent = feedContents.getValues().get(0);
-        final Project project = 프로젝트을_생성한다(targetFeedContent, creator);
+        final Project project = 프로젝트를_생성한다(targetFeedContent, creator);
 
         // when
         final int totalPeriod = project.calculateTotalPeriod();
@@ -119,7 +119,7 @@ class ProjectTest {
         //when, then
         assertThatThrownBy(() -> project.join(member))
                 .isInstanceOf(ProjectException.class)
-                .hasMessage("모집 중이지 않은 프로젝트에는 참여할 수 없습니다.");
+                .hasMessage("모집 중이지 않은 프로젝트에는 멤버를 추가할 수 없습니다.");
     }
 
     @Test
@@ -131,7 +131,23 @@ class ProjectTest {
         //when,then
         assertThatThrownBy(() -> project.join(member))
                 .isInstanceOf(ProjectException.class)
-                .hasMessage("제한 인원이 꽉 찬 프로젝트에는 참여할 수 없습니다.");
+                .hasMessage("제한 인원이 꽉 찬 프로젝트에는 멤버를 추가할 수 없습니다.");
+    }
+
+    @Test
+    void 피드_작성자가_아닌_사용자가_프로젝트를_생성하면_예외가_발생한다() {
+        //given
+        final Member creator = 크리에이터를_생성한다();
+        final Feed feed = 피드를_생성한다(creator);
+        final FeedContents feedContents = feed.getContents();
+        final FeedContent targetFeedContent = feedContents.getValues().get(0);
+        final Member 작성자가_아닌_사용자 = 사용자를_생성한다(2L, "test1@example.com", "닉네임");
+
+        //when, then
+        assertThatThrownBy(() -> Project.createProject(PROJECT_NAME, new LimitedMemberCount(6), targetFeedContent,
+                작성자가_아닌_사용자))
+                .isInstanceOf(ProjectException.class)
+                .hasMessage("피드를 생성한 사용자가 아닙니다.");
     }
 
     @Test
@@ -143,32 +159,32 @@ class ProjectTest {
         //when,then
         assertThatThrownBy(() -> project.join(member))
                 .isInstanceOf(ProjectException.class)
-                .hasMessage("이미 참여한 프로젝트에는 참여할 수 없습니다.");
+                .hasMessage("이미 프로젝트에 추가한 멤버는 추가할 수 없습니다.");
     }
 
     @Test
-    void 프로젝트의_총_인증_횟수를_구한다() {
+    void 프로젝트의_총_회고_횟수를_구한다() {
         //given
         final Member creator = 크리에이터를_생성한다();
-        final Feed feed = 피드을_생성한다(creator);
+        final Feed feed = 피드를_생성한다(creator);
 
         final FeedContents feedContents = feed.getContents();
         final FeedContent targetFeedContent = feedContents.getValues().get(0);
-        final Project project = 프로젝트을_생성한다(targetFeedContent, creator);
+        final Project project = 프로젝트를_생성한다(targetFeedContent, creator);
 
         //expect
-        assertThat(project.getAllCheckCount()).isEqualTo(12);
+        assertThat(project.getAllMemoirCount()).isEqualTo(12);
     }
 
     @Test
-    void 프로젝트이_시작하기_전에_참여_멤버를_확인한다() {
+    void 프로젝트가_시작하기_전에_참여_멤버를_확인한다() {
         //given
         final Member creator = 크리에이터를_생성한다();
-        final Feed feed = 피드을_생성한다(creator);
+        final Feed feed = 피드를_생성한다(creator);
 
         final FeedContents feedContents = feed.getContents();
         final FeedContent targetFeedContent = feedContents.getValues().get(0);
-        final Project project = 프로젝트을_생성한다(targetFeedContent, creator);
+        final Project project = 프로젝트를_생성한다(targetFeedContent, creator);
 
         final Member 참여자 = 사용자를_생성한다(2L, "test1@example.com", "팔로워");
         project.join(참여자);
@@ -181,14 +197,14 @@ class ProjectTest {
     }
 
     @Test
-    void 프로젝트이_시작한_후에_참여_멤버를_확인한다() {
+    void 프로젝트가_시작한_후에_참여_멤버를_확인한다() {
         //given
         final Member creator = 크리에이터를_생성한다();
-        final Feed feed = 피드을_생성한다(creator);
+        final Feed feed = 피드를_생성한다(creator);
 
         final FeedContents feedContents = feed.getContents();
         final FeedContent targetFeedContent = feedContents.getValues().get(0);
-        final Project project = 프로젝트을_생성한다(targetFeedContent, creator);
+        final Project project = 프로젝트를_생성한다(targetFeedContent, creator);
 
         final Member 참여자 = 사용자를_생성한다(2L, "test1@example.com", "팔로워");
 //        project.join(참여자);
@@ -202,7 +218,7 @@ class ProjectTest {
     }
 
     @Test
-    void 프로젝트을_나간다() {
+    void 프로젝트를_나간다() {
         //given
         final Project project = new Project(PROJECT_NAME, new LimitedMemberCount(2),
                 new FeedContent("피드 내용"), member);
@@ -231,17 +247,17 @@ class ProjectTest {
     }
 
     @Test
-    void 프로젝트이_종료된지_3개월_이상_지나지_않으면_false를_반환한다() {
+    void 프로젝트가_종료된지_2개월_이상_지나지_않으면_false를_반환한다() {
         //given
         final Member creator = 크리에이터를_생성한다();
-        final Feed feed = 피드을_생성한다(creator);
+        final Feed feed = 피드를_생성한다(creator);
 
         final FeedContents feedContents = feed.getContents();
         final FeedContent targetFeedContent = feedContents.getValues().get(0);
-        final Project project = 프로젝트을_생성한다(targetFeedContent, creator);
+        final Project project = 프로젝트를_생성한다(targetFeedContent, creator);
 
         // when
-        final boolean result = project.isCompletedAfterMonths(3);
+        final boolean result = project.isCompletedAfterMonths(2);
 
         // then
         assertThat(result).isEqualTo(false);
@@ -261,7 +277,7 @@ class ProjectTest {
                 new Nickname(nickname), null, memberProfile, skills);
     }
 
-    private Feed 피드을_생성한다(final Member creator) {
+    private Feed 피드를_생성한다(final Member creator) {
         final FeedCategory category = new FeedCategory("게임");
         final List<FeedNode> feedNodes = 피드_노드들을_생성한다();
         final FeedContent feedContent = 피드_본문을_생성한다(feedNodes);
@@ -283,8 +299,8 @@ class ProjectTest {
         return feedContent;
     }
 
-    private Project 프로젝트을_생성한다(final FeedContent feedContent, final Member creator) {
-        final Project project = new Project(new ProjectName("프로젝트"),
+    private Project 프로젝트를_생성한다(final FeedContent feedContent, final Member creator) {
+        final Project project = Project.createProject(new ProjectName("프로젝트"),
                 new LimitedMemberCount(6), feedContent, creator);
         final List<FeedNode> feedNodes = feedContent.getNodes().getValues();
 

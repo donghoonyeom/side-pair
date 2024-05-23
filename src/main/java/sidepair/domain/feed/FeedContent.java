@@ -50,7 +50,7 @@ public class FeedContent extends BaseUpdatedTimeEntity {
 
     private void validateContentLength(final String content) {
         if (content.length() > CONTENT_MAX_LENGTH) {
-            throw new FeedException(String.format("개시물 본문의 길이는 최대 %d글자입니다.", CONTENT_MAX_LENGTH));
+            throw new FeedException(String.format("피드 본문의 길이는 최대 %d글자입니다.", CONTENT_MAX_LENGTH));
         }
     }
 
@@ -61,6 +61,10 @@ public class FeedContent extends BaseUpdatedTimeEntity {
 
     public boolean isNotSameFeed(final Feed feed) {
         return this.feed == null || !this.feed.equals(feed);
+    }
+
+    public boolean isNotFeedCreator(final Member member) {
+        return !feed.isCreator(member);
     }
 
     public void updateFeed(final Feed feed) {
@@ -92,6 +96,4 @@ public class FeedContent extends BaseUpdatedTimeEntity {
     public Feed getFeed() {
         return feed;
     }
-
-    public Member getCreator() {return feed.getCreator();}
 }

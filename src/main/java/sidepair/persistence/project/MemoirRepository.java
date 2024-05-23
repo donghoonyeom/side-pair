@@ -12,30 +12,30 @@ import sidepair.domain.project.ProjectMember;
 
 public interface MemoirRepository extends JpaRepository<Memoir, Long>, MemoirQueryRepository {
 
-    @Query("SELECT cf"
-            + " FROM Memoir cf"
-            + " WHERE cf.projectMember = :projectMember"
-            + " AND cf.createdAt >= :start"
-            + " AND cf.createdAt < :end")
+    @Query("SELECT pm"
+            + " FROM Memoir pm"
+            + " WHERE pm.projectMember = :projectMember"
+            + " AND pm.createdAt >= :start"
+            + " AND pm.createdAt < :end")
     Optional<Memoir> findByProjectMemberAndDateTime(final ProjectMember projectMember, final LocalDateTime start,
                                                     final LocalDateTime end);
 
-    @Query("SELECT COUNT(cf)"
-            + " FROM Memoir cf"
-            + " WHERE cf.projectMember = :projectMember")
+    @Query("SELECT COUNT(pm)"
+            + " FROM Memoir pm"
+            + " WHERE pm.projectMember = :projectMember")
     int countByProjectMember(final ProjectMember projectMember);
 
-    @Query("SELECT COUNT(cf)"
-            + " FROM Memoir cf"
-            + " WHERE cf.projectMember = :projectMember"
-            + " AND cf.projectFeedNode = :projectFeedNode")
+    @Query("SELECT COUNT(pm)"
+            + " FROM Memoir pm"
+            + " WHERE pm.projectMember = :projectMember"
+            + " AND pm.projectFeedNode = :projectFeedNode")
     int countByProjectMemberAndProjectFeedNode(final ProjectMember projectMember,
     final ProjectFeedNode projectFeedNode);
 
-    @Query("SELECT cf"
-            + " FROM Memoir cf"
-            + " WHERE cf.projectMember.project =:project"
-            + " ORDER BY cf.createdAt DESC")
+    @Query("SELECT pm"
+            + " FROM Memoir pm"
+            + " WHERE pm.projectMember.project =:project"
+            + " ORDER BY pm.createdAt DESC")
     List<Memoir> findByProject(final Project project);
 
     List<Memoir> findByProjectFeedNode(final ProjectFeedNode projectFeedNode);

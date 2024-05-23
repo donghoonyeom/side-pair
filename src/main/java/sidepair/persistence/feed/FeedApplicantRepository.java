@@ -7,5 +7,8 @@ import sidepair.domain.feed.FeedApplicant;
 import sidepair.domain.member.Member;
 
 public interface FeedApplicantRepository extends JpaRepository<FeedApplicant, Long>, FeedApplicantQueryRepository {
+
+    Optional<FeedApplicant> findById (final Long applicantId);
+
     Optional<FeedApplicant> findByFeedAndMember(final Feed feed, final Member member);
 }

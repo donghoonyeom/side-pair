@@ -1,7 +1,6 @@
 package sidepair.persistence.project;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -74,7 +73,7 @@ class ProjectPendingMemberRepositoryTest {
         // given
         final Member creator = 크리에이터를_저장한다();
         final FeedCategory category = 카테고리를_저장한다("이커머스");
-        final Feed feed = 피드을_저장한다(creator, category);
+        final Feed feed = 피드를_저장한다(creator, category);
 
         final FeedContents feedContents = feed.getContents();
         final FeedContent targetFeedContent = feedContents.getValues().get(0);
@@ -101,7 +100,7 @@ class ProjectPendingMemberRepositoryTest {
         // given
         final Member creator = 크리에이터를_저장한다();
         final FeedCategory category = 카테고리를_저장한다("이커머스");
-        final Feed feed = 피드을_저장한다(creator, category);
+        final Feed feed = 피드를_저장한다(creator, category);
 
         final FeedContents feedContents = feed.getContents();
         final FeedContent targetFeedContent = feedContents.getValues().get(0);
@@ -123,7 +122,7 @@ class ProjectPendingMemberRepositoryTest {
         // given
         final Member creator = 크리에이터를_저장한다();
         final FeedCategory category = 카테고리를_저장한다("이커머스");
-        final Feed feed = 피드을_저장한다(creator, category);
+        final Feed feed = 피드를_저장한다(creator, category);
 
         final FeedContents feedContents = feed.getContents();
         final FeedContent targetFeedContent = feedContents.getValues().get(0);
@@ -165,7 +164,7 @@ class ProjectPendingMemberRepositoryTest {
         //given
         final Member creator = 크리에이터를_저장한다();
         final FeedCategory category = 카테고리를_저장한다("이커머스");
-        final Feed feed = 피드을_저장한다(creator, category);
+        final Feed feed = 피드를_저장한다(creator, category);
         final FeedContents feedContents = feed.getContents();
         final FeedContent targetFeedContent = feedContents.getValues().get(0);
         final Project project = 프로젝트를_생성한다(targetFeedContent, creator);
@@ -195,7 +194,7 @@ class ProjectPendingMemberRepositoryTest {
         // given
         final Member creator = 크리에이터를_저장한다();
         final FeedCategory category = 카테고리를_저장한다("이커머스");
-        final Feed feed = 피드을_저장한다(creator, category);
+        final Feed feed = 피드를_저장한다(creator, category);
 
         final FeedContents feedContents = feed.getContents();
         final FeedContent targetFeedContent = feedContents.getValues().get(0);
@@ -233,7 +232,7 @@ class ProjectPendingMemberRepositoryTest {
         // given
         final Member creator = 크리에이터를_저장한다();
         final FeedCategory category = 카테고리를_저장한다("이커머스");
-        final Feed feed = 피드을_저장한다(creator, category);
+        final Feed feed = 피드를_저장한다(creator, category);
 
         final FeedContents feedContents = feed.getContents();
         final FeedContent targetFeedContent = feedContents.getValues().get(0);
@@ -275,7 +274,7 @@ class ProjectPendingMemberRepositoryTest {
         // given
         final Member creator = 크리에이터를_저장한다();
         final FeedCategory category = 카테고리를_저장한다("이커머스");
-        final Feed feed = 피드을_저장한다(creator, category);
+        final Feed feed = 피드를_저장한다(creator, category);
 
         final FeedContents feedContents = feed.getContents();
         final FeedContent targetFeedContent = feedContents.getValues().get(0);
@@ -314,7 +313,7 @@ class ProjectPendingMemberRepositoryTest {
 
     private Member 크리에이터를_저장한다() {
         final MemberProfile memberProfile = new MemberProfile(Position.BACKEND);
-        final MemberSkills skills = new MemberSkills(List.of(new MemberSkill(1L, new SkillName("Java"))));
+        final MemberSkills skills = new MemberSkills(List.of(new MemberSkill(new SkillName("Java"))));
         final Member creator = new Member(new Email("test@example.com"),
                 new EncryptedPassword(new Password("password1!")), new Nickname("페어"),
                 new MemberImage("originalFileName", "serverFilePath", ImageContentType.PNG), memberProfile, skills);
@@ -323,7 +322,7 @@ class ProjectPendingMemberRepositoryTest {
 
     private Member 사용자를_생성한다(final String email, final String password, final String nickname) {
         final MemberProfile memberProfile = new MemberProfile(Position.DESIGNER);
-        final MemberSkills skills = new MemberSkills(List.of(new MemberSkill(1L, new SkillName("CSS"))));
+        final MemberSkills skills = new MemberSkills(List.of(new MemberSkill(new SkillName("CSS"))));
         final Member member = new Member(new Email(email), new EncryptedPassword(new Password(password)),
                 new Nickname(nickname), new MemberImage("originalFileName", "serverFilePath", ImageContentType.PNG),
                 memberProfile, skills);
@@ -335,7 +334,7 @@ class ProjectPendingMemberRepositoryTest {
         return feedCategoryRepository.save(feedCategory);
     }
 
-    private Feed 피드을_저장한다(final Member creator, final FeedCategory category) {
+    private Feed 피드를_저장한다(final Member creator, final FeedCategory category) {
         final List<FeedNode> feedNodes = 피드_노드들을_생성한다();
         final FeedContent feedContent = 피드_본문을_생성한다(feedNodes);
         final Feed feed = new Feed("피드 제목", "피드 소개글", 10, creator, category);
