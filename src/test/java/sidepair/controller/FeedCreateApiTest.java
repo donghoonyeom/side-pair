@@ -651,7 +651,7 @@ class FeedCreateApiTest extends ControllerTestHelper {
     }
 
     @Test
-    void 피드_신청서_생성시_이미_신청서를_단적이_있으면_예외가_발생한다() throws Exception {
+    void 피드_신청서_생성시_이미_신청서를_보낸적_있으면_예외가_발생한다() throws Exception {
         // given
         doThrow(new BadRequestException("이미 작성한 신청서가 존재합니다. feedId = 1L memberId = 1L"))
                 .when(feedCreateService)

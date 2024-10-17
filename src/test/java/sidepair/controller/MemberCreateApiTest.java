@@ -103,7 +103,7 @@ class MemberCreateApiTest extends ControllerTestHelper {
     }
 
     @Test
-    void 회원가입_시_기술_형식에_맞지않을때() throws Exception {
+    void 회원가입_시_기술_형식에_맞지않을_때() throws Exception {
         //given
         final MemberJoinRequest memberJoinRequest = new MemberJoinRequest("test@email.com", "password1!",
                 "nickname", PositionType.BACKEND, List.of(new MemberSkillSaveRequest

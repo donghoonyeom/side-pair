@@ -103,7 +103,7 @@ class AuthCreateApiTest extends ControllerTestHelper {
     }
 
     @Test
-    void 로그인_시_이메일와_비밀번호_모두_빈값이_들어올_때_예외를_던진다() throws Exception {
+    void 로그인_시_이메일과_비밀번호_모두_빈값이_들어올_때_예외를_던진다() throws Exception {
         //given
         final LoginRequest request = new LoginRequest("", "");
         final String jsonRequest = objectMapper.writeValueAsString(request);

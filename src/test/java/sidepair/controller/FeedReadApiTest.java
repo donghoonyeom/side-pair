@@ -32,7 +32,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import sidepair.controller.helper.ControllerTestHelper;
 import sidepair.domain.member.Position;
 import sidepair.domain.project.ProjectStatus;
-import sidepair.service.dto.CustomScrollRequest;
 import sidepair.service.dto.ErrorResponse;
 import sidepair.service.dto.feed.requesst.FeedOrderTypeRequest;
 import sidepair.service.dto.feed.response.FeedApplicantResponse;
@@ -300,7 +299,7 @@ class FeedReadApiTest extends ControllerTestHelper {
     }
 
     @Test
-    void 피드의_프로젝트룰_조회할_때_피드가_존재하지_않으면_예외_발생() throws Exception {
+    void 피드의_프로젝트를_조회할_때_피드가_존재하지_않으면_예외_발생() throws Exception {
         // given
         given(feedReadService.findFeedProjects(any()))
                 .willThrow(new NotFoundException("존재하지 않는 피드입니다. feedId = 1"));
@@ -630,7 +629,7 @@ class FeedReadApiTest extends ControllerTestHelper {
     }
 
     @Test
-    void 피드_신청서_조회_시_피드_생성자와_일치하지_않은_셍성자일_경우_예외를_반환한다() throws Exception {
+    void 피드_신청서_조회_시_피드_생성자와_일치하지_않은_생성자일_경우_예외를_반환한다() throws Exception {
         // given
         when(feedReadService.findFeedApplicants(anyLong(), anyString(), any()))
                 .thenThrow(new ForbiddenException("해당 피드를 생성한 사용자가 아닙니다."));

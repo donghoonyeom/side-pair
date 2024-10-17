@@ -85,7 +85,7 @@ class ProjectReadApiTest extends ControllerTestHelper{
                                         fieldWithPath("projectNodes[0].title").description("프로젝트 피드 노드 제목"),
                                         fieldWithPath("projectNodes[0].startDate").description("프로젝트 피드 노드 시작 날짜"),
                                         fieldWithPath("projectNodes[0].endDate").description("프로젝트 피드 노드 종료 날짜"),
-                                        fieldWithPath("projectNodes[0].checkCount").description("프로젝트 피드 노드 인증 횟수"),
+                                        fieldWithPath("projectNodes[0].checkCount").description("프로젝트 피드 노드 회고 횟수"),
                                         fieldWithPath("period").description("프로젝트 진행 기간"))))
                 .andReturn().getResponse()
                 .getContentAsString();
@@ -152,7 +152,7 @@ class ProjectReadApiTest extends ControllerTestHelper{
                                         fieldWithPath("projectNodes[0].title").description("프로젝트 피드 노드 제목"),
                                         fieldWithPath("projectNodes[0].startDate").description("프로젝트 피드 노드 시작 날짜"),
                                         fieldWithPath("projectNodes[0].endDate").description("프로젝트 피드 노드 종료 날짜"),
-                                        fieldWithPath("projectNodes[0].checkCount").description("프로젝트 피드 노드 인증 횟수"),
+                                        fieldWithPath("projectNodes[0].checkCount").description("프로젝트 피드 노드 회고 갯수"),
                                         fieldWithPath("period").description("프로젝트 진행 기간"),
                                         fieldWithPath("isJoined").description("프로젝트 참여 여부 (true / false)"))))
                 .andReturn().getResponse()
@@ -238,7 +238,7 @@ class ProjectReadApiTest extends ControllerTestHelper{
                                         fieldWithPath("projectFeedNodes.nodes[0].endDate").description(
                                                 "프로젝트 피드 노드 종료일"),
                                         fieldWithPath("projectFeedNodes.nodes[0].checkCount").description(
-                                                "프로젝트 피드 노드 최대 인증 횟수"),
+                                                "프로젝트 피드 노드 최대 회고 갯수"),
                                         fieldWithPath("projectTodos[0].id").description("프로젝트 투두 아이디"),
                                         fieldWithPath("projectTodos[0].content").description("프로젝트 투두 내용"),
                                         fieldWithPath("projectTodos[0].startDate").description("프로젝트 투두 시작일"),
@@ -572,7 +572,7 @@ class ProjectReadApiTest extends ControllerTestHelper{
                                         fieldWithPath("[0].imageUrls[0]").description("노드 이미지 파일 경로"),
                                         fieldWithPath("[0].startDate").description("노드 시작 날짜"),
                                         fieldWithPath("[0].endDate").description("노드 종료 날짜"),
-                                        fieldWithPath("[0].checkCount").description("인증 횟수")
+                                        fieldWithPath("[0].checkCount").description("회고 갯수")
                                 )))
                 .andReturn();
 
@@ -645,16 +645,16 @@ class ProjectReadApiTest extends ControllerTestHelper{
     }
 
     @Test
-    void 프로젝트의_인증피드를_전체_조회한다() throws Exception {
+    void 프로젝트의_회고를_전체_조회한다() throws Exception {
         // given
         final ProjectMemoirResponse projectMemoirResponse1 = new ProjectMemoirResponse(
                 new MemberResponse(1L, "name1", "imageUrl", Position.BACKEND.name(),
                         List.of(new MemberSkillResponse(1L, "Java"))),
-                new MemoirResponse(1L, "image description1", LocalDate.now()));
+                new MemoirResponse(1L, "회고 글", LocalDate.now()));
         final ProjectMemoirResponse projectMemoirResponse2 = new ProjectMemoirResponse(
                 new MemberResponse(2L, "name2", "imageUrl", Position.BACKEND.name(),
                         List.of(new MemberSkillResponse(1L, "Java"))),
-                new MemoirResponse(2L, "imageUrl",  LocalDate.now()));
+                new MemoirResponse(2L, "회고 글",  LocalDate.now()));
 
         final List<ProjectMemoirResponse> expected = List.of(projectMemoirResponse2,
                 projectMemoirResponse1);
@@ -690,15 +690,15 @@ class ProjectReadApiTest extends ControllerTestHelper{
                 .getContentAsString();
 
         // then
-        final List<ProjectMemoirResponse> 프로젝트_인증피드_전체_조회_응답 = objectMapper.readValue(response,
+        final List<ProjectMemoirResponse> 프로젝트_회고_전체_조회_응답 = objectMapper.readValue(response,
                 new TypeReference<>() {
                 });
-        assertThat(프로젝트_인증피드_전체_조회_응답)
+        assertThat(프로젝트_회고_전체_조회_응답)
                 .isEqualTo(expected);
     }
 
     @Test
-    void 프로젝트_인증피드_전체_조회_시_존재하지_않는_프로젝트일_경우_예외가_발생한다() throws Exception {
+    void 프로젝트_회고_전체_조회_시_존재하지_않는_프로젝트일_경우_예외가_발생한다() throws Exception {
         //given
         doThrow(new NotFoundException("존재하지 않는 프로젝트입니다. projectId = 1"))
                 .when(projectReadService)
@@ -727,7 +727,7 @@ class ProjectReadApiTest extends ControllerTestHelper{
     }
 
     @Test
-    void 프로젝트_인증피드_전체_조회_시_프로젝트에_참여하지_않은_사용자일_경우_예외_발생() throws Exception {
+    void 프로젝트_회고_전체_조회_시_프로젝트에_참여하지_않은_사용자일_경우_예외_발생() throws Exception {
         //given
         doThrow(new BadRequestException("프로젝트에 참여하지 않은 회원입니다."))
                 .when(projectReadService)
