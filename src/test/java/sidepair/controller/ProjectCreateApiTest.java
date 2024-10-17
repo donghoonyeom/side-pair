@@ -42,6 +42,7 @@ import sidepair.service.dto.project.request.ProjectFeedNodeRequest;
 import sidepair.service.dto.project.request.ProjectTodoRequest;
 import sidepair.service.dto.project.response.ProjectToDoCheckResponse;
 import sidepair.service.exception.BadRequestException;
+import sidepair.service.exception.ForbiddenException;
 import sidepair.service.exception.NotFoundException;
 import sidepair.service.project.ProjectCreateService;
 import sidepair.service.project.ProjectReadService;
@@ -128,6 +129,28 @@ class ProjectCreateApiTest extends ControllerTestHelper {
 
         //then
         final ErrorResponse expectedResponse = new ErrorResponse("존재하지 않는 피드입니다.");
+        final ErrorResponse response = jsonToClass(mvcResult, new TypeReference<>() {
+        });
+
+        assertThat(response).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    void 프로젝트_생성_시_피드_생성자가_아닐_경우() throws Exception {
+        //given
+        final ProjectCreateRequest request = new ProjectCreateRequest(1L, "name",
+                20, new ArrayList<>(List.of(new ProjectFeedNodeRequest(1L, 10, TODAY, TEN_DAY_LATER))));
+        final String jsonRequest = objectMapper.writeValueAsString(request);
+        doThrow(new ForbiddenException("피드를 생성한 사용자가 아닙니다."))
+                .when(projectCreateService)
+                .create(any(), any());
+
+        //when
+        final MvcResult mvcResult = 프로젝트_생성(jsonRequest, status().isForbidden())
+                .andReturn();
+
+        //then
+        final ErrorResponse expectedResponse = new ErrorResponse("피드를 생성한 사용자가 아닙니다.");
         final ErrorResponse response = jsonToClass(mvcResult, new TypeReference<>() {
         });
 
@@ -548,9 +571,9 @@ class ProjectCreateApiTest extends ControllerTestHelper {
     }
 
     @Test
-    void 프로젝트_투두리스트_체크시_프로젝트이_존재하지_않으면_예외가_발생한다() throws Exception {
+    void 프로젝트_투두리스트_체크시_프로젝트가_존재하지_않으면_예외가_발생한다() throws Exception {
         //given
-        doThrow(new NotFoundException("프로젝트이 존재하지 않습니다. projectId = 1"))
+        doThrow(new NotFoundException("프로젝트가 존재하지 않습니다. projectId = 1"))
                 .when(projectCreateService)
                 .checkProjectTodo(anyLong(), anyLong(), anyString());
 
@@ -572,7 +595,7 @@ class ProjectCreateApiTest extends ControllerTestHelper {
         //then
         final ErrorResponse response = jsonToClass(mvcResult, new TypeReference<>() {
         });
-        assertThat(response).isEqualTo(new ErrorResponse("프로젝트이 존재하지 않습니다. projectId = 1"));
+        assertThat(response).isEqualTo(new ErrorResponse("프로젝트가 존재하지 않습니다. projectId = 1"));
     }
 
     @Test
