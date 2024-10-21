@@ -1,0 +1,277 @@
+= Project API
+:toc-title: Project API Docs
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toc-title: Project API Docs
+:toclevels: 2
+:sectlinks:
+ifndef::snippets[]
+:snippets: ../../../build/generated-snippets
+endif::[]
+ifndef::page[]
+:page: src/docs/asciidoc
+endif::[]
+
+[[프로젝트생성-API]]
+== *1. 프로젝트 생성*
+
+=== *1-1* 성공
+
+operation::project-create-api-test/정상적으로_프로젝트를_생성한다[snippets='http-request,request-fields,request-headers,http-response,response-headers']
+
+=== *1-2* 실패 - 프로젝트 생성 시 요청에 빈값이 있을 경우
+
+operation::project-create-api-test/프로젝트_생성_시_요청에_빈값이_있을_경우[snippets='http-request,http-response']
+
+=== *1-3* 실패 - 프로젝트 생성 시 피드에 존재하지 않는 노드일 경우
+
+operation::project-create-api-test/프로젝트_생성_시_피드에_존재하지_않는_노드일_경우[snippets='http-request,http-response']
+
+=== *1-4* 실패 - 프로젝트 생성 시 피드의 노드 크기와 요청의 노드 크기가 일치하지 않을 경우
+
+operation::project-create-api-test/프로젝트_생성_시_피드의_노드_크기와_요청의_노드_크기가_일치하지_않을_경우[snippets='http-request,http-response']
+
+=== *1-5* 실패 - 프로젝트 생성 시 피드가 존재하지 않을 경우
+
+operation::project-create-api-test/프로젝트_생성_시_피드가_존재하지_않을_경우[snippets='http-request,http-response']
+
+=== *1-6* 실패 - 프로젝트 생성 시 삭제된 피드인 경우
+
+operation::project-create-api-test/프로젝트_생성_시_삭제된_피드_경우[snippets='http-request,http-response']
+
+=== *1-7* 실패 - 프로젝트 생성 시 존재하지 않는 회원일 경우
+
+operation::project-create-api-test/프로젝트_생성_시_존재하지_않는_회원일_경우[snippets='http-request,http-response']
+
+=== *1-8* 실패 - 프로젝트 생성 시 피드 생성자가 아닐 경우
+
+operation::project-create-api-test/프로젝트_생성_시_피드_생성자가_아닐_경우[snippets='http-request,http-response']
+
+=== *1-9* 실패 - 프로젝트 생성 시 프로젝트 노드의 시작 날짜가 오늘보다 전일 경우
+
+operation::project-create-api-test/프로젝트_생성_시_프로젝트_노드의_시작_날짜가_오늘보다_전일_경우[snippets='http-request,http-response']
+
+=== *1-10* 실패 - 프로젝트 생성 시 프로젝트 노드의 시작 날짜보다 종료 날짜가 빠른 경우
+
+operation::project-create-api-test/프로젝트_생성_시_프로젝트_노드의_시작_날짜보다_종료_날짜가_빠른_경우[snippets='http-request,http-response']
+
+=== *1-11* 실패 - 프로젝트 생성 시 프로젝트 노드의 인증 횟수가 0보다 작을 경우
+
+operation::project-create-api-test/프로젝트_생성_시_프로젝트_노드의_인증_횟수가_0보다_작을_경우[snippets='http-request,http-response']
+
+=== *1-12* 실패 - 프로젝트 생성 시 프로젝트 노드의 인증 횟수가 기간보다 클 경우
+
+operation::project-create-api-test/프로젝트_생성_시_프로젝트_노드의_인증_횟수가_기간보다_클_경우[snippets='http-request,http-response']
+
+[[프로젝트단일조회-비로그인-API]]
+== *2. 프로젝트 단일 조회 API (비로그인)*
+
+=== *2-1* 성공
+
+operation::project-read-api-test/프로젝트_아이디로_프로젝트를_조회한다[snippets='http-request,path-parameters,http-response,response-fields']
+
+=== *2-2* 실패
+
+operation::project-read-api-test/프로젝트_아이디로_프로젝트_조회시_아이디가_유효하지_않으면_예외가_발생한다[snippets='http-request,http-response,response-fields']
+
+[[프로젝트단일조회-로그인-API]]
+== *3. 프로젝트 단일 조회 API (로그인)*
+
+=== *3-1* 성공
+
+operation::project-read-api-test/프로젝트_아이디와_사용자_아이디로_프로젝트를_조회한다[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+=== *3-2* 실패
+
+operation::project-read-api-test/프로젝트_아이디와_사용자_아이디로_프로젝트_조회시_프로젝트_아이디가_유효하지_않으면_예외_발생[snippets='http-request,http-response']
+
+[[프로젝트참가자조회-API]]
+== *4. 프로젝트 참가자 조회 API*
+
+=== *4-1* 성공
+
+operation::project-read-api-test/정상적으로_프로젝트_멤버를_조회한다[snippets='http-request,request-headers,path-parameters,query-parameters,http-response']
+
+=== *4-2* 실패 - 프로젝트 멤버 조회 시 존재하지 않는 프로젝트일 경우
+
+operation::project-read-api-test/프로젝트_멤버_조회_시_존재하지_않는_프로젝트일_경우[snippets='http-request,http-response']
+
+[[프로젝트투두추가-API]]
+== *5. 프로젝트 투두 추가 API*
+
+=== *5-1* 성공
+
+operation::project-create-api-test/정상적으로_프로젝트에_투두리스트를_추가한다[snippets='http-request,request-fields,request-headers,path-parameters,http-response,response-headers']
+
+=== *5-2* 실패 - 프로젝트 투두 추가시 존재하지 않는 회원일 경우
+
+operation::project-create-api-test/프로젝트_투두_추가시_존재하지_않는_회원일_경우[snippets='http-request,http-response']
+
+=== *5-3* 실패 - 프로젝트 투두 추가시 존재하지 않는 프로젝트일 경우
+
+operation::project-create-api-test/프로젝트_투두_추가시_존재하지_않는_프로젝트일_경우[snippets='http-request,http-response']
+
+=== *5-4* 실패 - 프로젝트 투두 추가시 이미 종료된 프로젝트일 경우
+
+operation::project-create-api-test/프로젝트_투두_추가시_이미_종료된_프로젝트일_경우[snippets='http-request,http-response']
+
+=== *5-5* 실패 - 프로젝트 투두 추가시 리더가 아닌 경우
+
+operation::project-create-api-test/프로젝트_투두_추가시_리더가_아닌_경우[snippets='http-request,http-response']
+
+=== *5-6* 실패 - 프로젝트 투두 추가시 컨텐츠가 250글자가 넘을 경우
+
+operation::project-create-api-test/프로젝트_투두_추가시_컨텐츠가_250글자가_넘을_경우[snippets='http-request,http-response']
+
+[[프로젝트회고등록-API]]
+== *6. 회고 등록 API*
+
+=== *6-1* 성공
+
+operation::project-create-api-test/회고_등록_요청을_보낸다[snippets='http-request,request-headers,path-parameters,http-response']
+
+=== *6-2* 실패 - 회고 등록 요청 시 존재하지 않는 사용자 아이디일 경우
+
+operation::project-create-api-test/회고_등록_요청시_멤버가_존재하지_않을_경우_예외를_반환한다[snippets='http-request,http-response']
+
+=== *6-3* 실패 - 회고 요청 시 존재하지 않는 프로젝트일 경우
+
+operation::project-create-api-test/회고_등록_요청시_피드가_존재하지_않을_경우_예외를_반환한다[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+=== *6-4* 실패 - 회고 요청 시 노드 기간을 벗어난 경우
+
+operation::project-create-api-test/회고_등록시_노드_기간에_해당하지_않으면_예외가_발생한다[snippets='http-request,http-response']
+
+[[사용자프로젝트단일조회-API]]
+== *8. 사용자 프로젝트 단일 조회*
+
+=== *7-1* 성공
+
+operation::project-read-api-test/사용자_단일_프로젝트를_조회한다[snippets='http-request,request-headers,path-parameters,response-fields,http-response']
+
+=== *7-2* 실패 - 조회 요청 시 유효하지 않은 프로젝트 아이디가 들어올 때
+
+operation::project-read-api-test/사용자_프로젝트_조회_시_유효하지_않은_프로젝트_아이디를_보내면_예외가_발생한다[snippets='http-request,http-response']
+
+[[사용자프로젝트목록조회-API]]
+== *8. 사용자 프로젝트 목록 조회*
+
+=== *8-1* 성공
+
+operation::project-read-api-test/사용자_참가_프로젝트_목록을_조회한다[snippets='http-request,request-headers,query-parameters,http-response,response-fields']
+
+[[프로젝트투두체크-API]]
+== *9. 프로젝트 투두 체크 API*
+
+=== *9-1* 성공 - 체크
+
+operation::project-create-api-test/프로젝트_투두리스트에_대해_체크한다[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+=== *9-2* 성공 - 체크 해제 (기존에 체크한 이력이 있는 경우)
+
+operation::project-create-api-test/프로젝트_투두리스트_체크시_체크_이력이_있으면_제거한다[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+=== *9-3* 실패 - 프로젝트이 존재하지 않는 경우
+
+operation::project-create-api-test/프로젝트_투두리스트_체크시_프로젝트이_존재하지_않으면_예외가_발생한다[snippets='http-request,http-response']
+
+=== *9-4* 실패 - 프로젝트에 사용자가 존재하지 않는 경우
+
+operation::project-create-api-test/프로젝트_투두리스트_체크시_사용자가_없으면_예외가_발생한다[snippets='http-request,http-response']
+
+=== *9-5* 실패 - 투두가 존재하지 않는 경우
+
+operation::project-create-api-test/프로젝트_투두리스트_체크시_해당_투두가_존재하지_않으면_예외가_발생한다[snippets='http-request,http-response']
+
+[[프로젝트투두리스트조회-API]]
+== *10. 프로젝트 투두 리스트 조회 API*
+
+=== *10-1* 성공
+
+operation::project-read-api-test/프로젝트의_투두리스트를_조회한다[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+=== *10-2* 실패 - 존재하지 않은 프로젝트일 경우
+
+operation::project-read-api-test/프로젝트_투두리스트_조회시_존재하지_않은_프로젝트일_경우[snippets='http-request,http-response']
+
+=== *10-3* 실패 - 참여하지 않은 사용자인 경우
+
+operation::project-read-api-test/프로젝트_투두리스트_조회시_참여하지_않은_사용자일_경우[snippets='http-request,http-response']
+
+[[프로젝트나가기-API]]
+== *11. 프로젝트 나가기 API*
+
+=== *11-1* 성공
+
+operation::project-create-api-test/정상적으로_프로젝트를_나간다[snippets='http-request,request-headers,path-parameters,http-response']
+
+=== *11-2* 실패 - 존재하지 않는 회원인 경우
+
+operation::project-create-api-test/프로젝트를_나갈때_존재하지_않는_회원이면_실패한다[snippets='http-request,http-response']
+
+=== *11-3* 실패 - 프로젝트의 아이디가 유효하지 않은 경우
+
+operation::project-create-api-test/프로젝트를_나갈때_존재하지_않는_프로젝트이면_실패한다[snippets='http-request,http-response']
+
+=== *11-4* 실패 - 진행중인 프로젝트인 경우
+
+operation::project-create-api-test/프로젝트를_나갈때_진행중인_프로젝트이면_실패한다[snippets='http-request,http-response']
+
+=== *11-5* 실패 - 참여하지 않은 프로젝트인 경우
+
+operation::project-create-api-test/프로젝트를_나갈때_참여하지_않은_프로젝트이면_실패한다[snippets='http-request,http-response']
+
+[[프로젝트노드조회-API]]
+== *12. 프로젝트 노드 리스트 조회 API*
+
+=== *12-1* 성공
+
+operation::project-read-api-test/프로젝트의_노드를_조회한다[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+=== *12-2* 실패 - 존재하지 않은 프로젝트일 경우
+
+operation::project-read-api-test/프로젝트_노드_조회시_존재하지_않은_프로젝트일_경우[snippets='http-request,http-response']
+
+=== *12-3* 실패 - 참여하지 않은 사용자인 경우
+
+operation::project-read-api-test/프로젝트_노드_조회시_참여하지_않은_사용자일_경우[snippets='http-request,http-response']
+
+[[프로젝트회고전체조회-API]]
+== *13. 프로젝트 회고 전체 조회 API*
+
+=== *13-1* 성공
+
+operation::project-read-api-test/프로젝트의_회고를_전체_조회한다[snippets='http-request,path-parameters,request-headers,http-response,response-fields']
+
+=== *13-2* 실패 - 프로젝트 회고 전체 조회 시 존재하지 않는 프로젝트인 경우
+
+operation::project-read-api-test/프로젝트_회고_전체_조회_시_존재하지_않는_프로젝트일_경우_예외가_발생한다[snippets='http-request,http-response']
+
+=== *13-3* 실패 - 프로젝트 회고 전체 조회 시 해당 프로젝트에 참여하지 않은 사용자인 경우
+
+operation::project-read-api-test/프로젝트_회고_전체_조회_시_프로젝트에_참여하지_않은_사용자일_경우_예외_발생[snippets='http-request,http-response']
+
+[[프로젝트시작-API]]
+== *14. 프로젝트 시작 API*
+
+=== *14-1* 성공
+
+operation::project-create-api-test/프로젝트를_시작한다[snippets='http-request,path-parameters,http-response']
+
+=== *14-2* 실패 - 존재하지 않는 사용자인 경우
+
+operation::project-create-api-test/프로젝트_시작시_존재하지_않는_사용자면_예외가_발생한다[snippets='http-request,http-response']
+
+=== *14-3* 실패 - 존재하지 않는 프로젝트인 경우
+
+operation::project-create-api-test/프로젝트_시작시_존재하지_않는_프로젝트이면_예외가_발생한다[snippets='http-request,http-response']
+
+=== *14-4* 실패 - 요청을 보낸 사용자가 프로젝트의 리더가 아닌 경우
+
+operation::project-create-api-test/프로젝트를_시작하는_사용자가_프로젝트의_리더가_아니면_예외가_발생한다[snippets='http-request,http-response']
+
+=== *14-5* 실패 - 프로젝트의 시작 날짜가 미래인 경우
+
+operation::project-create-api-test/프로젝트_시작시_프로젝트의_시작날짜가_미래라면_예외가_발생한다[snippets='http-request,http-response']
